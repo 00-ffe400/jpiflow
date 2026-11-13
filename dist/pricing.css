@@ -1,0 +1,184 @@
+/* Pricing section — ExamVue 365 Flow telemedicine page */
+.pricing-section{background:#f8f9fb}
+.pricing-section>.service-wrap{padding:150px 0 40px}
+.pricing-head{display:flex;justify-content:space-between;align-items:center;gap:40px;margin-bottom:70px}
+.pricing-head .eyebrow{color:#697a90;font-weight:500;font-size:11px;letter-spacing:.4px}
+.tele-page main .pricing-head h2{font-size:55px;font-weight:300;letter-spacing:-2px;line-height:1.3;color:#172a43}
+.pricing-head h2 em{color:#0153ff}
+.pricing-head p{font-size:15px;line-height:1.7;color:#8896a8;margin-top:22px}
+.pricing-note{width:340px;min-height:230px;border-radius:22px;background:#102847;color:#fff;padding:26px;display:flex;flex-direction:column;justify-content:space-between;gap:28px;flex-shrink:0;position:relative;overflow:hidden;isolation:isolate}
+.pricing-note:before{content:'';position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#0153ff 0,#0153ff00 70%);opacity:.75;z-index:-1}
+.pricing-note>span,.pricing-note small{font-size:11px;line-height:1.5;color:#9fb4d6;letter-spacing:.3px}
+.tele-page .pricing-note h3{font-size:23px;font-weight:450;line-height:1.5;color:#fff}
+
+.price-block{padding:48px 0 0}
+.price-block+.price-block{margin-top:44px}
+.price-block-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:26px;border-top:1px solid #dde3eb;padding-top:26px}
+.price-index{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:500;line-height:18.7px;color:#0153ff}
+.price-index:before{content:'';width:4px;height:4px;border-radius:2px;background:#0153ff}
+.tele-page .price-block-head h3{font-size:24px;font-weight:500;line-height:1.35;letter-spacing:-.5px;color:#142e54;margin-top:10px}
+.price-block-head p{font-size:14px;line-height:1.6;color:#8795a7;margin-top:8px}
+.price-tools{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.currency-switch{display:flex;gap:4px;padding:4px;border-radius:32px;background:#eaebed}
+.currency-switch button{height:32px;min-width:64px;padding:0 14px;border-radius:32px;font-size:13px;font-weight:600;color:#6b7684;transition:background .25s,color .25s,box-shadow .25s}
+.currency-switch button[aria-pressed="true"]{background:#fff;color:#3879ff;box-shadow:0 0 .5px #000a210a,0 1px 2px #000a210f}
+.price-info-button{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid #cfd1d3;border-radius:10px;background:#fff;font-size:13px;color:#28415e;transition:border-color .2s}
+.price-info-button:hover,.price-info-button[aria-expanded="true"]{border-color:#0153ff}
+.price-info-button span{display:grid;place-items:center;width:16px;height:16px;border:1px solid currentColor;border-radius:50%;font-size:10px;font-weight:600;font-style:italic;line-height:1}
+.rate-basis{margin:-8px 0 22px;padding:14px 18px;border-radius:12px;background:#eef3ff;color:#36507a;font-size:13px;line-height:1.6}
+
+.rate-grid,.charge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.rate-card,.charge-card{background:#fff;border:1px solid #e3e8ef;border-radius:24px;padding:28px}
+.rate-card{display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
+.rate-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px #1a335512}
+.rate-top{display:flex;align-items:center;gap:10px;font-size:12px;color:#68758a}
+.modality{display:inline-grid;place-items:center;min-width:34px;height:24px;padding:0 7px;border-radius:6px;background:#eef3ff;color:#0153ff;font-size:12px;font-weight:700;letter-spacing:.3px}
+.rate-price{margin-top:26px;font-size:40px;font-weight:500;line-height:1.2;letter-spacing:-1.2px;color:#102847;font-variant-numeric:tabular-nums}
+.rate-label{margin-top:8px;font-size:14px;color:#8795a7}
+.rate-extra{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:18px;border-top:1px solid #edf1f5;font-size:14px;color:#68758a}
+.rate-extra strong{font-weight:600;color:#253d59;font-variant-numeric:tabular-nums}
+
+.charge-card{position:relative;display:flex;flex-direction:column;cursor:pointer;transition:border-color .25s,box-shadow .35s,transform .35s cubic-bezier(.16,1,.3,1)}
+.charge-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px #1a335512}
+.charge-card.is-selected{border-color:#0153ff;box-shadow:0 0 0 1px #0153ff,0 18px 40px #0153ff17}
+.charge-card:focus-visible{outline:2px solid #0153ff;outline-offset:4px}
+.charge-top{display:flex;justify-content:space-between;align-items:start;gap:14px;min-height:96px}
+.charge-badge{display:inline-flex;align-items:center;height:22px;padding:0 9px;margin-bottom:10px;border-radius:6px;background:#0153ff;color:#fff;font-size:11px;font-weight:600}
+.charge-amount{font-size:28px;font-weight:600;line-height:1.25;letter-spacing:-.8px;color:#102847;font-variant-numeric:tabular-nums}
+.charge-sub{margin-top:4px;font-size:13px;color:#8795a7}
+.bonus-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 12px;border-radius:12px;background:#eef3ff;text-align:center;flex-shrink:0}
+.bonus-chip span{font-size:11px;color:#5e7393}
+.bonus-chip strong{font-size:14px;font-weight:700;color:#0153ff;font-variant-numeric:tabular-nums}
+.charge-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:26px;padding-top:18px;border-top:1px solid #edf1f5;font-size:14px;color:#68758a}
+.charge-total strong{font-size:22px;font-weight:600;letter-spacing:-.5px;color:#142e54;font-variant-numeric:tabular-nums}
+.charge-button{display:flex;align-items:center;justify-content:center;gap:10px;height:48px;margin-top:22px;border-radius:30px;background:#eef2f7;color:#28415e;font-size:14px;font-weight:500;transition:background .25s,color .25s}
+.charge-button span{font-size:16px;transition:transform .25s}
+.charge-button:hover span{transform:translateX(3px)}
+.charge-card.is-selected .charge-button{background:#0153ff;color:#fff}
+.charge-card.is-selected .charge-button:hover{background:#003fc9}
+
+.calc-box{display:flex;justify-content:space-between;align-items:center;gap:30px;margin-top:20px;padding:24px 28px;border-radius:24px;background:linear-gradient(180deg,#edf1f6,#e3e9f1)}
+.calc-intro{display:flex;align-items:center;gap:16px;max-width:360px}
+.calc-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:#fff;color:#28415e;flex-shrink:0}
+.tele-page .calc-box h4{font-size:16px;font-weight:600;color:#142e54}
+.calc-desc{margin-top:4px;font-size:13px;line-height:1.55;color:#718096}
+.calc-formula{display:flex;align-items:center;gap:14px}
+.calc-item{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:150px;padding:13px 18px;border-radius:16px;background:#fff;text-align:center}
+.calc-item span{font-size:12px;color:#68758a}
+.calc-item em{font-style:normal;color:#0153ff;font-weight:600}
+.calc-item strong{font-size:17px;font-weight:600;color:#142e54;font-variant-numeric:tabular-nums}
+.calc-item.is-total{background:#0153ff}
+.calc-item.is-total span{color:#c8dbff}
+.calc-item.is-total strong{color:#fff}
+.calc-op{font-size:20px;font-weight:300;color:#8795a7}
+
+.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.guide-grid article{border-top:1px solid #dce3eb;padding-top:20px}
+.guide-grid article>span{font-size:34px;font-weight:300;letter-spacing:-1px;color:#a5b2c4;line-height:1.35}
+
+
+.tele-page .guide-grid h4{font-size:18px;font-weight:500;color:#253d59;margin-top:16px}
+.guide-grid p{margin-top:10px;font-size:14px;line-height:1.6;color:#8795a7}
+.pricing-footnote{margin-top:40px;font-size:12px;line-height:1.7;color:#99a6b7}
+.pricing-footnote .usd-note:not([hidden]){display:block}
+
+@media(max-width:1100px){
+.pricing-section>.service-wrap{padding:100px 0 20px}
+.pricing-head{flex-direction:column;align-items:stretch;gap:30px;margin-bottom:40px}
+.tele-page main .pricing-head h2{font-size:42px}
+.pricing-note{width:100%;min-height:190px}
+.rate-price{font-size:32px}
+.charge-amount{font-size:23px}
+.charge-top{flex-direction:column}
+.bonus-chip{flex-direction:row;gap:8px}
+.calc-box{flex-direction:column;align-items:stretch}
+.calc-intro{max-width:none}
+.calc-item{flex:1;min-width:0}
+.guide-grid{grid-template-columns:repeat(2,1fr);row-gap:40px}
+}
+@media(max-width:760px){
+.price-block-head{flex-direction:column;align-items:stretch}
+.price-tools{justify-content:space-between}
+.rate-grid,.charge-grid{grid-template-columns:1fr}
+.charge-top{min-height:0}
+.calc-formula{flex-direction:column;align-items:stretch;gap:6px}
+.calc-op{text-align:center;line-height:1}
+.guide-grid{grid-template-columns:1fr;row-gap:30px}
+.tele-page main .pricing-head h2{font-size:34px;letter-spacing:-1.2px}
+.rate-card,.charge-card{padding:24px}
+
+}
+/* Example calculation: match Figma (1722:29229) */
+.tele-page .calc-box h4{margin:0;font-size:18px;line-height:24px;font-weight:600;color:#142e54}
+.tele-page .calc-box .calc-desc{margin:0;font-size:13px;line-height:20px;color:#718096}
+.calc-intro>div{display:flex;flex-direction:column;justify-content:center}
+.calc-item{gap:4px;padding:13px 18px}
+.calc-item span{line-height:18px}
+.calc-item strong{line-height:24px}
+.calc-op{line-height:24px}
+@media(min-width:1101px){
+ .calc-intro{max-width:none;flex-shrink:0}
+ .tele-page .calc-box .calc-desc{white-space:nowrap}
+ .calc-item{width:160px;min-width:160px}
+}
+
+/* Pricing: match Figma (1722:29096) */
+.pricing-head{margin-bottom:0}
+.tele-page main .pricing-head h2 .motion-line:last-child,.tele-page main .pricing-head h2 em{font-weight:600}
+.pricing-note:before{display:none}
+.price-block{padding-top:0;margin-top:92px}
+.price-block+.price-block{margin-top:92px}
+.calc-box{margin-top:26px}
+.price-info-button{height:40px;padding:0 16px;font-size:15px;color:#3c3e40;border-color:#cfd1d3}
+.charge-button{height:48px;border-radius:12px;background:#fff;border:1px solid #cfd1d3;color:#3c3e40;font-size:17px;font-weight:400;width:100%}
+.charge-button:hover{border-color:#0153ff}
+.charge-card.is-selected .charge-button{background:#0153ff;border-color:#0153ff;color:#fff}
+@media(max-width:1100px){.price-block,.price-block+.price-block{margin-top:64px}}
+@media(max-width:700px){.price-block,.price-block+.price-block{margin-top:48px}.charge-button{font-size:15px}}
+
+/* ===== Pricing v2 (시안 A: 요금표 + 충전 계산기) ===== */
+.pr-v2>.service-wrap{max-width:1360px;padding:150px 0}
+.pr-head .eyebrow{display:block;font-size:11px;font-weight:500;letter-spacing:0;color:#697a90}
+.tele-page main .pr-head h2{margin-top:19px;font-size:55px;font-weight:300;line-height:1.3;letter-spacing:-2px;color:#172a43}
+.tele-page main .pr-head h2 em,.tele-page main .pr-head h2 .motion-line:last-child{font-style:normal;font-weight:600;color:#0153ff}
+.pr-head>p{margin-top:19px;font-size:15px;line-height:1.4;color:#8896a8}
+.pr-row{display:grid;grid-template-columns:minmax(0,1fr) 500px;gap:24px;align-items:start;margin-top:64px}
+.pr-rates{padding:36px 40px;border:1px solid #e6ebf1;border-radius:24px;background:#fff}
+.pr-rates-head{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:24px}
+.tele-page .pr-rates-head h3{font-size:22px;font-weight:600;line-height:1.4;color:#142e54}
+.pr-rates-head p{margin-top:6px;font-size:14px;line-height:1.4;color:#8795a7}
+.pr-rate-list{list-style:none;margin:0;padding:0}
+.pr-rate-list li{display:flex;align-items:center;gap:16px;padding:26px 0;border-top:1px solid #e3e8ef}
+.pr-badge{flex-shrink:0;padding:6px 10px;border-radius:8px;background:#edf3ff;font-size:14px;font-weight:700;line-height:1.4;color:#0153ff}
+.pr-name{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pr-name b{font-size:16px;font-weight:500;line-height:1.4;color:#253d59}
+.pr-name span,.pr-price span{font-size:13px;line-height:1.4;color:#8795a7}
+.pr-price{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.pr-price strong{font-size:30px;font-weight:600;line-height:1.25;letter-spacing:-.6px;color:#142e54;font-variant-numeric:tabular-nums}
+.pr-price i{font-style:normal}
+.pr-calc{display:flex;flex-direction:column;gap:28px;padding:36px;border-radius:24px;background:#102847;color:#fff}
+.pr-kicker{display:block;margin-bottom:-20px;font-size:11px;font-weight:500;letter-spacing:.8px;color:#9fb4d6}
+.tele-page .pr-calc h3{font-size:24px;font-weight:600;line-height:1.35;color:#fff}
+.pr-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:14px;background:rgba(255,255,255,.08)}
+.pr-seg button{padding:12px 0;border-radius:10px;font-size:15px;font-weight:500;color:#c3d0e6;transition:background .25s,color .25s}
+.pr-seg button:hover{color:#fff}
+.pr-seg button[aria-checked="true"]{background:#fff;color:#102847;font-weight:600}
+.pr-break{display:flex;flex-direction:column;gap:14px;margin:0}
+.pr-break>div{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pr-break dt{font-size:14px;color:#9fb4d6}
+.pr-break dd{margin:0;font-size:16px;font-weight:500;color:#fff;font-variant-numeric:tabular-nums}
+.pr-break>div:nth-child(2) dd{color:#7fb0ff}
+.pr-break>.is-total{padding-top:14px;border-top:1px solid rgba(255,255,255,.14)}
+.pr-break>.is-total dd{font-size:30px;font-weight:600;letter-spacing:-.5px}
+.pr-charge{height:52px;border-radius:12px;background:#0153ff;font-size:17px;font-weight:500;color:#fff;transition:background .2s}
+.pr-charge:hover{background:#2a6bff}
+.pr-note{margin:-8px 0 0;font-size:12px;line-height:1.5;color:#7f93b3}
+.pr-guide{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin:64px 0 0;padding:26px 0 0;border-top:1px solid #dde3eb}
+.pr-guide li{position:relative;display:flex;flex-direction:column;gap:3px;padding-left:16px}
+.pr-guide li:before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#0153ff}
+.pr-guide b{font-size:15px;font-weight:500;line-height:1.4;color:#253d59}
+.pr-guide span{font-size:13px;line-height:1.4;color:#8795a7}
+@media(max-width:1500px){.pr-v2>.service-wrap{padding:120px 0}.pr-row{grid-template-columns:minmax(0,1fr) 440px}.tele-page main .pr-head h2{font-size:clamp(38px,3.6vw,55px)}}
+@media(max-width:1100px){.pr-v2>.service-wrap{padding:90px 0}.pr-row{grid-template-columns:1fr;margin-top:44px}.pr-guide{grid-template-columns:repeat(2,1fr);row-gap:22px;margin-top:44px}.tele-page main .pr-head h2{font-size:clamp(30px,4.5vw,44px)}}
+@media(max-width:700px){.pr-v2>.service-wrap{padding:70px 0}.tele-page main .pr-head h2{font-size:28px;letter-spacing:-1px}.pr-rates{padding:24px 20px}.pr-rates-head{flex-direction:column;align-items:flex-start}.pr-rate-list li{flex-wrap:wrap;padding:20px 0}.pr-price{width:100%;flex-direction:row;justify-content:space-between;align-items:baseline}.pr-price strong{font-size:24px}.pr-calc{padding:26px 22px;gap:22px}.pr-kicker{margin-bottom:-14px}.tele-page .pr-calc h3{font-size:20px}.pr-break>.is-total dd{font-size:24px}.pr-guide{grid-template-columns:1fr}}
+.pr-seg button{background:transparent;border:0}.pr-seg button[aria-checked="true"]{background:#fff}

@@ -1,0 +1,32 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="68.0821" height="56.6922" viewBox="0 0 68.0821 56.6922" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Item Graphic">
+<g id="Ellipse 12" filter="url(#filter0_f_0_78)">
+<ellipse cx="34.041" cy="41.5958" rx="29.2406" ry="10.296" fill="#070E1D" fill-opacity="0.12"/>
+</g>
+<path id="Ellipse 10" d="M7.28489 42.8687C7.28489 37.3516 7.28489 31.4785 13.3777 25.3857C17.2789 21.4845 22.57 19.2929 28.0871 19.2929C33.6042 19.2929 38.8953 21.4845 42.7965 25.3857C48.4916 31.0808 48.8893 37.3516 48.8893 42.8687C48.8893 42.8687 42.7965 52.5764 28.0871 52.5764C13.3777 52.5764 7.28489 42.8687 7.28489 42.8687Z" fill="url(#paint0_radial_0_78)"/>
+<g id="Ellipse 11" filter="url(#filter1_f_0_78)">
+<ellipse cx="30.1265" cy="19.5783" rx="11.0945" ry="7.83142" fill="black" fill-opacity="0.3"/>
+</g>
+<circle id="Ellipse 9" cx="27.5162" cy="11.0945" r="11.0945" fill="url(#paint1_radial_0_78)"/>
+</g>
+<defs>
+<filter id="filter0_f_0_78" x="-1.78814e-07" y="26.4994" width="68.0821" height="30.1928" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="2.4002" result="effect1_foregroundBlur_0_78"/>
+</filter>
+<filter id="filter1_f_0_78" x="14.2316" y="6.94649" width="31.7898" height="25.2636" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="2.4002" result="effect1_foregroundBlur_0_78"/>
+</filter>
+<radialGradient id="paint0_radial_0_78" cx="0" cy="0" r="1" gradientTransform="matrix(23.4749 20.592 -24.1556 17.9097 19.6266 25.9458)" gradientUnits="userSpaceOnUse">
+<stop offset="0.0865384" stop-color="#2E3741"/>
+<stop offset="1" stop-color="#12161A"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_78" cx="0" cy="0" r="1" gradientTransform="matrix(17.2083 16.7555 -15.7095 16.3949 23.1978 7.46519)" gradientUnits="userSpaceOnUse">
+<stop offset="0.0865384" stop-color="#2E3741"/>
+<stop offset="1" stop-color="#12161A"/>
+</radialGradient>
+</defs>
+</svg>

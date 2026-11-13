@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ExamVue 365 Flow — Total Imaging Solution</title>
+<meta name="description" content="영상진단 장비부터 원격 판독까지, 동물병원을 위한 통합 진단 솔루션.">
+<meta name="theme-color" content="#cdd7dd">
+<script src="theme.js?v=light-only"></script>
+<style>
+html{scrollbar-gutter:stable}html.is-loading{overflow:hidden}
+html.is-loading main,html.is-loading .exam-footer{opacity:0}
+.page-loader{visibility:hidden;position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:#cdd7dd;opacity:1;transition:opacity 1s cubic-bezier(.22,1,.36,1);pointer-events:auto}
+.page-loader.is-active{visibility:visible}
+.flow-studio{display:none!important}
+.page-loader.is-leaving{opacity:0;pointer-events:none}
+.loader-mark{width:180px;height:24px;position:relative;background:#fff;-webkit-mask:url('assets/examvue-header-logo.svg') center/contain no-repeat;mask:url('assets/examvue-header-logo.svg') center/contain no-repeat;overflow:hidden}
+.loader-fill{position:absolute;inset:auto 0 0;height:clamp(0%,var(--fill,0%),110%);background:#46536e}
+.loader-fill:before{content:'';position:absolute;left:0;top:-5px;width:200%;height:6px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='6' viewBox='0 0 180 6'%3E%3Cpath d='M0 3Q22.5 0 45 3T90 3T135 3T180 3V6H0Z' fill='%2346536e'/%3E%3C/svg%3E") repeat-x;animation:loader-wave 1.8s linear infinite}
+.loader-percent{display:block;margin-top:20px;text-align:center;font:400 13px/20px Pretendard,Arial,sans-serif;letter-spacing:0;color:#46536e;font-variant-numeric:tabular-nums}
+@keyframes loader-wave{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.loader-fill:before{animation:none}.page-loader{transition:opacity .6s ease}}
+</style>
+<script>document.documentElement.classList.add('intro-pending');setTimeout(()=>{document.documentElement.classList.remove('is-loading','intro-pending');document.querySelector('main')?.removeAttribute('inert');document.querySelector('.exam-footer')?.removeAttribute('inert');document.querySelector('.page-loader')?.remove()},15000)</script>
+<script src="loader.js?v=readiness-3" defer></script>
+<noscript><style>.page-loader{display:none}</style></noscript>
+<link rel="stylesheet" href="style.css?v=full-hero-1"><link rel="stylesheet" href="landing.css?v=mobile-experience-hidden-7">
+<link rel="stylesheet" href="service-overlay.css?v=fullscreen-3"><link rel="stylesheet" href="mobile.css?v=4"></head>
+<body>
+<div class="page-loader" role="progressbar" aria-label="ExamVue 365 Flow 로딩" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+<div class="loader-content"><div class="loader-mark" aria-hidden="true"><div class="loader-fill"></div></div><output class="loader-percent" aria-hidden="true">0%</output></div>
+</div>
+<a class="skip" href="#hero-title">본문 바로가기</a>
+<main>
+<section class="hero frame" id="home" aria-labelledby="hero-title">
+<div class="scene" id="scene" role="img" aria-label="부드럽게 흐르는 투명한 3D 유리 리본"><div class="ribbon-fallback"></div></div>
+<header class="header" data-intro="header">
+<a class="exam-brand" href="#home" aria-label="ExamVue 365 Flow 메인"><img src="assets/examvue-header-logo.svg" alt="" /></a>
+<nav aria-label="주요 메뉴"><a href="#home" aria-current="page">메인</a><button data-info="services">서비스</button><button data-info="pricing">가격</button></nav>
+<div class="exam-actions"><label class="language"><span class="sr-only">언어</span><select aria-label="언어"><option value="ko">KOR</option></select></label><button class="login-button" data-info="login">로그인</button></div>
+</header>
+<div class="exam-intro"><span class="solution-tag" data-intro="tag">Total Imaging Solution</span><h1 id="hero-title"><span class="title-line" data-intro="title">Imaging Clarity.</span><span class="title-line" data-intro="title">Clinical Insight.</span><span class="title-line title-brand" data-intro="title">Seamless Workflow.</span></h1></div>
+<aside class="exam-experience" data-intro="experience"><h2>EXPERIENCE, IN PERSPECTIVE</h2><p class="experience-number">40<sup>+</sup></p><p>이미징 솔루션 전문 기업<br><strong>JPI Healthcare</strong>가 만든 전문적인 이미징 분석 서비스<br>이제 당신의 병원이 선택할 차례입니다.</p></aside>
+<div class="exam-bottom"><div class="exam-copy"><p data-intro="copy">영상진단 장비부터 전문 원격 판독까지,<br>동물병원을 위한 통합 진단 솔루션을 제공합니다</p><div class="exam-cta"><button class="primary-cta" data-intro="cta" data-info="telemedicine">Telerad <span>→</span></button><button class="secondary-cta" data-intro="cta" data-info="pacs">Web Pacs <span>→</span></button></div></div>
+<div class="service-cards" id="services"><button class="service-card" data-intro="card" data-info="telemedicine"><span class="service-symbol" aria-hidden="true"><img src="assets/examvue-service-symbol.svg" alt=""></span><div class="service-card-copy"><div><span class="service-label">Service</span><h2>Telemedicine service</h2></div><p>원격진료 서비스</p></div><span class="service-about">About <span>→</span></span></button><button class="service-card" data-intro="card" data-info="pacs"><span class="service-symbol" aria-hidden="true"><img src="assets/examvue-service-symbol.svg" alt=""></span><div class="service-card-copy"><div><span class="service-label">Service</span><h2>Web PACS</h2></div><p>설치없이 사용하는, PACS</p></div><span class="service-about">About <span>→</span></span></button></div></div>
+<div class="scene-status"><span id="scene-status-text" class="sr-only">LIVE / FLOWING RIBBON</span><button id="motion-toggle" aria-pressed="false" aria-label="3D 모션 일시정지">Ⅱ</button></div>
+</section>
+</main>
+<footer class="exam-footer" id="company"><div class="footer-top"><div class="company-info"><a class="exam-brand" href="#home">ExamVue <span>365</span> Flow</a><p>상호명 : 제이피아이헬스케어<br>대표자명 : 김진국<br>사업자 등록번호 : 203-81-48896<br>통신판매업번호 : 2024-서울구로-0968<br>사업장 주소 : 서울특별시 구로구 디지털로33길 28, 608호(우림이비즈센터1차)<br>유선번호 : <a href="tel:0221082580">02-2108-2580</a></p></div><div class="footer-links"><div><h2>Company</h2><button data-info="company">Company Introduction</button><button data-info="services">About Service</button><button data-info="pricing">Pricing</button></div><div><h2>Family Site</h2><button data-info="terms">Terms of Service</button><button data-info="privacy">Privacy Policy</button><button data-info="refund">Refund Policy</button></div></div></div><p class="copyright">Copyright(c) JPI All Rights Reserved.</p></footer>
+<dialog class="service-dialog" aria-labelledby="service-dialog-title"><button class="service-close" aria-label="안내 닫기">×</button><span class="dialog-eyebrow">EXAMVUE 365 FLOW</span><h2 id="service-dialog-title"></h2><p id="service-dialog-copy"></p><button class="dialog-confirm">확인</button></dialog>
+<dialog class="service-overlay" aria-label="서비스 소개"><div class="service-overlay-shell"><header class="service-overlay-bar"><div role="tablist" aria-label="서비스 선택"><button role="tab" aria-selected="true" id="service-tab-telemedicine" aria-controls="service-panel-telemedicine" data-service-tab="telemedicine">TELEMEDICINE SERVICE</button><button role="tab" aria-selected="false" tabindex="-1" id="service-tab-pacs" aria-controls="service-panel-pacs" data-service-tab="pacs">WEB PACS</button></div><div class="service-overlay-actions"><button class="service-pricing-button" type="button">가격 보기</button><button class="service-overlay-close" aria-label="서비스 소개 닫기"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m4 4 12 12M16 4 4 16" stroke="currentColor" stroke-width="1.3"/></svg></button></div></header><div id="service-panel-telemedicine" class="service-overlay-content" role="tabpanel" aria-labelledby="service-tab-telemedicine"><iframe title="Telemedicine Service 소개" data-src="telemedicine?embed=1&amp;v=pricing-a2" loading="lazy"></iframe><div class="service-frame-loading" aria-live="polite">서비스 소개를 불러오고 있어요.</div></div><div id="service-panel-pacs" class="service-overlay-content" role="tabpanel" aria-labelledby="service-tab-pacs" hidden><iframe title="Web PACS 소개" data-src="pacs?embed=1&amp;v=pricing-a" loading="lazy"></iframe><div class="service-frame-loading" aria-live="polite">서비스 소개를 불러오고 있어요.</div></div></div></dialog><script src="service-overlay.js?v=bridge-1"></script><script type="module" src="flow.js?v=preset-4"></script><script src="landing.js?v=pricing-1"></script>
+</body></html>

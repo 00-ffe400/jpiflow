@@ -1,0 +1,14 @@
+# Local secrets and machine-specific files
+.env
+.env.*
+!.env.example
+.openai/*
+!.openai/hosting.json
+node_modules/
+outputs/
+*.zip
+*.tar
+*.tar.gz
+*.log
+Thumbs.db
+.DS_Store

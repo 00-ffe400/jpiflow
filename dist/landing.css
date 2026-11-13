@@ -1,0 +1,103 @@
+
+:root{--ink:#00163e;--muted:#61738e;--accent:#0054ff;--paper:#f5f6f7;color-scheme:light}
+body{color:#1d2228}main{padding:0}.hero.frame{margin:0;width:100%;height:100dvh;min-height:700px;max-height:none;border:0;border-radius:0;box-shadow:none;background:#cdd7dd}
+.header{top:24px;left:5.8%;right:5.8%;gap:24px}.exam-brand{font-size:20px;font-weight:650;letter-spacing:-.8px;color:#00163e;white-space:nowrap;line-height:1.5}.exam-brand>span{position:relative}.exam-brand>span:before{content:'';position:absolute;left:0;right:0;top:-4px;height:3px;background:#efb21b}
+.header nav{position:absolute;left:50%;transform:translateX(-50%);gap:34px;align-items:center;font-size:16px}.header nav a,.header nav button{padding:8px 0;color:#4c4f53;background:none}.header nav a[aria-current]{color:#00163e}.exam-actions{display:flex;gap:10px;margin-left:auto;align-items:center}.language select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='m1 1 6 6 6-6' fill='none' stroke='%233c4248' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 15px center;border:1px solid #cdd0d4;border-radius:9px;padding:9px 40px 9px 12px;font-size:15px;color:#3e4247}.login-button{background:#0054ff;color:#fff;border-radius:9px;font-size:15px;padding:10px 18px}
+.exam-intro{position:absolute;left:5.8%;top:24%;z-index:1}.solution-tag{display:inline-block;padding:3px 14px;border:1px solid #52627c;border-radius:30px;color:#52627c;font-size:15px;line-height:1.5}#hero-title{font-size:clamp(48px,4.25vw,164px);font-weight:400;letter-spacing:-.045em;line-height:1.13;color:#fff;margin:18px 0 0;text-shadow:none}#hero-title>span{color:#00163e}
+.exam-experience{position:absolute;right:5.6%;top:17%;text-align:right;color:#61738e}.exam-experience h2{font-size:16px;font-weight:650;letter-spacing:-.3px;color:#4c5970}.experience-number{font-size:clamp(64px,4.4vw,170px);line-height:1.1;font-weight:350;letter-spacing:-3px;color:#4c5970;margin:25px 0 12px}.experience-number sup{font-size:24px;vertical-align:top;line-height:1.5;letter-spacing:0}.exam-experience>p:last-child{font-size:15px;line-height:1.85}
+.exam-bottom{position:absolute;left:5.8%;right:5.8%;bottom:18.5%;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;z-index:2}.exam-copy>p{font-size:17px;line-height:1.85}.exam-cta{display:flex;gap:12px;margin-top:32px}.exam-cta button{display:flex;align-items:center;justify-content:space-between;gap:20px;border-radius:100px;padding:14px 24px;font-size:18px;font-weight:400}.exam-cta button>span{font-size:27px;line-height:1}.primary-cta{background:#0054ff;color:#fff}.secondary-cta{background:#fff;color:#45494d;border:1px solid #cdd0d4}
+.service-cards{display:flex;gap:18px;width:28.3%;min-width:470px}.service-card{flex:1;min-width:0;text-align:left;padding:23px 24px 20px;border:1px solid #fff;border-radius:30px;background:#ffffff06;backdrop-filter:blur(7px);display:flex;flex-direction:column;min-height:260px;color:#1b2229;transition:background .25s,transform .25s}.service-card:hover{background:#ffffff22;transform:translateY(-4px)}.service-symbol{color:#0054ff;font-size:43px;line-height:1;font-weight:200;margin-bottom:28px}.service-label{font-size:13px;font-weight:650;color:#00163e}.service-card h2{font-size:17px;font-weight:450;letter-spacing:-.6px;line-height:1.3;margin:4px 0 20px;white-space:nowrap}.service-card>p{font-size:15px;margin-bottom:28px;white-space:nowrap}.service-about{margin:auto 0 0 auto;display:flex;align-items:center;gap:10px;font-size:15px;color:#4c5155}
+.scene-status{left:18px;bottom:12px;opacity:.5}.scene-status button{color:#52627c}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.exam-footer{padding:60px 5.8% 45px;background:#f5f6f7}.footer-top{display:flex;justify-content:space-between;gap:40px}.company-info>p{font-size:14px;color:#696d72;line-height:1.9;margin:18px 0 36px}.footer-links{display:flex;gap:65px;text-align:right}.footer-links h2{font-size:16px;font-weight:500;color:#20252a;margin:0 0 12px}.footer-links button{display:block;background:none;color:#7a7e84;font-size:14px;margin:0 0 10px auto;padding:0}.footer-links button:hover{color:#0054ff}.copyright{text-align:center;padding-top:34px;border-top:1px solid #d4d7db;font-size:14px;color:#7a7e84}.service-dialog{max-width:480px;padding:32px;background:#f7fafc;color:#00163e;border-radius:22px}.service-close{float:right;background:none;font-size:28px;line-height:1}.dialog-eyebrow{font-size:11px;letter-spacing:1px;color:#697c94}.service-dialog h2{font-size:27px;margin:24px 0 15px;letter-spacing:-.7px}.service-dialog p{font-size:15px;line-height:1.8;color:#52627c}.dialog-confirm{display:block;margin:28px 0 0 auto;background:#0054ff;color:#fff;padding:10px 24px;border-radius:8px}
+@media(min-width:1800px){.header{top:2.1vw}.exam-brand{font-size:1vw}.header nav{font-size:.85vw;gap:1.8vw}.language select,.login-button{font-size:.85vw}.solution-tag{font-size:.8vw}.exam-experience h2{font-size:.8vw}.exam-experience>p:last-child{font-size:.8vw}.exam-copy>p{font-size:.85vw}.exam-cta button{font-size:1vw;padding:.65vw 1.1vw}.service-card{padding:1.2vw;min-height:12.8vw;border-radius:1.6vw}.service-symbol{font-size:2.2vw;margin-bottom:1.6vw}.service-label{font-size:.65vw}.service-card h2{font-size:1vw;margin-bottom:1.1vw}.service-card>p,.service-about{font-size:.8vw}.exam-footer{padding-top:3vw}.company-info>p,.copyright,.footer-links button{font-size:.75vw}.exam-footer .exam-brand,.footer-links h2{font-size:.85vw}}
+@media(max-width:1100px){.service-cards{min-width:350px;gap:12px}.service-card{padding:20px 18px;min-height:245px}.service-card h2{font-size:17px}.service-card>p{font-size:13px}.exam-copy>p{font-size:15px}.exam-cta button{font-size:16px;padding:13px 18px}#hero-title{font-size:5vw}.exam-experience>p:last-child{font-size:13px}.exam-experience h2{font-size:13px}.exam-bottom{bottom:12%}}
+@media(max-width:700px){.hero.frame{height:auto;min-height:100dvh;padding:125px 6% 45px;display:flex;flex-direction:column;gap:30px}.header{left:6%;right:6%;top:22px}.exam-brand{font-size:16px}.header nav{display:none}.exam-actions{gap:7px}.language select{font-size:12px;padding:8px 28px 8px 9px;background-position:right 9px center}.login-button{font-size:12px;padding:9px 12px}.exam-intro{position:relative;left:auto;top:auto}.solution-tag{font-size:12px;padding:3px 12px}#hero-title{font-size:clamp(32px,8vw,54px);letter-spacing:-.05em;margin-top:22px;line-height:1.2}.exam-experience{position:relative;right:auto;top:auto;text-align:left;display:grid;grid-template-columns:68px 1fr;column-gap:14px;align-items:center}.exam-experience h2{grid-column:1/-1;font-size:11px;margin-bottom:10px}.experience-number{font-size:50px;margin:0;letter-spacing:-2px}.experience-number sup{font-size:17px}.exam-experience>p:last-child{font-size:11px;line-height:1.8}.exam-bottom{position:relative;left:auto;right:auto;bottom:auto;display:flex;flex-direction:column;align-items:stretch;gap:30px}.exam-copy>p{font-size:13px}.exam-cta{margin-top:20px;gap:9px}.exam-cta button{font-size:13px;padding:12px 17px;gap:12px}.exam-cta button>span{font-size:20px}.service-cards{min-width:0;width:100%;gap:12px}.service-card{min-height:220px;padding:18px 14px;border-radius:24px}.service-symbol{font-size:34px;margin-bottom:24px}.service-label{font-size:11px}.service-card h2{font-size:clamp(13px,3.8vw,18px);letter-spacing:-.6px;margin-bottom:15px}.service-card>p{font-size:11px;white-space:normal}.service-about{font-size:12px}.exam-footer{padding:42px 6% 30px}.footer-top{flex-direction:column;gap:20px}.company-info>p{font-size:11px;margin-bottom:0}.footer-links{text-align:left;gap:40px}.footer-links h2{font-size:14px}.footer-links button{margin-left:0;font-size:12px}.copyright{font-size:11px;margin-top:25px;padding-top:22px}}
+
+/* Typography measured from Figma 1618:177886 (1920px desktop frame). */
+body{font-family:Pretendard,Arial,sans-serif}
+.solution-tag{font-size:13px;font-weight:400;line-height:24px;letter-spacing:0;padding-top:0;padding-bottom:0}
+#hero-title{font-size:78px;font-weight:500;line-height:90px;letter-spacing:-1.5px;text-shadow:0 0 4px #a0a0b538}
+#hero-title>span{color:#001540}
+.header nav,.header nav a,.header nav button,.language select,.login-button{font-size:14px;font-weight:400;line-height:20px;letter-spacing:0}
+.exam-experience h2{font-size:14px;font-weight:700;line-height:24px;letter-spacing:0;color:#46536e}
+.experience-number{font-size:64px;font-weight:400;line-height:22px;letter-spacing:0;color:#46536e;margin:44px 0 32px}
+.experience-number sup{font-size:16px;font-weight:700;line-height:24px}
+.exam-experience>p:last-child{font-size:14px;font-weight:500;line-height:24px;letter-spacing:0;color:#617192}
+.exam-experience strong{font-weight:700}
+.exam-copy>p{font-size:16px;font-weight:400;line-height:28px;letter-spacing:0;color:#191a1d}
+.exam-cta button{font-size:16px;font-weight:400;line-height:24px;letter-spacing:0}
+.service-label{font-size:11px;font-weight:700;line-height:16px;letter-spacing:0;color:#001540}
+.service-card h2{font-size:18px;font-weight:500;line-height:28px;letter-spacing:0;color:#191a1d}
+.service-card>p{font-size:14px;font-weight:400;line-height:20px;letter-spacing:0;color:#191a1d}
+.service-about{font-size:14px;font-weight:400;line-height:20px;letter-spacing:0;color:#4b4d4f}
+.company-info>p{font-size:14px;font-weight:300;line-height:22px;letter-spacing:0;color:#4b4d4f}
+.footer-links h2{font-size:14px;font-weight:500;line-height:22px;letter-spacing:0;color:#191a1d}
+.footer-links button,.copyright{font-size:13px;font-weight:400;line-height:20px;letter-spacing:0;color:#70757a}
+@media(min-width:701px){#hero-title{display:flex;flex-direction:column;gap:20px;line-height:70px}#hero-title br{display:none}.service-cards{min-width:478px}.service-card{padding-left:22px;padding-right:22px}}
+@media(min-width:701px) and (max-width:1500px){#hero-title{font-size:clamp(42px,4.0625vw,78px);line-height:.89744;gap:clamp(12px,1.04167vw,20px)}}
+@media(min-width:701px) and (max-width:1100px){.service-cards{min-width:420px}.service-card{padding-left:14px;padding-right:14px}.service-card h2{font-size:16px}.service-card>p{font-size:12px}.exam-cta button{font-size:14px}}
+@media(max-width:700px){#hero-title{font-size:clamp(32px,8vw,54px);line-height:1.2}.experience-number{font-size:50px;line-height:1.1;margin:0}.experience-number sup{font-size:16px}.exam-experience h2{font-size:11px}.exam-experience>p:last-child{font-size:11px;line-height:20px}.exam-copy>p{font-size:13px;line-height:24px}.exam-cta button{font-size:13px}.service-card h2{font-size:clamp(13px,3.8vw,18px);line-height:24px}.service-card>p{font-size:11px}.service-about{font-size:12px}.company-info>p{font-size:11px;line-height:20px}.footer-links button{font-size:12px}.copyright{font-size:11px}}
+
+#hero-title .title-line{display:block;color:#fff}#hero-title .title-brand{color:#001540}
+
+/* Figma Landing Header: 1920 × 70, horizontal padding 48. */
+.header{top:0;left:0;right:0;width:100%;height:70px;padding:0 48px;gap:0;display:flex;align-items:center;justify-content:space-between}
+.header .exam-brand{width:138.824px;height:20px;position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.header .exam-brand img{display:block;flex:none}
+.header nav{position:static;transform:none;display:flex;gap:8px;align-items:flex-start}
+.header nav a,.header nav button{height:32px;padding:6px 12px;border-radius:8px;line-height:20px;font-size:14px;font-weight:400;letter-spacing:0;white-space:nowrap}
+.exam-actions{margin-left:0;gap:8px;flex:none}
+.language{position:relative;display:block;height:32px}
+.language:after{content:'';position:absolute;right:32px;top:1px;bottom:1px;width:1px;background:#cfd1d3;pointer-events:none}
+.language select{height:32px;min-width:78px;border:1px solid #cfd1d3;border-radius:8px;padding:5px 40px 5px 8px;font-size:14px;line-height:20px;background:#fff url('assets/examvue-chevron.svg') no-repeat right 8px center;background-size:16px 16px}
+.login-button{height:32px;padding:5px 12px;border:1px solid #0153ff;border-radius:8px;background:#0153ff;font-size:14px;line-height:20px}
+@media(max-width:700px){.header{height:70px;padding:0 20px}.header .exam-brand{width:118px}.header nav{display:none}.language,.language select{height:40px}.language select{font-size:14px}.login-button{height:40px;padding:9px 12px}}
+
+/* N-shaped reading sequence, prepared before the loader is removed. */
+.intro-pending .hero [data-intro]{opacity:0}
+/* Keep content in normal flow before the desktop columns become crowded. */
+.exam-cta button{white-space:nowrap;flex-shrink:0}.exam-copy{min-width:0}.service-card h2{white-space:normal}
+@media(max-width:1100px){
+ .hero.frame{height:auto;min-height:100dvh;max-height:none;padding:135px 6% 90px;display:flex;flex-direction:column;gap:40px;overflow:hidden}
+ .exam-intro{position:relative;left:auto;top:auto;width:100%}
+ #hero-title{font-size:clamp(36px,5.7vw,60px);line-height:1.12;gap:8px;margin-top:22px;letter-spacing:-1.5px}
+ .exam-experience{position:relative;top:auto;right:auto;text-align:left;display:grid;grid-template-columns:95px minmax(0,1fr);gap:12px 22px;width:100%;align-items:center}
+ .exam-experience h2{grid-column:1/-1;font-size:12px;margin:0}
+ .experience-number{font-size:55px;line-height:1;margin:0;letter-spacing:-2px}.experience-number sup{font-size:18px}
+ .exam-experience>p:last-child{font-size:13px;line-height:22px}
+ .exam-bottom{position:relative;left:auto;right:auto;bottom:auto;width:100%;display:flex;flex-direction:column;align-items:stretch;gap:32px}
+ .exam-copy>p{font-size:15px;line-height:26px}.exam-cta{margin-top:22px;flex-wrap:wrap;gap:12px}.exam-cta button{font-size:15px;padding:14px 22px;gap:20px}
+ .service-cards{width:100%;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+ .service-card{width:100%;min-width:0;min-height:235px;padding:24px;border-radius:26px}.service-card h2{font-size:20px;line-height:1.3}.service-card>p{font-size:13px;white-space:normal}.service-symbol{margin-bottom:24px}
+ .header{padding:0 5%}.header nav{gap:0}.header nav a,.header nav button{padding-left:9px;padding-right:9px}
+}
+@media(max-width:600px){
+ .hero.frame{padding:112px 6% 90px;gap:30px}.header{padding:0 6%}.header nav{display:none}.header .exam-brand{width:118px}
+ #hero-title{font-size:clamp(29px,7.7vw,44px);letter-spacing:-1.2px;gap:5px;line-height:1.15;display:flex;flex-direction:column}
+ .exam-experience{grid-template-columns:66px minmax(0,1fr);gap:10px 12px}.experience-number{font-size:46px}.exam-experience>p:last-child{font-size:11px;line-height:19px}
+ .exam-copy>p{font-size:13px;line-height:24px}.exam-cta{gap:9px}.exam-cta button{font-size:13px;padding:12px 16px;gap:12px;min-height:48px}
+ .service-cards{gap:12px}.service-card{padding:18px 14px;min-height:225px;border-radius:22px}.service-card h2{font-size:17px;line-height:24px;overflow-wrap:normal}.service-card>p{font-size:11px;line-height:18px}.service-symbol{font-size:34px}.service-about{font-size:12px}
+}
+
+/* Service cards: Figma 1618:178133 / 1618:178141. */
+.service-cards{gap:18px;align-items:stretch}
+.service-card{display:flex;flex-direction:column;align-items:flex-start;gap:32px;padding:24px 22px 16px;min-height:245px;border:1px solid #fff;border-radius:28px;background:rgba(255,255,255,.18);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.service-symbol{display:block;flex:none;width:23px;height:25px;margin:0;font-size:0;line-height:0}
+.service-symbol img{display:block}
+.service-card-copy{display:flex;flex-direction:column;gap:18px;width:100%;text-align:left}
+.service-label{display:block;font-size:11px;line-height:16px;font-weight:700}
+.service-card h2{font-size:18px;font-weight:500;line-height:28px;letter-spacing:0;margin:0}
+.service-card-copy>p{font-size:14px;line-height:20px;color:#191a1d;margin:0}
+.service-about{width:100%;height:32px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;margin:auto 0 0;font-size:15px;line-height:20px}
+.service-card:hover{background:rgba(255,255,255,.62)}
+@media(max-width:600px){.service-cards{gap:12px}.service-card{padding:24px 16px 16px}.service-card h2{font-size:16px;line-height:24px}.service-card-copy>p{font-size:12px;line-height:20px}.service-about{font-size:13px}}
+
+/* Service icon: exact hover color and a slow, continuous turn. */
+.service-card .service-symbol{background-color:#fff;-webkit-mask:url('assets/examvue-service-symbol.svg') center/contain no-repeat;mask:url('assets/examvue-service-symbol.svg') center/contain no-repeat;transform-origin:center;transition:background-color .45s ease;animation:service-symbol-turn 7s linear infinite;animation-play-state:paused}
+.service-card .service-symbol img{opacity:0}
+.service-card:hover .service-symbol,.service-card:focus-visible .service-symbol{background-color:#99B2D0;animation-play-state:running}
+@keyframes service-symbol-turn{to{rotate:360deg}}
+@media(prefers-reduced-motion:reduce){.service-card .service-symbol{animation:none}}
+
+/* Hide the experience summary on phone layouts. */
+@media(max-width:700px){.exam-experience{display:none}}

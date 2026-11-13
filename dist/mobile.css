@@ -1,0 +1,111 @@
+/* Phone layout refinements; desktop layouts remain unchanged. */
+@media(max-width:700px){
+ html{scrollbar-gutter:auto}
+ .hero.frame{padding:108px 20px 48px;gap:30px;min-height:100svh}
+ .header{padding-left:20px;padding-right:20px}
+ .header .exam-brand{width:112px;flex-shrink:0}
+ .exam-actions{gap:8px}.login-button,.language,.language select{min-height:44px}
+ #hero-title{font-size:clamp(28px,7.6vw,43px);line-height:1.18;letter-spacing:-1.1px;margin-top:22px}
+ .solution-tag{font-size:11px}.exam-bottom{gap:28px}
+ .exam-copy>p{font-size:13px;line-height:1.85}
+ .exam-cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+ .exam-cta button{min-width:0;min-height:48px;padding:12px 14px;justify-content:space-between;font-size:14px;gap:8px}
+ .service-cards{gap:12px}.service-card{min-height:222px;padding:20px 14px 14px;border-radius:22px;gap:24px}
+ .service-card h2{font-size:15px;line-height:21px;letter-spacing:-.2px}
+ .service-card-copy{gap:14px}.service-card-copy>p{font-size:12px;line-height:19px;word-break:keep-all}
+ .service-about{font-size:13px;min-height:36px}.service-symbol{width:23px;height:25px}
+ .exam-footer{padding:36px 20px 24px}.footer-links{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:20px}
+ .footer-links button{min-height:36px;text-align:left;display:block;font-size:12px}.company-info>p{font-size:11px;line-height:1.9;overflow-wrap:anywhere}
+ .service-overlay-bar{padding:10px 12px;gap:8px;flex-basis:66px}.service-overlay-actions{gap:6px}
+ .service-overlay-bar [role=tab]{font-size:11px;padding:8px 9px;min-height:38px}
+ .service-overlay-close{width:40px;height:40px}.service-pricing-button{height:40px;padding:0 9px}
+ .tele-page .service-wrap{width:calc(100% - 40px)}
+ .tele-page .service-hero{padding-left:12px;padding-right:12px}
+ .hero-foot{padding:16px 4px 18px;gap:12px}.hero-foot>span{font-size:11px;letter-spacing:.2px}
+ .hero-surface{padding-top:48px;border-radius:20px;gap:24px}
+ .hero-surface h1{font-size:clamp(25px,6.6vw,32px);letter-spacing:-1px;line-height:1.35}
+ .hero-surface p{font-size:13px;line-height:1.8;margin-top:20px;max-width:100%;padding:0 6px}
+ .hero-surface .eyebrow{margin-bottom:16px}.hero-product{width:100%}
+ .recommend-section.service-wrap{width:100%;padding:56px 24px}.recommend-grid article{padding:24px 0}
+ .advantages>.service-wrap,.flow-section>.service-wrap{padding-top:64px;padding-bottom:64px}
+ .advantages .section-head h2{font-size:28px}.benefit-grid{gap:12px}
+ .benefit-copy{padding:4px 12px 22px;min-height:168px}.benefit-category{padding-left:12px;padding-right:12px;font-size:11px}
+ .benefit-card h3{font-size:14px;line-height:1.5;word-break:keep-all}.benefit-card p{font-size:12px;line-height:1.65;word-break:keep-all}
+ .device-section{padding-top:64px;padding-bottom:64px}.device-section h2{font-size:28px;line-height:1.4}
+ .flow-editorial-top h2{font-size:34px;letter-spacing:-1px}.flow-blue-note{width:100%;min-height:220px}
+ .flow-open-steps{gap:32px 18px}.flow-open-steps h3{font-size:16px;word-break:keep-all}.flow-open-steps p{font-size:13px;word-break:keep-all}
+ .pricing-section>.service-wrap{padding-top:64px;padding-bottom:32px}.tele-page main .pricing-head h2{font-size:32px;letter-spacing:-1px}
+ .pricing-note{width:100%;min-height:200px}.rate-card,.charge-card{min-width:0;padding:24px}
+ .price-block-head{gap:16px;flex-wrap:wrap}.calc-box{padding:20px;gap:20px}.calc-desc{white-space:normal!important}
+ .faq-section{padding-top:64px;padding-bottom:64px}.faq-list summary{font-size:15px;line-height:1.6;padding-right:30px}
+ .tele-contact{padding:40px 24px;gap:24px;flex-direction:column;align-items:flex-start}.tele-contact h2{font-size:25px;line-height:1.4;word-break:keep-all}.tele-contact .tele-primary{min-height:48px}
+ .pacs-overview{gap:32px}.pacs-overview-side,.pacs-tool-card,.pacs-adjust-grid>*{min-width:0}
+}
+@media(max-width:380px){
+ .header{padding-left:16px;padding-right:16px}.header .exam-brand{width:104px}
+ .language select{min-width:68px;padding-right:32px}.exam-actions{gap:6px}.login-button{padding-left:10px;padding-right:10px}
+ .service-overlay-bar{flex-wrap:wrap;flex-basis:auto;min-height:104px}
+ .service-overlay-bar [role=tablist]{order:2;width:100%}.service-overlay-bar [role=tab]{flex:1}
+ .service-overlay-actions{margin-left:auto;width:100%;justify-content:space-between}.service-card{padding-left:12px;padding-right:12px}
+}
+
+/* Benefit cards are full-width and readable on phones. */
+@media(max-width:700px){
+ .tele-page main .benefit-grid{grid-template-columns:minmax(0,1fr);gap:24px;max-width:420px;margin-inline:auto}
+ .tele-page main .benefit-card,.tele-page main .benefit-card:nth-child(even){margin-top:0;min-height:0;border-radius:24px}
+ .tele-page main .benefit-category{height:50px;min-height:50px;padding:20px 22px 0;font-size:11px}
+ .tele-page main .benefit-art-frame{aspect-ratio:355/247}
+ .tele-page main .benefit-copy{padding:8px 22px 28px;min-height:0}
+ .tele-page main .benefit-stat{font-size:38px;line-height:1.3;letter-spacing:-1px}
+ .tele-page main .benefit-card:nth-child(odd) h3,.tele-page main .benefit-card:nth-child(even) h3{font-size:18px;line-height:1.5;margin-top:12px}
+ .tele-page main .benefit-card p{font-size:14px;line-height:1.7;margin-top:8px}
+}
+
+@media(max-width:700px){
+ .tele-page main .flow-open-steps{grid-template-columns:minmax(0,1fr);gap:0}
+ .tele-page main .flow-open-steps article{padding:0 0 32px 28px;border:0!important;position:relative;min-width:0}
+ .tele-page main .flow-open-steps article::before,.tele-page main .flow-open-steps:not(.pacs-deploy-steps) article:nth-child(2n)::before{top:10px;bottom:-10px;left:4px;right:auto;width:1px;height:auto;background:#d3dbe5}
+ .tele-page main .flow-open-steps article:last-child::before{display:none}
+ .tele-page main .flow-open-steps article::after{top:9px;left:0;width:9px;height:9px}
+ .tele-page main .flow-open-steps article>div{justify-content:flex-start;gap:14px}
+ .tele-page main .flow-open-steps article>div>span{font-size:32px;line-height:1}
+ .tele-page main .flow-open-steps h3{font-size:18px;margin-top:16px}
+ .tele-page main .flow-open-steps p{font-size:14px;line-height:1.7;margin-top:10px;max-width:100%}
+}
+
+@media(max-width:700px){
+ .tele-page .price-tools{display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:100%;min-width:0}
+ .tele-page .currency-switch{flex:none;width:max-content;max-width:100%}
+ .tele-page .price-info-button{white-space:nowrap;flex:none;min-height:44px;height:auto;padding:11px 16px;justify-content:center;line-height:20px}
+ .tele-page .faq-list summary{position:relative;display:block;padding:22px 32px 22px 0;min-height:64px;word-break:keep-all}
+ .tele-page .faq-list summary img{position:absolute;right:0;top:50%;translate:0 -50%;width:18px;height:18px;object-fit:contain;margin:0}
+ .tele-page .tele-contact{align-items:center;text-align:center;justify-content:center;padding:40px 24px;gap:24px}
+ .tele-page .tele-contact>div{width:100%}.tele-page .tele-contact .eyebrow{display:block;text-align:center;max-width:290px;margin-left:auto;margin-right:auto;line-height:1.6}
+ .tele-page .tele-contact h2{text-align:center}.tele-page .tele-contact .tele-primary{align-self:center;margin-inline:auto}
+}
+
+@media(max-width:700px){
+ .tele-page .pacs-diagram{padding:20px 16px;border-radius:22px;width:100%;min-width:0}
+ .tele-page .dg-row{grid-template-columns:minmax(0,1fr);gap:12px}
+ .tele-page .dg-box{padding:16px;min-width:0;word-break:keep-all}
+ .tele-page .dg-platform{padding:18px 14px;gap:16px;min-width:0}
+ .tele-page .dg-head{flex-direction:column;align-items:flex-start;gap:6px}
+ .tele-page .dg-head span,.tele-page .dg-label{font-size:11px}
+ .tele-page .dg-links{padding:0;gap:10px;flex-wrap:wrap;line-height:1.6}
+ .tele-page .pacs-dark-card,.tele-page .pacs-light-card{padding:24px 20px;gap:22px;min-width:0}
+ .tele-page .pacs-tool-list,.tele-page .pacs-stats,.tele-page .pacs-presets{grid-template-columns:minmax(0,1fr);gap:12px}
+ .tele-page .pacs-tool-list li{min-height:60px;padding:12px 14px;font-size:15px;gap:14px;word-break:keep-all}
+ .tele-page .pacs-tool-ico{flex:none}
+ .tele-page .pacs-stats div{padding:20px}.tele-page .pacs-stats strong{font-size:32px;white-space:nowrap;line-height:1.3}
+ .tele-page .pacs-stats span{display:block;margin-top:6px;font-size:13px}
+ .tele-page .pacs-presets li{padding:20px;gap:8px;min-width:0}.tele-page .pacs-presets span{font-size:14px;line-height:1.7;word-break:keep-all}
+ .tele-page .pacs-tip{font-size:13px;line-height:1.8;padding:18px;word-break:keep-all}
+ .tele-page .pacs-ops .recommend-grid{gap:0}
+ .tele-page .pacs-ops .recommend-grid article{padding:28px 0!important}
+ .tele-page .pacs-ops .recommend-grid article:first-child{padding-top:12px!important}
+ .tele-page .pacs-ops .recommend-grid article:last-child{padding-bottom:0!important}
+ .tele-page .pacs-ops .recommend-grid p{margin-bottom:0;line-height:1.8}
+}
+
+/* Full-bleed platform background, with inset content. */
+@media(max-width:700px){.tele-page main .pacs-platform.service-wrap{width:100%;max-width:none;margin-inline:0;padding-left:20px;padding-right:20px;box-sizing:border-box}}

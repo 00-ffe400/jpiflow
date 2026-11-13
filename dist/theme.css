@@ -1,0 +1,55 @@
+.header-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;border:1px solid #ffffff99;border-radius:50px;background:#ffffff50;font-size:12px;white-space:nowrap;backdrop-filter:blur(14px)}.theme-toggle:hover{background:#ffffffa0}.theme-toggle svg{width:17px;height:17px;flex:none}.theme-toggle .theme-moon{display:none}
+:root[data-theme=dark]{color-scheme:dark;--ink:#dce9f6;--muted:#a0b5c9;--accent:#7dd8f4;--paper:#070f1c;--line:#819bbd30}
+[data-theme=dark] .theme-toggle .theme-sun{display:none}[data-theme=dark] .theme-toggle .theme-moon{display:block}
+[data-theme=dark] .frame{border-color:#2a3c52;box-shadow:inset 0 0 0 1px #a3c9e012,0 12px 50px #0003}
+[data-theme=dark] .hero{background:#101c2c}
+[data-theme=dark] .brand-sub{color:#a1b9cd}
+[data-theme=dark] .brand>svg{background:#27415a;box-shadow:0 0 0 8px #b0d7f011}
+[data-theme=dark] .pill,[data-theme=dark] .chapter-nav a,[data-theme=dark] .circle{border-color:#99b8d044;background:#c1dfff0b}
+[data-theme=dark] .theme-toggle{border-color:#99b8d055;background:#203950b0}
+[data-theme=dark] .theme-toggle:hover,[data-theme=dark] .contact-pill:hover{background:#30516cc9}
+[data-theme=dark] .hero-copy>p{color:#b2c9db}
+[data-theme=dark] .scene-pages button{border-color:#94b8d34d}
+[data-theme=dark] .scene-pages button[aria-pressed=true]{background:#294762;color:#effaff}
+[data-theme=dark] .glass-note{background:linear-gradient(135deg,#213b56d6,#12283cd6);border-color:#8db5d755;box-shadow:inset 0 1px 1px #ffffff0d,0 25px 70px #0004}
+[data-theme=dark] .flow-bars i{background:linear-gradient(#e0f6ffcc,#34b9db30)}
+[data-theme=dark] .chapter-nav a.active,[data-theme=dark] .chapter-nav a:hover{background:#31516c80}
+[data-theme=dark] .status-dot{background:#7ed8f0}
+[data-theme=dark] .section-label{color:#95acc1}
+[data-theme=dark] h2 em{color:#89a8c0}
+[data-theme=dark] .skills span{background:#192b4088;border-color:#86accb33}
+[data-theme=dark] .project-image{background:#172b42}
+[data-theme=dark] .project-meta,[data-theme=dark] .project-tags{color:#91abc4}
+[data-theme=dark] .medical-image{background:radial-gradient(ellipse at top right,#244e65,#183044)}
+[data-theme=dark] .medical-window{background:#233c51cc;border-color:#8db2cb55;box-shadow:0 20px 40px #0003}
+[data-theme=dark] .medical-chips i{border-color:#7a9ab955}
+[data-theme=dark] .medical-plus{color:#86c6d9}
+[data-theme=dark] .text-link{border-color:#7c9cb8}
+[data-theme=dark] .career-list,[data-theme=dark] .career-list details{border-color:#7c9cb833}
+[data-theme=dark] .career-list summary>span{color:#9cb7ca}
+[data-theme=dark] .journey-art:after{border-color:#8fb4cf35}
+[data-theme=dark] .contact{background:radial-gradient(ellipse at 80% 30%,#247ca744,transparent 45%),#111f31}
+[data-theme=dark] .contact-actions .pill{background:#28455b80}
+[data-theme=dark] .contact footer{border-color:#8ba3bc33}
+[data-theme=dark] dialog{background:#102236;border-color:#638bb14d}
+[data-theme=dark] .dialog-close{background:#243b52}
+[data-theme=dark] #case-domain,[data-theme=dark] #case-meta dt{color:#90adc4}
+[data-theme=dark] .skip{background:#203b51;color:#effaff}
+[data-theme=dark] .studio-launch{background:#102940e8;border-color:#7192af66;box-shadow:0 8px 32px #0005}
+[data-theme=dark] .studio-panel{background:#11263af2;border-color:#7192af55;box-shadow:0 20px 80px #0006}
+[data-theme=dark] .studio-header small{color:#9fbad0}
+[data-theme=dark] .studio-tabs button{color:#9bb5ca}
+[data-theme=dark] .studio-tabs button[aria-selected=true]{color:#98e5ff;border-color:#7dcced}
+[data-theme=dark] .control-label output{color:#9cdaef}
+[data-theme=dark] .control-limits,[data-theme=dark] .studio-status{color:#a0b8cc}
+[data-theme=dark] .control-row input[type=range]{background:linear-gradient(90deg,#4dc8eb var(--progress),#35536d var(--progress))}
+[data-theme=dark] .color-row input[type=color]{border-color:#7295b4}
+[data-theme=dark] .color-row input[type=text],[data-theme=dark] .gradient-direction select{background:#0c1e30;border-color:#7196b544}
+[data-theme=dark] .finish-buttons button,[data-theme=dark] .color-modes button{border-color:#6c90aa66}
+[data-theme=dark] .finish-buttons button[aria-pressed=true],[data-theme=dark] .color-modes button[aria-pressed=true]{background:#244b66;border-color:#81c4df;color:#c1eeff}
+[data-theme=dark] .gradient-preview{border-color:#d2edff33}
+[data-theme=dark] .studio-actions button{background:#203d52;color:#dce9f6;border-color:#54768c55}
+[data-theme=dark] .studio-actions .copy-settings{background:#9adff6;color:#102433;border-color:transparent}
+@media(max-width:1050px){.header-actions{gap:8px}.theme-toggle{padding:8px;width:38px;min-height:38px}.theme-toggle [data-theme-label]{display:none}}
+@media(max-width:900px){.header nav{display:none}}
+@media(max-width:700px){.header-actions{gap:8px}.theme-toggle{width:36px;min-height:36px}.header-actions .contact-pill{width:36px;height:36px;padding:0;gap:0}.header-actions .contact-label{display:none}[data-theme=dark] .brand>svg{box-shadow:0 0 0 5px #b0d7f011}}
