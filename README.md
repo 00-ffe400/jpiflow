@@ -1,5 +1,9 @@
 # JPI Flow / ExamVue 365 Flow
 
+## 로그인 3D 첫 구현 — 검토 브랜치
+
+`feature/login-3d-preview`에는 Figma 로그인 화면을 구현한 `/login/` 미리보기가 추가되어 있습니다. 기존 소개 사이트는 유지됩니다. `node tools/serve-login.mjs` 실행 후 http://127.0.0.1:4173/login/ 에서 확인하세요. 자세한 실행·3D 설정·GitHub 작업·배포 방법은 [로그인 README](dist/login/README.md)를 참고하세요. **공개 배포와 main 병합은 수행하지 않습니다.**
+
 ExamVue 365 Flow 소개 웹사이트의 현재 작업 코드입니다.
 
 공개 사이트: https://jpiflow.ffe400.chatgpt.site
