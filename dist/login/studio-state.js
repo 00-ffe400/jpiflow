@@ -1,0 +1,118 @@
+export const GROUPS = {all:'전체',loops:'유리 곡선',tiles:'바닥 타일',pedestal:'중앙 받침대',crystal:'중앙 크리스탈'};
+export const TABS = ['구도','형태·배열','색상·재질','조명·반사','그림자·배경','모션','저장'];
+export const clone = value => structuredClone(value);
+const transform = () => ({visible:true,x:0,y:0,z:0,rx:0,ry:0,rz:0,scale:1});
+const material = (color,roughness,metalness,transmission=0) => ({preset:transmission?'glass':'satin',color,opacity:1,roughness,metalness,transmission,reflection:1.2,ior:1.46,opticalThickness:1.2,attenuationColor:'#6ac8ff',attenuationDistance:6,coat:1,coatRoughness:.12,emissive:'#003977',emission:0});
+const camera = () => ({type:'perspective',distance:17,azimuth:39,elevation:39,targetX:0,targetY:.6,targetZ:0,fov:36,zoom:1,fit:'fill',padding:.12});
+const light = (type,color,intensity,x,y,z,shadow=false) => ({type,enabled:true,color,intensity,x,y,z,targetX:0,targetY:0,targetZ:0,shadow});
+export function defaults(){return {
+  version:2,model:'loops',modelRevision:1,look:'clear-glass-loops',
+  scene:{...transform(),scale:1},
+  loops:{...transform(),rz:-12,count:3,radiusX:2.35,radiusY:2.5,width:.34,depth:.3,bend:.35,twist:28,spacing:.55,segments:240,radialSegments:24,material:{...material('#9bdaf6',.035,0,.92),reflection:2.3,ior:1.75,opticalThickness:.65,attenuationColor:'#69c5ed',attenuationDistance:1.8,coatRoughness:.055},motion:{paused:false,height:.06,speed:.15,spinX:0,spinY:1.2,spinZ:.25,tilt:1.5}},
+  camera:{...camera(),distance:10.5,azimuth:5,elevation:10,targetY:.1,fov:38,padding:0},mobileCamera:{...camera(),distance:11,azimuth:5,elevation:10,targetY:.1,fov:40,padding:0},
+  mobile:{enabled:true,scale:.92,x:0,y:0,z:0},
+  tiles:{...transform(),rows:11,columns:11,width:1.03,depth:1.03,thickness:.25,crown:.03,gapX:.1,gapZ:.1,roundness:.055,segments:6,stagger:false,holeX:3,holeZ:3,slope:0,jitterHeight:0,jitterRotation:0,jitterScale:0,seed:365,overrides:{},material:{...material('#0c2b58',.32,.35),preset:'blueSoft',coat:.16,coatRoughness:.42,reflection:1.05},motion:{paused:false,type:'ripple',height:.025,speed:.7,wavelength:3,direction:0,delay:.08,phase:0}},
+  pedestal:{...transform(),width:2.95,depth:2.95,height:.38,layers:3,shrink:.09,gap:.055,roundness:.06,segments:6,autoFit:false,linkCrystal:false,edgeVisible:true,edgeWidth:.018,edgeColor:'#299bdd',edgeEmission:.22,material:{...material('#16417a',.34,.25),preset:'blueSoft',coat:.18,coatRoughness:.4,reflection:1},motion:{paused:false,height:0,speed:.4,spin:0,pulse:.15,linkCrystal:false}},
+  crystal:{...transform(),shape:'chamfer',width:1.65,height:1.65,depth:1.65,lockRatio:false,roundness:.065,bevel:.08,segments:10,flat:false,twist:0,floatGap:.55,outer:true,material:material('#168dff',.065,0,.91),core:{visible:true,shape:'octahedron',count:1,size:.43,spacing:.45,x:0,y:0,z:0,rx:0,ry:20,rz:15,color:'#5bddff',opacity:1,emission:.35,linked:true},motion:{paused:false,height:.12,speed:.55,spinX:0,spinY:4,spinZ:0,tilt:3,coreSpin:10,coreFloat:.04,phase:0,pulseSpeed:.5,pulseStrength:.1}},
+  environment:{intensity:1.25,rotation:-15,blur:.08,exposure:1},
+  lights:{key:light('directional','#e1f8ff',2.8,-3,8,4,true),fill:light('directional','#a9f2ff',1.1,5,4,2),rim:light('point','#1685e4',14,-2,3,-3),ambient:light('ambient','#d4f2ff',.65,0,0,0),base:light('point','#279ae5',10,0,.5,0)},
+  background:{mode:'gradient',color:'#0064a1',color2:'#9de9ef',angle:120,ground:false,groundColor:'#061124',groundRoughness:.6,shadowOpacity:.28,shadowSoftness:3,fog:false,fogColor:'#02060c',fogNear:17,fogFar:44},
+  motion:{paused:false,reduced:false,mode:'auto',progress:0,scrollStart:0,scrollEnd:1500,smoothness:.14,parallax:.15,hoverLift:.06,hoverScale:1.025},
+  render:{quality:'auto'},links:{material:false},
+};}
+
+const n=(key,label,min,max,step=.01,unit='',hint='')=>({key,label,type:'number',min,max,step,unit,hint});
+const b=(key,label,hint='')=>({key,label,type:'boolean',hint});
+const c=(key,label,hint='')=>({key,label,type:'color',hint});
+const s=(key,label,options,hint='')=>({key,label,type:'select',options,hint});
+const pose=[n('x','좌우 위치',-15,15,.01,'u'),n('y','높이',-5,12,.01,'u'),n('z','앞뒤 위치',-15,15,.01,'u'),n('rx','X 회전',-180,180,1,'°'),n('ry','Y 회전',-180,180,1,'°'),n('rz','Z 회전',-180,180,1,'°'),n('scale','크기 배율',.1,3,.01,'×')];
+const matFields=[s('material.preset','재질 프리셋',{glass:'투명 유리',frosted:'불투명 유리',satin:'새틴',silver:'실버',matte:'무광',blueSoft:'코발트 · 소프트 새틴'}),c('material.color','기본 색상'),n('material.opacity','불투명도',.05,1,.01,'','형상의 불투명도. 유리 투과율과 별개입니다.'),n('material.transmission','유리 투과율',0,1,.01,'','금속성이 높으면 유리 투과가 약해집니다.'),n('material.roughness','표면 거칠기',.02,1,.005),n('material.metalness','금속성',0,1),n('material.reflection','반사 강도',0,3),n('material.ior','굴절률',1,2.3,.01,'IOR'),n('material.opticalThickness','굴절 계산용 두께',.01,6,.01,'u','실제 지오메트리 두께를 변경하지 않습니다.'),c('material.attenuationColor','내부 흡수 색상'),n('material.attenuationDistance','색 흡수 거리',.1,20,.1,'u'),n('material.coat','코팅 강도',0,1),n('material.coatRoughness','코팅 거칠기',.02,1),c('material.emissive','자체 발광 색상'),n('material.emission','자체 발광 강도',0,3)];
+const cameraFields=[s('type','카메라',{perspective:'원근',orthographic:'직교'}),n('distance','카메라 거리',5,45,.1,'u'),n('azimuth','좌우 방향',-180,180,1,'°'),n('elevation','내려다보는 각도',8,85,1,'°'),n('targetX','바라보는 지점 X',-8,8,.05,'u'),n('targetY','바라보는 지점 Y',-3,8,.05,'u'),n('targetZ','바라보는 지점 Z',-8,8,.05,'u'),n('fov','원근 시야각',15,80,1,'°'),n('zoom','직교 확대율',.2,3,.01,'×'),s('fit','프레이밍',{fit:'전체 보기',fill:'화면 채우기'},'전체 보기는 장면 경계에 맞춰 카메라를 자동으로 확보합니다.'),n('padding','보기 여백',0,.6,.01,'비율')];
+export function fieldsFor(target,tab,profile='camera',lightId='key'){
+  let prefix=target==='all'?'scene':target;
+  const wrap=(fields,p=prefix)=>fields.map(f=>({...f,path:`${p}.${f.key}`}));
+  if(tab==='구도'){
+    if(target!=='all')return wrap([b('visible','그룹 표시'),...pose]);
+    return [...wrap(pose),...wrap(cameraFields,profile),...wrap([b('enabled','모바일 전용 설정'),n('scale','모바일 크기',.2,2,.01,'×'),n('x','모바일 X',-5,5,.05,'u'),n('y','모바일 Y',-5,5,.05,'u'),n('z','모바일 Z',-5,5,.05,'u')],'mobile')];
+  }
+  if(tab==='색상·재질')return target==='all'?[]:wrap(matFields);
+  if(tab==='형태·배열'){
+    if(target==='loops')return wrap([b('visible','유리 곡선 표시'),n('count','곡선 개수',1,3,1,'개'),n('radiusX','루프 가로 곡률',.8,4,.01,'u'),n('radiusY','루프 세로 곡률',.8,4,.01,'u'),n('width','곡선 폭',.08,.9,.01,'u'),n('depth','실제 곡선 두께',.04,.5,.005,'u'),n('bend','입체 굽힘',0,1,.01),n('twist','단면 비틀기',-180,180,1,'°'),n('spacing','곡선 사이 간격',.1,1.8,.01,'u'),n('segments','경로 부드러움',80,400,1,'분할'),n('radialSegments','단면 부드러움',8,40,1,'분할')]);
+    if(target==='tiles')return wrap([b('visible','타일 표시'),n('columns','가로 타일 수',3,25,1,'개'),n('rows','세로 타일 수',3,25,1,'개'),n('width','타일 가로',.2,2,.01,'u'),n('depth','타일 세로',.2,2,.01,'u'),n('thickness','실제 타일 두께',.05,.8,.01,'u'),n('crown','윗면의 완만한 곡률',0,.18,.005,'u','실제 윗면을 볼록하게 만들어 넓은 반사광이 부드럽게 흐릅니다.'),n('gapX','가로 간격',.02,.8,.01,'u'),n('gapZ','세로 간격',.02,.8,.01,'u'),n('roundness','모서리 라운드',.005,.25,.005,'u'),n('segments','모서리 분할',2,16,1,'단계'),b('stagger','엇갈림 배열'),n('holeX','중앙 비움 가로',0,9,1,'타일'),n('holeZ','중앙 비움 세로',0,9,1,'타일'),n('slope','거리별 높이 변화',-.15,.15,.005,'u/u'),n('jitterHeight','높이 편차',0,.5,.01,'u'),n('jitterRotation','회전 편차',0,25,1,'°'),n('jitterScale','크기 편차',0,.3,.01,'비율'),n('seed','랜덤 시드',1,99999,1)]);
+    if(target==='pedestal')return wrap([b('visible','받침대 표시'),n('width','가로 크기',1,7,.01,'u'),n('depth','세로 크기',1,7,.01,'u'),n('height','전체 실제 두께',.1,2,.01,'u'),n('layers','겹 개수',1,7,1,'겹'),n('shrink','겹 크기 감소율',0,.2,.01,'비율'),n('gap','겹 사이 간격',0,.3,.005,'u'),n('roundness','라운드·경사 폭',.005,.25,.005,'u'),n('segments','경사 부드러움',2,16,1),b('autoFit','중앙 비움에 자동 맞춤'),b('linkCrystal','크리스탈 크기에 연결'),b('edgeVisible','발광 테두리 표시'),n('edgeWidth','테두리 두께',.005,.15,.005,'u'),c('edgeColor','테두리 색상'),n('edgeEmission','테두리 발광',0,5,.05)]);
+    if(target==='crystal')return wrap([b('visible','크리스탈 그룹 표시'),b('outer','외부 크리스탈 표시','외부 반사와 실제 내부 코어를 각각 켜고 비교할 수 있습니다.'),s('shape','기본 형태',{cube:'큐브',box:'직육면체',chamfer:'모서리 깎인 크리스탈'}),b('lockRatio','비율 고정'),n('width','가로',.4,4,.01,'u'),n('height','높이',.4,4,.01,'u'),n('depth','세로',.4,4,.01,'u'),n('roundness','모서리 라운드',.005,.3,.005,'u'),n('bevel','모서리 깎는 폭',.01,.35,.005,'u'),n('segments','면 분할 수',2,20,1),b('flat','평평한 면 표현'),n('twist','비틀기',-90,90,1,'°'),n('floatGap','받침대 위 부양 거리',.05,3,.01,'u'),b('core.visible','내부 코어 표시'),s('core.shape','코어 형태',{diamond:'다이아몬드',octahedron:'팔면체',cube:'작은 큐브'}),n('core.count','코어 개수',1,7,1,'개'),n('core.size','코어 크기',.05,.7,.01,'u'),n('core.spacing','코어 간격',.05,1,.01,'u'),n('core.x','코어 X',-1,1,.01,'u'),n('core.y','코어 Y',-1,1,.01,'u'),n('core.z','코어 Z',-1,1,.01,'u'),n('core.rx','코어 X 회전',-180,180,1,'°'),n('core.ry','코어 Y 회전',-180,180,1,'°'),n('core.rz','코어 Z 회전',-180,180,1,'°'),c('core.color','코어 색상'),n('core.opacity','코어 불투명도',.05,1),n('core.emission','코어 발광 강도',0,3),b('core.linked','외부와 코어 모션 연결')]);
+    return [];
+  }
+  if(tab==='조명·반사')return [...wrap([b('enabled','선택 조명 켜기'),c('color','조명 색상'),n('intensity','밝기',0,lightId==='base'||lightId==='rim'?60:10,.05),...['x','y','z'].map(a=>n(a,`조명 ${a.toUpperCase()}`,-15,15,.1,'u')),...['X','Y','Z'].map(a=>n(`target${a}`,`바라보는 지점 ${a}`,-8,8,.1,'u')),b('shadow','그림자 생성')],`lights.${lightId}`),...wrap([n('intensity','주변 반사 강도',0,3),n('rotation','반사 환경 회전',-180,180,1,'°'),n('blur','반사 환경 흐림',0,.5,.01,'','PMREM 환경맵을 갱신하므로 입력을 마친 뒤 반영됩니다.'),n('exposure','전체 노출',.2,2,.01,'EV')],'environment')];
+  if(tab==='그림자·배경')return wrap([s('mode','배경',{solid:'단색',gradient:'그라데이션',transparent:'투명'}),c('color','배경 색상'),c('color2','그라데이션 두 번째 색'),n('angle','그라데이션 방향',0,360,1,'°'),b('ground','바닥 평면 표시'),c('groundColor','바닥 색상'),n('groundRoughness','바닥 반사 흐림',.05,1),n('shadowOpacity','접촉 그림자 진하기',0,.65),n('shadowSoftness','그림자 부드러움',1,6,.1),b('fog','안개 사용'),c('fogColor','안개 색상'),n('fogNear','안개 시작 거리',5,60,.5,'u'),n('fogFar','안개 종료 거리',10,90,.5,'u')],'background');
+  if(tab==='모션'){
+    if(target==='loops')return wrap([b('motion.paused','유리 곡선 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s')),n('motion.tilt','기울기 범위',0,10,.1,'°')]);
+    if(target==='tiles')return wrap([b('motion.paused','타일 일시정지'),s('motion.type','타일 움직임',{rise:'순차 상승',wave:'파도',ripple:'중앙 파동',float:'은은한 부유'}),n('motion.height','이동 높이',0,.8,.01,'u'),n('motion.speed','파동 속도',0,3,.01,'×'),n('motion.wavelength','파장',.5,12,.1,'u'),n('motion.direction','진행 방향',-180,180,1,'°'),n('motion.delay','타일별 지연',0,.5,.01,'s'),n('motion.phase','모션 위상',0,360,1,'°')]);
+    if(target==='pedestal')return wrap([b('motion.paused','받침대 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),n('motion.spin','Y 회전 속도',-30,30,.1,'°/s'),n('motion.pulse','테두리 빛 변화',0,1),b('motion.linkCrystal','크리스탈 부유와 연결')]);
+    if(target==='crystal')return wrap([b('motion.paused','크리스탈 일시정지'),n('motion.height','부유 높이',0,.6,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-60,60,.1,'°/s')),n('motion.tilt','기울기 범위',0,15,.1,'°'),n('motion.coreSpin','코어 회전 속도',-60,60,.1,'°/s'),n('motion.coreFloat','코어 부유 높이',0,.3,.01,'u'),n('motion.phase','내부·외부 위상 차이',0,360,1,'°'),n('motion.pulseSpeed','발광 변화 속도',0,3,.01,'×'),n('motion.pulseStrength','발광 변화 강도',0,1)]);
+    return wrap([b('paused','전체 일시정지'),b('reduced','움직임 줄이기'),s('mode','진행 방식',{auto:'자동 재생',scroll:'스크롤 진행',manual:'특정 진행률에서 정지'}),n('progress','정지 진행률',0,1,.001,'비율'),n('scrollStart','스크롤 시작',0,6000,10,'px'),n('scrollEnd','스크롤 종료',100,8000,10,'px'),n('smoothness','변경 보간 시간',.03,1,.01,'s'),n('parallax','마우스 시차 강도',0,.5,.01),n('hoverLift','호버 상승',0,.4,.01,'u'),n('hoverScale','호버 확대',1,1.2,.005,'×')],'motion');
+  }
+  return [];
+}
+export const get=(obj,path)=>path.split('.').reduce((o,k)=>o?.[k],obj);
+export function set(obj,path,value){const keys=path.split('.'),last=keys.pop();keys.reduce((o,k)=>o[k],obj)[last]=value;}
+// Import only known schema fields. Reject wrong types; clamp finite numbers.
+export function validate(input){
+  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('설정 JSON 객체가 필요합니다.');
+  if(input.version!==2)throw Error('스튜디오 v2 설정 파일을 사용해 주세요.');
+  const result=defaults();if(!Object.hasOwn(input,'model'))result.model='tiles';
+  function walk(base,value,path=''){
+    for(const key of Object.keys(base)){
+      if(key==='overrides')continue;
+      if(!Object.hasOwn(value||{},key))continue;
+      const p=path?`${path}.${key}`:key,v=value[key];
+      if(base[key]&&typeof base[key]==='object'){if(!v||typeof v!=='object'||Array.isArray(v))throw Error(`${p}: 객체가 필요합니다.`);walk(base[key],v,p);}
+      else if(typeof base[key]==='number'){if(typeof v!=='number'||!Number.isFinite(v))throw Error(`${p}: 유한한 숫자가 필요합니다.`);base[key]=v;}
+      else if(typeof v!==typeof base[key])throw Error(`${p}: 값의 형식을 확인하세요.`);
+      else {if(key.toLowerCase().includes('color')||key==='emissive'){if(!/^#[0-9a-f]{6}$/i.test(v))throw Error(`${p}: HEX 색상을 확인하세요.`);}base[key]=v;}
+    }
+  }
+  walk(result,input);
+  const descriptors=[];
+  for(const target of Object.keys(GROUPS))for(const tab of TABS)for(const profile of ['camera','mobileCamera'])for(const lightId of Object.keys(result.lights))descriptors.push(...fieldsFor(target,tab,profile,lightId));
+  for(const d of descriptors){const value=get(result,d.path);if(d.type==='number'){let v=Math.max(d.min,Math.min(d.max,value));if(d.step===1)v=Math.round(v);set(result,d.path,v);}if(d.type==='select'&&!Object.hasOwn(d.options,value))throw Error(`${d.label}: 지원하지 않는 값입니다.`);}
+  if(!['loops','tiles'].includes(result.model))throw Error('지원하지 않는 장면 모델입니다.');
+  if(!['auto','low','medium','high'].includes(result.render.quality))throw Error('렌더링 품질 값이 올바르지 않습니다.');
+  if(result.background.fogFar<=result.background.fogNear)result.background.fogFar=result.background.fogNear+1;
+  if(result.motion.scrollEnd<=result.motion.scrollStart)result.motion.scrollEnd=result.motion.scrollStart+100;
+  const overrideInput=input.tiles?.overrides||{};
+  if(typeof overrideInput!=='object'||Array.isArray(overrideInput))throw Error('선택 타일 설정이 올바르지 않습니다.');
+  for(const [key,v]of Object.entries(overrideInput).slice(0,625)){
+    if(!/^\d+:\d+$/.test(key)||!v||typeof v!=='object')continue;
+    const item={};for(const property of ['x','y','z','rx','rz','scale'])if(typeof v[property]==='number'&&Number.isFinite(v[property]))item[property]=Math.max(property==='scale'?.1:-5,Math.min(property==='scale'?3:5,v[property]));
+    if(/^#[0-9a-f]{6}$/i.test(v.color||''))item.color=v.color;
+    result.tiles.overrides[key]=item;
+  }
+  return result;
+}
+export const MATERIAL_PRESETS={blueSoft:{color:'#0c2b58',roughness:.32,metalness:.35,transmission:0,coat:.16,coatRoughness:.42,reflection:1.05},glass:{roughness:.065,metalness:0,transmission:.92,coat:1},frosted:{roughness:.35,metalness:0,transmission:.7,coat:.3},satin:{roughness:.32,metalness:.35,transmission:0,coat:.5},silver:{roughness:.18,metalness:1,transmission:0,coat:.6},matte:{roughness:.85,metalness:0,transmission:0,coat:0}};
+
+// Built-in comparison looks never overwrite user-created named presets.
+export function builtInPresets(){
+  const glassLoops=defaults(),reference=defaults(),original=defaults();for(const preset of [reference,original]){preset.model='tiles';preset.camera=camera();preset.mobileCamera={...camera(),distance:16,elevation:42,fov:38};preset.environment={intensity:1,rotation:0,blur:.28,exposure:.86};Object.assign(preset.background,{mode:'solid',color:'#02060c',color2:'#13223a',ground:true,fog:true});}original.look='original';
+  original.tiles.crown=0;original.tiles.material=material('#123764',.28,.42);
+  original.pedestal.material=material('#13365c',.22,.48);
+  Object.assign(original.pedestal,{edgeWidth:.035,edgeColor:'#4cc9ff',edgeEmission:1.5});
+  original.environment={intensity:1,rotation:0,blur:.08,exposure:.9};
+  original.lights={key:light('directional','#d5edff',3.8,-3,8,4,true),fill:light('directional','#78acff',1.3,5,4,2),rim:light('point','#0084ff',24,-2,3,-3),ambient:light('ambient','#b4d4ff',1.1,0,0,0),base:light('point','#2bbaff',18,0,.5,0)};
+  Object.assign(original.background,{color:'#171e29',color2:'#324452',groundColor:'#132035',groundRoughness:.45,fogColor:'#171e29',fogNear:15,fogFar:40});
+  return {glassLoops:{name:'유리 곡선 · 클리어 블루',settings:glassLoops},reference:{name:'이전 모델 · 코발트 타일',settings:reference},original:{name:'이전 모델 · 선명한 유리 반사',settings:original}};
+}
+export function applyReferenceLook(state){
+  const ref=defaults();state.look=ref.look;state.tiles.material=ref.tiles.material;state.tiles.crown=ref.tiles.crown;state.pedestal.material=ref.pedestal.material;
+  for(const key of ['edgeWidth','edgeColor','edgeEmission'])state.pedestal[key]=ref.pedestal[key];
+  state.environment=ref.environment;for(const id of Object.keys(ref.lights))Object.assign(state.lights[id],{color:ref.lights[id].color,intensity:ref.lights[id].intensity});
+  for(const key of ['color','color2','groundColor','groundRoughness','fogColor'])state.background[key]=ref.background[key];
+  return state;
+}
+
+export function applyLoopModel(state){
+  const fresh=defaults();state.model='loops';state.modelRevision=1;state.look='clear-glass-loops';state.loops=fresh.loops;
+  state.camera=fresh.camera;state.mobileCamera=fresh.mobileCamera;state.environment=fresh.environment;state.background=fresh.background;state.lights=fresh.lights;
+  return state;
+}

@@ -8,6 +8,7 @@
   <title>Login · ExamVue 365 Flow</title>
   <link rel="preload" href="../assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="studio.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -15,32 +16,13 @@
   <main class="login-page">
     <section class="visual-panel" aria-label="푸른 유리 큐브 3D 인터랙션">
       <div id="scene" class="scene" role="img" aria-label="빛나는 푸른 유리 큐브와 입체 타일"></div>
-      <div id="scene-fallback" class="scene-fallback"><div class="fallback-cube"></div></div>
+      <div id="scene-fallback" class="scene-fallback"></div>
       <p id="scene-error" class="scene-error" hidden>이 브라우저에서는 3D를 표시할 수 없습니다. 로그인은 계속 사용할 수 있습니다.</p>
       <div class="scene-tools" id="scene-tools">
         <button type="button" id="studio-toggle" class="scene-button" aria-expanded="false" aria-controls="studio"><span aria-hidden="true">⚙</span> 3D 설정</button>
         <button type="button" id="motion-toggle" class="scene-button" aria-pressed="false">모션 일시정지</button>
       </div>
-      <aside id="studio" class="studio" aria-label="3D 설정" hidden>
-        <div class="studio-header"><div><span class="eyebrow">LIVE OBJECT</span><h2>3D 설정</h2></div><button type="button" class="icon-button" id="studio-close" aria-label="3D 설정 닫기">×</button></div>
-        <div class="studio-fields">
-          <label>형태<select id="shape"><option value="cube">큐브</option><option value="sphere">구</option><option value="ring">링</option></select></label>
-          <label>재질<select id="material"><option value="glass">유리</option><option value="frosted">반투명 유리</option><option value="metal">금속</option><option value="ceramic">세라믹</option></select></label>
-          <label>색상<input id="color" type="color" value="#148bff"></label>
-          <label>두께 <output for="thickness"></output><input id="thickness" aria-label="두께" type="range" min="0.25" max="1.6" step="0.01"></label>
-          <label>곡률 <output for="curvature"></output><input id="curvature" aria-label="곡률" type="range" min="0.02" max="0.5" step="0.01"></label>
-          <label>비틀기 <output for="twist"></output><input id="twist" aria-label="비틀기" type="range" min="-180" max="180" step="1"></label>
-          <label>투명도 <output for="transparency"></output><input id="transparency" aria-label="투명도" type="range" min="0" max="1" step="0.01"></label>
-          <label>조명 <output for="light"></output><input id="light" aria-label="조명" type="range" min="0.2" max="3" step="0.01"></label>
-          <label>속도 <output for="speed"></output><input id="speed" aria-label="속도" type="range" min="0" max="2" step="0.01"></label>
-          <label class="check-row"><input id="reduce-motion" type="checkbox"> 움직임 줄이기</label>
-        </div>
-        <div class="studio-actions"><button type="button" id="copy-settings">설정 복사</button><button type="button" id="reset-settings">초기화</button></div>
-        <details><summary>설정 가져오기</summary><label class="sr-only" for="settings-json">복사한 JSON 설정</label><textarea id="settings-json" rows="4" placeholder="복사한 JSON 설정을 붙여넣으세요"></textarea><button type="button" id="import-settings">설정 적용</button></details>
-        <p class="studio-notice" role="status" id="studio-status">설정은 이 브라우저에 자동 저장됩니다.</p>
-        <button type="button" class="hide-controls" id="hide-controls">화면에서 컨트롤 모두 숨기기</button>
-        <span class="studio-hint">다시 표시: Shift + D 또는 주소의 ?controls=1</span>
-      </aside>
+      <aside id="studio" class="studio" aria-label="3D 설정" hidden></aside>
     </section>
     <section class="form-panel" aria-labelledby="login-title">
       <form id="login-form" class="login-form" novalidate>
