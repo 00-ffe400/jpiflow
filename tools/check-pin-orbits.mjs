@@ -1,24 +1,39 @@
 import assert from 'node:assert/strict';
 import * as THREE from '../dist/vendor/three.module.js';
-import {orbitalBand,createPinOrbits,cappedHemisphere} from '../dist/login/pin-orbits.js';
-import {defaults,validate,builtInPresets,applyPinHemisphere} from '../dist/login/studio-state.js';
+import {hollowHemisphere,createPinOrbits,cappedHemisphere} from '../dist/login/pin-orbits.js';
+import {defaults,validate,builtInPresets,applyPinHemisphere,applyHollowGlass} from '../dist/login/studio-state.js';
 
 const state=validate(defaults());
 assert.equal(state.model,'pinOrbit');
 assert.equal(state.background.ground,false,'No physical display stand or floor in this composition');
 assert(!('pinScreen' in state)&&!('pinStand' in state));
-for(const settings of [state.pinRings,{...state.pinRings,radiusX:1,radiusY:3,width:.4,depth:.025,twist:90,segments:96}]){
-  const geometry=orbitalBand(settings,1),p=geometry.attributes.position,n=geometry.attributes.normal;
+for(const [radius,thickness,roundness] of [[1.45,.04,1],[.8,.15,.1],[2.5,.01,1]]){
+  const geometry=hollowHemisphere(radius,thickness,roundness,160,64),p=geometry.attributes.position,n=geometry.attributes.normal;
   for(const v of [...p.array,...n.array])assert(Number.isFinite(v));
-  const vec=new THREE.Vector3(),other=new THREE.Vector3();
+  const vec=new THREE.Vector3(),other=new THREE.Vector3(),third=new THREE.Vector3(),cross=new THREE.Vector3();
   for(let i=0;i<n.count;i++)assert(Math.abs(vec.fromBufferAttribute(n,i).length()-1)<1e-5,'All normals are unit length');
-  for(let j=0;j<=20;j++){
-    assert(vec.fromBufferAttribute(p,j).distanceTo(other.fromBufferAttribute(p,settings.segments*21+j))<1e-5,'Closed path seam');
-    assert(vec.fromBufferAttribute(n,j).distanceTo(other.fromBufferAttribute(n,settings.segments*21+j))<1e-5,'No lighting seam');
+  const key=i=>[p.getX(i),p.getY(i),p.getZ(i)].map(v=>Math.round(v*1e6)).join(',');
+  const edges=new Map();let volume=0;
+  for(let i=0;i<geometry.index.count;i+=3){
+    const ids=[0,1,2].map(k=>geometry.index.getX(i+k));
+    vec.fromBufferAttribute(p,ids[0]);other.fromBufferAttribute(p,ids[1]);third.fromBufferAttribute(p,ids[2]);volume+=vec.dot(cross.crossVectors(other,third))/6;
+    for(let k=0;k<3;k++){const e=[key(ids[k]),key(ids[(k+1)%3])].sort().join('|');edges.set(e,(edges.get(e)||0)+1);}
   }
-  for(let i=0;i<=settings.segments;i++)assert(vec.fromBufferAttribute(p,i*21).distanceTo(other.fromBufferAttribute(p,i*21+20))<1e-5,'Closed cross section');
-  geometry.dispose();
+  assert([...edges.values()].every(v=>v===2),'Only the glass wall is a watertight solid');
+  const expected=2/3*Math.PI*(radius**3-(radius-thickness)**3)+Math.PI**2*(radius-thickness/2)*(thickness/2)**2*roundness;
+  assert(Math.abs(volume/expected-1)<.012,'Thin wall volume, not a filled half sphere');
+  const material=new THREE.MeshBasicMaterial(),mesh=new THREE.Mesh(geometry,material);mesh.updateMatrixWorld();
+  const ray=new THREE.Raycaster(new THREE.Vector3(.1*radius,1,0),new THREE.Vector3(0,-1,0)),hits=ray.intersectObject(mesh);
+  assert(hits.length&&Math.abs(hits[0].point.y+Math.sqrt((radius-thickness)**2-(.1*radius)**2))<.002,'A ray through the mouth reaches the inner concave floor, not a disk');
+  const open=new THREE.Raycaster(new THREE.Vector3(0,.01,0),new THREE.Vector3(0,1,0));assert.equal(open.intersectObject(mesh).length,0,'The mouth is open');
+  geometry.dispose();material.dispose();
 }
+const oldGlass=structuredClone(state);delete oldGlass.pinRings.shapeRevision;oldGlass.pinRings.count=2;
+const glassCorrection=validate(oldGlass),glassBefore=structuredClone(glassCorrection);applyHollowGlass(glassCorrection);
+assert.equal(glassCorrection.pinRings.shapeRevision,1);assert.equal(glassCorrection.pinRings.count,2);
+assert.deepEqual(glassCorrection.pinRings.material,glassBefore.pinRings.material);assert.deepEqual(glassCorrection.pinRings.motion,glassBefore.pinRings.motion);
+const glassOnce=structuredClone(glassCorrection);applyHollowGlass(glassCorrection);assert.deepEqual(glassCorrection,glassOnce,'Hollow glass migration is idempotent');
+glassCorrection.pinRings=glassBefore.pinRings;assert.deepEqual(glassCorrection,glassBefore,'All other groups and framing survive the glass replacement');
 assert.equal(state.pinCore.shape,'hemisphere');
 const half=cappedHemisphere(),pos=half.attributes.position,norm=half.attributes.normal;
 const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),cross=new THREE.Vector3();
@@ -58,4 +73,4 @@ assert.equal(baseline.geometry.source,'blend261101');
 assert.equal(baseline.sphere.motion.depth,1.2);
 assert.equal(baseline.sphere.motion.duration,4.4);
 for(const preset of Object.values(builtInPresets()))validate(preset.settings);
-console.log('PASS: watertight capped hemisphere, outward volume/normals, shape-only migration, smooth bands and preserved presets.');
+console.log('PASS: open-mouth hollow glass hemispheres, inner/outer walls, correct wall volume, smooth normals, selective migrations and preserved presets.');

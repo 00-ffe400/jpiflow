@@ -39,25 +39,40 @@ export function cappedHemisphere(rim=.012,segments=128,latitudes=64){
   g.computeBoundingBox();g.computeBoundingSphere();return g;
 }
 
-export function orbitalBand(config,index){
-  const segments=config.segments,radial=20,positions=[],uv=[],indices=[];
-  for(let i=0;i<=segments;i++){
-    const t=i/segments,a=t*Math.PI*2,x=config.radiusX*Math.cos(a),y=config.radiusY*Math.sin(a);
-    const normal=new THREE.Vector3(Math.cos(a)/config.radiusX,Math.sin(a)/config.radiusY,0).normalize();
-    const twist=rad(config.twist)*Math.sin(a+index);
-    for(let j=0;j<=radial;j++){
-      const b=j/radial*Math.PI*2,n=Math.cos(b)*config.width/2,z=Math.sin(b)*config.depth/2;
-      const across=n*Math.cos(twist)-z*Math.sin(twist),forward=n*Math.sin(twist)+z*Math.cos(twist);
-      positions.push(x+normal.x*across,y+normal.y*across,forward);uv.push(t,j/radial);
-    }
+// A hollow glass bowl: outer hemisphere, rounded lip, and inward-facing
+// inner hemisphere. The opening has NO disk across it. Only the glass wall
+// is a closed solid, so its real thickness remains visible at the mouth.
+export function hollowHemisphere(radius=1.45,thickness=.04,rimRoundness=1,segments=160,latitudes=64){
+  const t=Math.min(radius*.2,Math.max(.005,thickness)),inner=radius-t,profile=[];
+  for(let i=0;i<=latitudes;i++){
+    const a=i/latitudes*Math.PI/2;
+    profile.push({r:radius*Math.sin(a),y:-radius*Math.cos(a),nr:Math.sin(a),ny:-Math.cos(a)});
   }
-  for(let i=0;i<segments;i++)for(let j=0;j<radial;j++){const a=i*(radial+1)+j,b=a+radial+1;indices.push(a,b,a+1,b,b+1,a+1);}
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();
-  const normals=g.attributes.normal,n=new THREE.Vector3(),m=new THREE.Vector3();
-  for(let j=0;j<=radial;j++){const a=j,b=segments*(radial+1)+j;n.fromBufferAttribute(normals,a).add(m.fromBufferAttribute(normals,b)).normalize();normals.setXYZ(a,n.x,n.y,n.z);normals.setXYZ(b,n.x,n.y,n.z);}
-  for(let i=0;i<=segments;i++){const a=i*(radial+1),b=a+radial;n.fromBufferAttribute(normals,a).add(m.fromBufferAttribute(normals,b)).normalize();normals.setXYZ(a,n.x,n.y,n.z);normals.setXYZ(b,n.x,n.y,n.z);}
-  g.computeBoundingSphere();return g;
+  const lipR=t/2,lipH=lipR*Math.max(.1,rimRoundness);
+  for(let i=1;i<=16;i++){
+    const a=i/16*Math.PI,n=new THREE.Vector2(Math.cos(a)/lipR,Math.sin(a)/lipH).normalize();
+    profile.push({r:radius-lipR+lipR*Math.cos(a),y:lipH*Math.sin(a),nr:n.x,ny:n.y});
+  }
+  for(let i=1;i<=latitudes;i++){
+    const a=(1-i/latitudes)*Math.PI/2;
+    profile.push({r:inner*Math.sin(a),y:-inner*Math.cos(a),nr:-Math.sin(a),ny:Math.cos(a)});
+  }
+  const positions=[],normals=[],uv=[],indices=[];
+  for(let row=0;row<profile.length;row++)for(let j=0;j<=segments;j++){
+    const p=profile[row],a=j/segments*Math.PI*2,c=Math.cos(a),s=Math.sin(a);
+    positions.push(p.r*c,p.y,p.r*s);normals.push(p.nr*c,p.ny,p.nr*s);uv.push(j/segments,row/(profile.length-1));
+  }
+  for(let row=0;row<profile.length-1;row++)for(let j=0;j<segments;j++){
+    const a=row*(segments+1)+j,b=a+segments+1;
+    if(row>0)indices.push(a,b,a+1);
+    if(row<profile.length-2)indices.push(b,b+1,a+1);
+  }
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);
+  g.computeBoundingBox();g.computeBoundingSphere();return g;
 }
+
+export const SHELL_KEYS=['one','two','three','four'];
 
 export function createPinOrbits(state,materials,roundedBox){
   const pinCore=new THREE.Group(),pinRings=new THREE.Group();
@@ -66,11 +81,14 @@ export function createPinOrbits(state,materials,roundedBox){
   const center=new THREE.Mesh(geometry,materials.pinCore);
   center.scale.set(core.width,core.height,core.depth);
   if(core.shape==='sphere')center.scale.multiplyScalar(.5);
+  // All hemispheres share their sphere center and equatorial opening plane.
+  if(core.shape==='hemisphere')center.position.y=-core.height/2;
   pinCore.add(center);
-  const angles=[[65,10,-24],[12,-58,35],[-41,29,67],[78,-35,13]];
   for(let i=0;i<rings.count;i++){
-    const band=new THREE.Mesh(orbitalBand(rings,i),materials.pinRings),a=angles[i%angles.length];
-    band.rotation.set(rad(a[0]),rad(a[1]+rings.fan*i),rad(a[2]));pinRings.add(band);
+    const cfg=rings.layers[SHELL_KEYS[i]];
+    const shell=new THREE.Mesh(hollowHemisphere(rings.radius+i*rings.spacing,rings.wallThickness,rings.rimRoundness,rings.segments),materials[`pinShell${i+1}`]||materials.pinRings);
+    shell.rotation.set(rad(cfg.rx),rad(cfg.ry),rad(cfg.rz));shell.userData.shellIndex=i;
+    pinRings.add(shell);
   }
   return {pinCore,pinRings};
 }
