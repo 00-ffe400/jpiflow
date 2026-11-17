@@ -3,6 +3,7 @@ import {createGlassLoops} from './glass-loops.js';
 import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
 import {dipProgress,applyAnimatedTranslation} from './scene-motion.js';
+import {installCoreGradient} from './core-gradient.js';
 import {createHemisphereComposite} from './hemisphere-composite.js';
 import {createGlassComposite} from './glass-composite.js';
 import {PIN_SHELL_TARGETS} from './studio-state.js';
@@ -29,6 +30,7 @@ function random(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(
 
 export async function createScene(container,initial,{onCamera=()=>{},onSelection=()=>{},onStats=()=>{}}={}){
   const blenderSource=await loadBlenderSource();
+  let pinStartFrame=true;
   let state=structuredClone(initial),raf=0,last=0,disposed=false,inView=true,externalPause=false,contextLost=false,settleUntil=0;
   const usesBlender=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
   const isDip=id=>id==='sphere'&&usesBlender()&&state.sphere.motion.type==='dip';
@@ -51,6 +53,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const hemisphereComposite=createHemisphereComposite(renderer),glassComposite=createGlassComposite(renderer),lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
   const perspective=new THREE.PerspectiveCamera(36,1,.1,200),orthographic=new THREE.OrthographicCamera(-10,10,10,-10,.1,200);let camera=perspective;
   const mats={};for(const id of ['tiles','pedestal','crystal','loops',...stackIds,...pinIds,...Object.keys(PIN_SHELL_TARGETS)]){mats[id]=new THREE.MeshPhysicalMaterial();mats[id].userData.shared=true;}
+  const coreGradient=installCoreGradient(mats.pinCore);
   mats.slabEdge=new THREE.MeshPhysicalMaterial();mats.slabEdge.userData.shared=true;
   mats.slabSide=new THREE.MeshPhysicalMaterial();mats.slabSide.userData.shared=true;
   const coreMat=new THREE.MeshPhysicalMaterial({roughness:.12,metalness:.08,clearcoat:1}),edgeMat=new THREE.MeshStandardMaterial({roughness:.18});coreMat.userData.shared=edgeMat.userData.shared=true;
@@ -115,6 +118,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,c.wallThickness,c.lipRoundness,r.count,r.radius,r.spacing,r.wallThickness,r.rimRoundness,r.segments]);
     if(keys.pin===key)return;keys.pin=key;for(const root of Object.values(pinRoots))disposeGroup(root);
     const fresh=createPinOrbits(state,mats,box);for(const id of pinIds){const children=fresh[id].children.slice();if(children.length)pinRoots[id].add(...children);}
+    coreGradient.setGeometry(pinRoots.pinCore.children[0].geometry);
   }
   function pedestalSize(){const p=state.pedestal,t=state.tiles,c=state.crystal;return {width:p.autoFit?Math.max(.4,t.holeX*(t.width+t.gapX)-t.gapX):p.linkCrystal?c.width+.9:p.width,depth:p.autoFit?Math.max(.4,t.holeZ*(t.depth+t.gapZ)-t.gapZ):p.linkCrystal?c.depth+.9:p.depth};}
   function buildPedestal(){
@@ -150,6 +154,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       m.normalMap=id==='slabs'&&usesBlender()?blenderSource.normal:null;m.normalScale.setScalar(id==='slabs'?state.slabs.normalStrength:1);
       const shaderKey=JSON.stringify([Boolean(m.normalMap),m.transmission>0,m.transparent,m.flatShading,m.clearcoat>0,m.side]);if(m.userData.shaderKey!==shaderKey){m.userData.shaderKey=shaderKey;m.needsUpdate=true;}
     }
+    coreGradient.update(state.pinCore.gradient,state.pinCore.material.emission);
     const edge=mats.slabEdge,v=state.slabs.material;edge.copy(mats.slabs);edge.userData.shared=true;edge.color.set(state.slabs.edgeColor);edge.transmission=state.slabs.edgeTransmission;if(usesBlender()){edge.opacity=state.slabs.edgeOpacity;edge.transparent=edge.opacity<1;edge.depthWrite=false;}edge.roughness=Math.max(.06,v.roughness);edge.clearcoat=0;edge.envMapIntensity=v.reflection*(usesBlender()&&state.slabs.optics==='layered'?1:.45)*state.environment.intensity;
     const side=mats.slabSide;side.copy(edge);side.userData.shared=true;side.color.set(state.slabs.sideColor);side.transmission=state.slabs.sideTransmission;if(usesBlender()){side.opacity=state.slabs.sideOpacity;side.transparent=side.opacity<1;side.depthWrite=false;}
     if(usesBlender()&&state.slabs.optics==='layered'){edge.thickness=state.slabs.edgeOpticalThickness;edge.attenuationColor.set(state.slabs.edgeAbsorptionColor);edge.attenuationDistance=state.slabs.edgeAbsorptionDistance;side.thickness=state.slabs.edgeOpticalThickness*.3;side.attenuationColor.set(state.slabs.edgeAbsorptionColor);side.attenuationDistance=state.slabs.edgeAbsorptionDistance*2;}
@@ -215,7 +220,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function reduced(){return externalPause||state.motion.reduced||motionQuery.matches;}
   function tick(now){
-    raf=0;if(disposed||contextLost)return;const elapsed=Math.min((now-last)/1000||.016,.25),dt=Math.min(elapsed,.05);last=now;const stop=reduced()||state.motion.paused;
+    raf=0;if(disposed||contextLost)return;const elapsed=state.model==='pinOrbit'&&pinStartFrame?0:Math.min((now-last)/1000||.016,.25),dt=Math.min(elapsed,.05);last=now;const stop=reduced()||state.motion.paused;
     for(const id of Object.keys(clocks)){
       if(state.motion.mode==='auto'){if(!stop&&!state[id].motion.paused){clocks[id]+=dt;phases[id]+=(isDip(id)?elapsed/state.sphere.motion.duration:dt)*state[id].motion.speed;}}
       else if(!reduced()&&!state[id].motion.paused){const progress=state.motion.mode==='scroll'?clamp((scrollY-state.motion.scrollStart)/Math.max(1,state.motion.scrollEnd-state.motion.scrollStart),0,1):state.motion.progress;clocks[id]=progress*20;phases[id]=isDip(id)?progress:clocks[id]*state[id].motion.speed;}
@@ -270,10 +275,11 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
         if(state.motion.mode==='auto'){if(!stop&&!state.pinRings.motion.paused&&!cfg.paused)spin[axis]+=dt*speed;}
         else if(!reduced()&&!state.pinRings.motion.paused&&!cfg.paused)spin[axis]=clocks.pinRings*speed;
       }
-      rotate(mesh,cfg.rx+spin.x,cfg.ry+spin.y,cfg.rz+spin.z,dt);
+      const start=state.pinRings.alignedStart?state.pinRings.layers.one:cfg;
+      rotate(mesh,start.rx+spin.x,start.ry+spin.y,start.rz+spin.z,dt);
     }
     const autoActive=state.model==='pinOrbit'?pinIds.some(id=>{const m=state[id].motion;return state[id].visible&&!m.paused&&(m.height*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0||id==='pinRings'&&SHELL_KEYS.slice(0,state.pinRings.count).some(k=>state.pinRings.layers[k].visible&&!state.pinRings.layers[k].paused&&['X','Y','Z'].some(a=>state.pinRings.layers[k]['spin'+a]!==0)));}):state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&((isDip(id)?m.depth:m.height)*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
-    cameraUpdate(dt);renderFrame();if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
+    cameraUpdate(dt);renderFrame();if(state.model==='pinOrbit')pinStartFrame=false;if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
   }
   function renderFrame(){
     if(state.model==='pinOrbit'){world.updateMatrixWorld(true);camera.updateMatrixWorld(true);pinRoots.pinCore.getWorldPosition(focusPoint);lens.render(scene,camera,state.lens,focusPoint,state.pinRings.optics==='layered'?destination=>hemisphereComposite.render(scene,camera,[...pinRoots.pinCore.children,...pinRoots.pinRings.children],destination):undefined);}
@@ -321,6 +327,6 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     update(next){settleUntil=performance.now()+1200;update(next);},setPaused(value){externalPause=value;last=performance.now();settleUntil=performance.now()+50;schedule();},
     setProfile(value){cameraProfile=value;cameraDirty=true;schedule();},setInteraction(mode){interaction=mode;renderer.domElement.style.touchAction=mode==='camera'?'none':'pan-y';renderer.domElement.style.cursor=mode==='camera'?'grab':'crosshair';},
     getCamera:()=>({profile:activeCameraKey(),value:structuredClone(state[activeCameraKey()])}),selectPattern,getSelection:()=>[...selection],capture,
-    restart(){for(const spin of [...Object.values(pinSpin),...Object.values(shellSpin)])spin.x=spin.y=spin.z=0;for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
+    restart(){pinStartFrame=true;for(const spin of [...Object.values(pinSpin),...Object.values(shellSpin)])spin.x=spin.y=spin.z=0;for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
   };
 }

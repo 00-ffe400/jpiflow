@@ -103,7 +103,8 @@ export function createPinOrbits(state,materials,roundedBox){
   for(let i=0;i<rings.count;i++){
     const cfg=rings.layers[SHELL_KEYS[i]];
     const shell=new THREE.Mesh(hollowHemisphere(rings.radius+i*rings.spacing,rings.wallThickness,rings.rimRoundness,rings.segments),materials[`pinShell${i+1}`]||materials.pinRings);
-    shell.rotation.set(rad(cfg.rx),rad(cfg.ry),rad(cfg.rz));shell.userData.shellIndex=i;
+    const start=rings.alignedStart?rings.layers.one:cfg;
+    shell.rotation.set(rad(start.rx),rad(start.ry),rad(start.rz));shell.userData.shellIndex=i;
     pinRings.add(shell);
   }
   return {pinCore,pinRings};

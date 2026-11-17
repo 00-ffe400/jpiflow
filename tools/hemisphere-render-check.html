@@ -4,7 +4,8 @@
 <script type="module">
 import * as THREE from '/vendor/three.module.js';
 import {createHemisphereComposite} from '/login/hemisphere-composite.js';
-import {hollowHemisphere} from '/login/pin-orbits.js';
+import {hollowHemisphere,hollowSphere} from '/login/pin-orbits.js';
+import {installCoreGradient} from '/login/core-gradient.js';
 const result=document.querySelector('#result'),messages=[];
 const check=(ok,message)=>{if(!ok)throw Error(message);messages.push('PASS: '+message);};
 const renderer=new THREE.WebGLRenderer({antialias:false});renderer.setSize(64,64);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;document.body.append(renderer.domElement);
@@ -30,6 +31,17 @@ try{
   check(pixels[3]===0,'Transparent exports keep the background alpha clear');
   scene.background=new THREE.Color(0);renderer.setClearColor(0,1);
   renderer.setRenderTarget(null);composite.render(scene,camera,bowls);
+  scene.remove(...bowls);
+  const gradientMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:1,depthWrite:false});
+  const globe=new THREE.Mesh(hollowSphere(.018),gradientMat);globe.scale.setScalar(3);scene.add(globe);
+  const gradient=installCoreGradient(gradientMat),settings={mode:'two',color1:'#ff0000',color2:'#0000ff',color3:'#00ff00',direction:'vertical',angle:45,width:1,offset:0,midpoint:.5,tintEmission:true};
+  gradient.setGeometry(globe.geometry);gradient.update(settings,0);draw([globe]);
+  const probe=y=>[...pixels.slice((y*64+32)*4,(y*64+32)*4+3)];
+  const top=probe(44),bottom=probe(20);
+  check(top[2]>top[0]+60&&bottom[0]>bottom[2]+60,'Object-space two-color gradient reaches the upper and lower sphere');
+  settings.mode='three';settings.color2='#00ff00';settings.color3='#0000ff';gradient.update(settings,0);draw([globe]);
+  const middle=probe(32);check(middle[1]>220&&middle[0]<25&&middle[2]<25,'Three-color mode places the middle color correctly without rebuilding the sphere');
+  scene.remove(globe);globe.geometry.dispose();gradientMat.dispose();
   for(const mesh of bowls){mesh.geometry.dispose();mesh.material.dispose();}
   result.textContent=messages.join('\n')+'\nALL GPU CHECKS PASSED';result.dataset.status='passed';
 }catch(error){result.textContent=messages.join('\n')+'\nFAIL: '+error.message;result.dataset.status='failed';console.error(error);}
