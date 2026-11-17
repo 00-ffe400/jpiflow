@@ -1,4 +1,5 @@
 import baseline from './presets/current-baseline.js';
+import previousGlass from './presets/site-before-clear-glass.js';
 import chosen from './presets/site-default.js';
 export const GROUPS = {all:'전체',pinCore:'파란 중심 오브젝트',pinRings:'유리 반구 전체',pinShell1:'유리 반구 1 · 가장 안쪽',pinShell2:'유리 반구 2',pinShell3:'유리 반구 3',pinShell4:'유리 반구 4 · 가장 바깥쪽',sphere:'코발트 구',slabs:'유리판',rings:'유리 링',loops:'유리 곡선',tiles:'바닥 타일',pedestal:'중앙 받침대',crystal:'중앙 크리스탈'};
 export const PIN_SHELL_TARGETS={pinShell1:'one',pinShell2:'two',pinShell3:'three',pinShell4:'four'};
@@ -29,7 +30,7 @@ function proceduralDefaults(){const state={
   lights:{key:light('directional','#ffffff',2.3,1,7,5),fill:light('directional','#d5d5e8',.35,-5,3,2),rim:{...light('point','#ffffff',5,-4,1,5),enabled:false},ambient:light('ambient','#e3dfea',1.8,0,0,0),base:{...light('point','#ffffff',0,0,.5,0),enabled:false}},
   background:{mode:'gradient',color:'#b4acbe',color2:'#aaa3b5',angle:155,ground:false,groundColor:'#061124',groundRoughness:.6,shadowOpacity:.28,shadowSoftness:3,fog:false,fogColor:'#02060c',fogNear:17,fogFar:44},
   motion:{paused:true,reduced:false,mode:'auto',progress:0,scrollStart:0,scrollEnd:1500,smoothness:.14,parallax:0,hoverLift:.06,hoverScale:1.025},
-  render:{quality:'auto'},links:{material:false},
+  render:{quality:'auto',glassLookRevision:0},links:{material:false},
 };for(const layer of Object.values(state.pinRings.layers))Object.assign(layer,{visible:true,paused:false,material:clone(state.pinRings.material)});return state;}
 
 function blenderDefaults(){
@@ -159,7 +160,7 @@ export function builtInPresets(){
   original.lights={key:light('directional','#d5edff',3.8,-3,8,4,true),fill:light('directional','#78acff',1.3,5,4,2),rim:light('point','#0084ff',24,-2,3,-3),ambient:light('ambient','#b4d4ff',1.1,0,0,0),base:light('point','#2bbaff',18,0,.5,0)};
   Object.assign(original.background,{color:'#171e29',color2:'#324452',groundColor:'#132035',groundRoughness:.45,fogColor:'#171e29',fogNear:15,fogFar:40});
   for(const preset of [glassLoops,legacyGlass,reference,original])preset.lights={key:light('directional','#e1f8ff',2.8,-3,8,4,true),fill:light('directional','#a9f2ff',1.1,5,4,2),rim:light('point','#1685e4',14,-2,3,-3),ambient:light('ambient','#d4f2ff',.65,0,0,0),base:light('point','#279ae5',10,0,.5,0)};
-  return {selected20261117:{name:'사이트 기본 설정 · HEX',settings:selectedSettings()},pinOrbit:{name:'새 시안 · 파란 반구와 속이 빈 유리 반구',settings:pinOrbit},baseline:{name:'기억한 현재 설정 · 유리판과 파란 구',settings:baseline},blender:{name:'261101.blend · 원본 메시와 카메라',settings:blender},glassStack:{name:'002 · 코발트 구와 투명 유리판',settings:glassStack},glassLoops:{name:'새 조형 · 회색 형태 검토',settings:glassLoops},legacyGlass:{name:'이전 모델 · 원형 유리 루프',settings:legacyGlass},reference:{name:'이전 모델 · 코발트 타일',settings:reference},original:{name:'이전 모델 · 선명한 유리 반사',settings:original}};
+  return {beforeClearGlass:{name:'이전 재질 · 변경 전 비교',settings:validate(previousGlass)},selected20261117:{name:'사이트 기본 설정 · HEX',settings:selectedSettings()},pinOrbit:{name:'새 시안 · 파란 반구와 속이 빈 유리 반구',settings:pinOrbit},baseline:{name:'기억한 현재 설정 · 유리판과 파란 구',settings:baseline},blender:{name:'261101.blend · 원본 메시와 카메라',settings:blender},glassStack:{name:'002 · 코발트 구와 투명 유리판',settings:glassStack},glassLoops:{name:'새 조형 · 회색 형태 검토',settings:glassLoops},legacyGlass:{name:'이전 모델 · 원형 유리 루프',settings:legacyGlass},reference:{name:'이전 모델 · 코발트 타일',settings:reference},original:{name:'이전 모델 · 선명한 유리 반사',settings:original}};
 }
 export function applyReferenceLook(state){
   const ref=defaults();state.look=ref.look;state.tiles.material=ref.tiles.material;state.tiles.crown=ref.tiles.crown;state.pedestal.material=ref.pedestal.material;

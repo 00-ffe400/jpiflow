@@ -3,6 +3,7 @@ import {createGlassLoops} from './glass-loops.js';
 import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
 import {dipProgress,applyAnimatedTranslation} from './scene-motion.js';
+import {createGlassEnvironment} from './glass-environment.js';
 import {installCoreGradient} from './core-gradient.js';
 import {createHemisphereComposite} from './hemisphere-composite.js';
 import {createGlassComposite} from './glass-composite.js';
@@ -74,7 +75,8 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   let tilesMesh,tileData=[],crystalMesh,loopFitRadius=5;
   function environment(){
     const pin=state.model==='pinOrbit',stack=state.model==='glassStack',glass=state.model==='loops',clay=clayPreview();const e=new THREE.Scene();let softMap;e.background=new THREE.Color(pin?'#bccbdb':stack?'#6f7078':clay?'#777777':glass?'#0b2941':'#20344b');
-    if(usesBlender()){
+    if(pin){e.add(createGlassEnvironment());}
+    else if(usesBlender()){
       e.background=null;e.add(new THREE.Mesh(new THREE.SphereGeometry(12,48,32),new THREE.MeshBasicMaterial({map:blenderSource.hdr,side:THREE.BackSide,toneMapped:false})));
     }else{
     e.add(new THREE.Mesh(new THREE.BoxGeometry(20,16,20),new THREE.MeshBasicMaterial({color:pin?'#bfcddd':stack?'#9a98a2':clay?'#777777':glass?'#092237':'#263a52',side:THREE.BackSide})));
@@ -149,7 +151,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   function updateMaterials(){
     for(const [id,m]of Object.entries(mats).filter(([id])=>!['slabEdge','slabSide'].includes(id))){
       const stored=(PIN_SHELL_TARGETS[id]?state.pinRings.layers[PIN_SHELL_TARGETS[id]]:state[id]).material,v=(id==='loops'&&clayPreview())||((id==='pinRings'||PIN_SHELL_TARGETS[id])&&state.pinRings.preview==='clay')?{...stored,color:'#a8bfd5',roughness:.48,metalness:0,transmission:0,opacity:1,reflection:.45,coat:0,emissive:'#000000',emission:0}:stored;m.color.set(id==='tiles'?'#ffffff':v.color);m.roughness=v.roughness;m.metalness=v.metalness;m.transmission=v.transmission;m.opacity=v.opacity;m.transparent=id==='pinCore'||Boolean(PIN_SHELL_TARGETS[id])||v.opacity<1;m.depthWrite=id!=='pinCore'&&!PIN_SHELL_TARGETS[id]&&v.opacity>=1;
-      m.specularIntensity=id==='loops'&&!clayPreview()?1.7:1;m.ior=v.ior;m.thickness=v.opticalThickness;m.attenuationColor.set(v.attenuationColor);m.attenuationDistance=v.attenuationDistance;m.clearcoat=v.coat;m.clearcoatRoughness=v.coatRoughness;m.emissive.set(v.emissive);m.emissiveIntensity=v.emission;
+      m.specularIntensity=id==='loops'&&!clayPreview()?1.7:1;m.ior=v.ior;m.thickness=id==='pinCore'?v.opticalThickness/state.pinCore.width:v.opticalThickness;m.attenuationColor.set(v.attenuationColor);m.attenuationDistance=v.attenuationDistance;m.clearcoat=v.coat;m.clearcoatRoughness=v.coatRoughness;m.emissive.set(v.emissive);m.emissiveIntensity=v.emission;
       m.envMapIntensity=v.reflection*(clayPreview()?1:state.environment.intensity);m.envMapRotation.set(0,rad(clayPreview()?0:state.environment.rotation),0);m.flatShading=id==='crystal'&&state.crystal.flat;m.side=usesBlender()&&id==='slabs'?THREE.DoubleSide:THREE.FrontSide;
       m.normalMap=id==='slabs'&&usesBlender()?blenderSource.normal:null;m.normalScale.setScalar(id==='slabs'?state.slabs.normalStrength:1);
       const shaderKey=JSON.stringify([Boolean(m.normalMap),m.transmission>0,m.transparent,m.flatShading,m.clearcoat>0,m.side]);if(m.userData.shaderKey!==shaderKey){m.userData.shaderKey=shaderKey;m.needsUpdate=true;}

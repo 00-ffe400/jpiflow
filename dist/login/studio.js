@@ -1,3 +1,4 @@
+import {applyClearGlass} from './glass-look.js';
 import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics,applyPinHemisphere,applyHollowGlass,PIN_SHELL_TARGETS,targetPath,materialTargets,changeMaterial,copyMaterial,applyHollowCore,selectedSettings,applyCoreSphere} from './studio-state.js';
 
 const $=s=>document.querySelector(s),KEY='examvue.studio.v2',PRESETS='examvue.studio.presets.v2';
@@ -23,7 +24,8 @@ export function initStudio(){
     if(!safe.read(KEY+'.selected20261117')){safe.write(KEY+'.beforeSelected20261117',saved||state);if(!saved)state=selectedSettings();safe.write(KEY+'.selected20261117',true);safe.write(KEY,state);}
     if(state.model==='pinOrbit'&&state.pinCore.shape==='hemisphere'&&state.pinCore.shapeRevision<2){safe.write(KEY+'.beforeHollowCore',state);applyHollowCore(state);safe.write(KEY,state);}
     if(state.model==='pinOrbit'&&!safe.read(KEY+'.coreSphere20261117')){safe.write(KEY+'.beforeCoreSphere',state);applyCoreSphere(state);safe.write(KEY+'.coreSphere20261117',true);safe.write(KEY,state);}
-  }catch{state=selectedSettings();}
+    if(state.model==='pinOrbit'&&!safe.read(KEY+'.clearGlass1')){safe.write(KEY+'.beforeClearGlass',saved||state);applyClearGlass(state);safe.write(KEY+'.clearGlass1',true);safe.write(KEY,state);}
+  }catch{state=selectedSettings();applyClearGlass(state);}
   let scene,target=['glassStack','pinOrbit'].includes(state.model)?'all':state.model==='loops'?'loops':'crystal',tab=['glassStack','pinOrbit'].includes(state.model)?'구도':'형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:selected20261117',saveTimer;
   const isSource=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
   const groupIds=()=>state.model==='pinOrbit'?['pinCore','pinRings',...Object.keys(PIN_SHELL_TARGETS).slice(0,state.pinRings.count)]:state.model==='glassStack'?(isSource()?['sphere','slabs']:['sphere','slabs','rings']):state.model==='loops'?['loops']:['tiles','pedestal','crystal'];
