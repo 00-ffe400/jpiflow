@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import * as THREE from '../dist/vendor/three.module.js';
 import {GLTFLoader} from '../dist/vendor/addons/loaders/GLTFLoader.js';
-import {defaults,validate,builtInPresets} from '../dist/login/studio-state.js';
+import {defaults,validate,builtInPresets,applySphereDip,applySphereDetail,applyGlassOptics} from '../dist/login/studio-state.js';
+
+import {createBlenderModels} from '../dist/login/blender-model.js';
+import {dipProgress} from '../dist/login/scene-motion.js';
 
 const asset=new URL('../dist/login/assets/blender-261101/',import.meta.url);
 const meta=JSON.parse(await readFile(new URL('source.json',asset),'utf8'));
@@ -44,5 +47,31 @@ invalid.sphere.radius=.35;invalid.sphere.material.color='bad';assert.throws(()=>
 const png=await readFile(new URL('plate-normal.png',asset));
 assert.equal(png.readUInt32BE(16),1024);assert.equal(png.readUInt32BE(20),1024);
 const hdr=await readFile(new URL('environment.hdr',asset));assert(hdr.subarray(0,300).toString().includes('-Y 512 +X 1024'));
+for(const [phase,expected]of [[0,0],[.12,0],[.44,1],[.5,1],[.56,1],[.88,0],[1,0]])assert(Math.abs(dipProgress(phase)-expected)<1e-12);
+for(let i=0;i<=100;i++){const t=i/100;assert(Math.abs(dipProgress(t)-dipProgress(1-t))<1e-12);assert(dipProgress(t)>=0&&dipProgress(t)<=1);}
+assert(Math.abs(dipProgress(-.5)-dipProgress(.5))<1e-12);
+for(const t of [.12,.44,.56,.88])assert(Math.abs(dipProgress(t+.00001)-dipProgress(t-.00001))<1e-8,'Motion joins must have zero endpoint velocity');
+const axis=new THREE.Vector3(...meta.plate.normal).normalize();
+const sphereOffset=new THREE.Vector3(...meta.sphere.position).sub(new THREE.Vector3(...meta.plate.position));
+const signed=sphereOffset.dot(axis),tangent=sphereOffset.clone().addScaledVector(axis,-signed);
+assert(tangent.length()<.00001,'Sphere must move along the center of the source opening');
+const inside=signed+state.sphere.motion.depth;
+assert(inside>0&&inside<meta.plate.spacing,'Sphere must dip between the first two sheets');
+assert(inside+meta.sphere.radius<meta.plate.spacing-meta.plate.dimensions[1]/2,'Dip must not reach the second sheet');
+assert.equal(plateHit(.36,0),0);assert.equal(plateHit(0,.36),0);
+const customized=structuredClone(state);customized.camera.azimuth=32;customized.sphere.material.color='#123456';customized.scene.x=2;
+const before={camera:structuredClone(customized.camera),material:structuredClone(customized.sphere.material),scene:structuredClone(customized.scene)};
+applySphereDip(customized);assert.deepEqual(customized.camera,before.camera);assert.deepEqual(customized.sphere.material,before.material);assert.deepEqual(customized.scene,before.scene);
+assert.equal(customized.motion.paused,false);assert.equal(customized.sphere.motion.duration,6);
+const sourceModel={meta,plateGeometry:plate.geometry.clone().scale(...plate.scale.toArray()),sphereGeometry:ball.geometry.clone().scale(...ball.scale.toArray()),plateQuaternion:plate.quaternion,sphereQuaternion:ball.quaternion};
+const dense=createBlenderModels(state,{sphere:new THREE.MeshBasicMaterial(),slabs:new THREE.MeshBasicMaterial(),slabEdge:new THREE.MeshBasicMaterial(),slabSide:new THREE.MeshBasicMaterial()},sourceModel).sphere.children[0].geometry;
+assert(dense.attributes.position.count>ball.geometry.attributes.position.count*6,'Sphere must have a substantially denser mesh');
+dense.computeBoundingSphere();assert(Math.abs(dense.boundingSphere.radius-meta.sphere.radius)<.00001,'Dense sphere must retain the original radius');
+assert(state.lens.sharpRange>state.sphere.radius,'Whole sphere must stay within the sharp focus band');
+const preservedMotion=structuredClone(customized.sphere.motion);applySphereDetail(customized);assert.deepEqual(customized.sphere.motion,preservedMotion);assert.deepEqual(customized.camera,before.camera);assert.deepEqual(customized.sphere.material,before.material);
+const beforeGlass={camera:structuredClone(customized.camera),sphere:structuredClone(customized.sphere),lens:structuredClone(customized.lens),motion:structuredClone(customized.motion)};applyGlassOptics(customized);for(const key of Object.keys(beforeGlass))assert.deepEqual(customized[key],beforeGlass[key]);assert.equal(customized.slabs.optics,'layered');assert.equal(customized.slabs.material.opacity,1);assert.equal(customized.slabs.material.transmission,1);
+console.log('PASS: glass-only migration preserves camera, sphere, focus and animation.');
+console.log('PASS: dense smooth sphere, original size, sharp focus band, preserved motion and camera.');
+console.log('PASS: dip timing, centered path through opening, clearance to next sheet, motion-only migration.');
 console.log('PASS: original opening, normals/UVs, camera/FOV, array spacing, JSON/presets, range/type checks, normal map and HDR.');
 

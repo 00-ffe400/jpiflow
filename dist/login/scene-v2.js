@@ -2,6 +2,8 @@ import * as THREE from '../vendor/three.module.js';
 import {createGlassLoops} from './glass-loops.js';
 import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
+import {dipProgress} from './scene-motion.js';
+import {createGlassComposite} from './glass-composite.js';
 const rad=THREE.MathUtils.degToRad,clamp=THREE.MathUtils.clamp;
 
 // Analytic normals join the six rounded box faces without visible seams.
@@ -26,6 +28,8 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const blenderSource=await loadBlenderSource();
   let state=structuredClone(initial),raf=0,last=0,disposed=false,inView=true,externalPause=false,contextLost=false,settleUntil=0;
   const usesBlender=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
+  const isDip=id=>id==='sphere'&&usesBlender()&&state.sphere.motion.type==='dip';
+  const dipAxis=new THREE.Vector3(),slabRotation=new THREE.Euler();
   const clayPreview=()=>state.model==='loops'&&state.loops.preview==='clay';
   const stackIds=['sphere','slabs','rings'];
   const keys={},clocks={tiles:0,pedestal:0,crystal:0,loops:0,sphere:0,slabs:0,rings:0},phases={tiles:0,pedestal:0,crystal:0,loops:0,pulse:0,sphere:0,slabs:0,rings:0},spins={pedestal:0,x:0,y:0,z:0,core:0,loopX:0,loopY:0,loopZ:0};
@@ -37,7 +41,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const scene=new THREE.Scene(),world=new THREE.Group();scene.add(world);
   const tileRoot=new THREE.Group(),pedRoot=new THREE.Group(),crystalRoot=new THREE.Group(),coreRoot=new THREE.Group(),loopRoot=new THREE.Group();world.add(tileRoot,pedRoot,crystalRoot,coreRoot,loopRoot);
   const stackRoots={sphere:new THREE.Group(),slabs:new THREE.Group(),rings:new THREE.Group()};world.add(...Object.values(stackRoots));
-  const lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
+  const glassComposite=createGlassComposite(renderer),lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
   const perspective=new THREE.PerspectiveCamera(36,1,.1,200),orthographic=new THREE.OrthographicCamera(-10,10,10,-10,.1,200);let camera=perspective;
   const mats={};for(const id of ['tiles','pedestal','crystal','loops',...stackIds]){mats[id]=new THREE.MeshPhysicalMaterial();mats[id].userData.shared=true;}
   mats.slabEdge=new THREE.MeshPhysicalMaterial();mats.slabEdge.userData.shared=true;
@@ -94,7 +98,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     const c=state.loops,key=JSON.stringify([c.count,c.radiusX,c.radiusY,c.width,c.depth,c.bend,c.twist,c.spacing,c.segments,c.radialSegments,c.silhouette,c.fullness,c.taper]);if(key!==keys.loops){keys.loops=key;disposeGroup(loopRoot);loopRoot.add(...createGlassLoops(c,mats.loops));loopFitRadius=Math.max(...loopRoot.children.map(mesh=>mesh.geometry.boundingSphere.center.length()+mesh.geometry.boundingSphere.radius+mesh.position.length()));}
   }
   function buildStack(){
-    const key=JSON.stringify([state.geometry.source,state.sphere.radius,state.sphere.smooth,...['width','depth','thickness','bevel','count','spacing','offsetX','offsetZ','fan'].map(k=>state.slabs[k]),...['radius','tube','count','spacing','offsetX','offsetZ','tiltX','tiltZ'].map(k=>state.rings[k])]);
+    const key=JSON.stringify([state.geometry.source,state.sphere.radius,state.sphere.smooth,state.sphere.segments,...['width','depth','thickness','bevel','count','spacing','offsetX','offsetZ','fan'].map(k=>state.slabs[k]),state.slabs.smoothCuts,...['radius','tube','count','spacing','offsetX','offsetZ','tiltX','tiltZ'].map(k=>state.rings[k])]);
     if(keys.stack===key)return;keys.stack=key;
     for(const root of Object.values(stackRoots))disposeGroup(root);
     const fresh=usesBlender()?createBlenderModels(state,mats,blenderSource):createGlassStack(state,mats,box);for(const id of stackIds){const children=fresh[id].children.slice();if(children.length)stackRoots[id].add(...children);}
@@ -133,8 +137,9 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       m.normalMap=id==='slabs'&&usesBlender()?blenderSource.normal:null;m.normalScale.setScalar(id==='slabs'?state.slabs.normalStrength:1);
       const shaderKey=JSON.stringify([Boolean(m.normalMap),m.transmission>0,m.transparent,m.flatShading,m.clearcoat>0,m.side]);if(m.userData.shaderKey!==shaderKey){m.userData.shaderKey=shaderKey;m.needsUpdate=true;}
     }
-    const edge=mats.slabEdge,v=state.slabs.material;edge.copy(mats.slabs);edge.userData.shared=true;edge.color.set(state.slabs.edgeColor);edge.transmission=state.slabs.edgeTransmission;if(usesBlender()){edge.opacity=state.slabs.edgeOpacity;edge.transparent=edge.opacity<1;edge.depthWrite=false;}edge.roughness=Math.max(.06,v.roughness);edge.clearcoat=0;edge.envMapIntensity=v.reflection*.45*state.environment.intensity;
+    const edge=mats.slabEdge,v=state.slabs.material;edge.copy(mats.slabs);edge.userData.shared=true;edge.color.set(state.slabs.edgeColor);edge.transmission=state.slabs.edgeTransmission;if(usesBlender()){edge.opacity=state.slabs.edgeOpacity;edge.transparent=edge.opacity<1;edge.depthWrite=false;}edge.roughness=Math.max(.06,v.roughness);edge.clearcoat=0;edge.envMapIntensity=v.reflection*(usesBlender()&&state.slabs.optics==='layered'?1:.45)*state.environment.intensity;
     const side=mats.slabSide;side.copy(edge);side.userData.shared=true;side.color.set(state.slabs.sideColor);side.transmission=state.slabs.sideTransmission;if(usesBlender()){side.opacity=state.slabs.sideOpacity;side.transparent=side.opacity<1;side.depthWrite=false;}
+    if(usesBlender()&&state.slabs.optics==='layered'){edge.thickness=state.slabs.edgeOpticalThickness;edge.attenuationColor.set(state.slabs.edgeAbsorptionColor);edge.attenuationDistance=state.slabs.edgeAbsorptionDistance;side.thickness=state.slabs.edgeOpticalThickness*.3;side.attenuationColor.set(state.slabs.edgeAbsorptionColor);side.attenuationDistance=state.slabs.edgeAbsorptionDistance*2;}
     for(const id of ['slabEdge','slabSide']){const m=mats[id],signature=JSON.stringify([Boolean(m.normalMap),m.transmission>0,m.transparent,m.clearcoat>0,m.side]);if(keys[id+'Shader']!==signature){keys[id+'Shader']=signature;m.needsUpdate=true;}}
     const q=state.crystal.core;coreMat.color.set(q.color);coreMat.emissive.set(q.color);coreMat.opacity=q.opacity;coreMat.transparent=q.opacity<1;coreMat.emissiveIntensity=q.emission;coreMat.envMapIntensity=state.environment.intensity;
     edgeMat.color.set(state.pedestal.edgeColor);edgeMat.emissive.set(state.pedestal.edgeColor);edgeMat.emissiveIntensity=state.pedestal.edgeEmission;
@@ -157,7 +162,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function quality(){
     const q=state.render.quality==='auto'?(mobileView()?'low':'medium'):state.render.quality;renderer.setPixelRatio(Math.min(devicePixelRatio,{low:1,medium:1.5,high:2}[q]));renderer.transmissionResolutionScale={low:.5,medium:.75,high:1}[q];
-    lens.setSamples(q==='low'?0:4);
+    lens.setSamples(q==='low'?0:4);glassComposite.setSamples(q==='low'?0:q==='high'?4:2);
     const size=q==='high'?2048:q==='low'?512:1024;for(const l of Object.values(lights))if(l.shadow&&l.shadow.mapSize.x!==size){l.shadow.mapSize.set(size,size);l.shadow.map?.dispose();l.shadow.map=null;}renderer.setSize(dimensions.width,dimensions.height,false);
   }
   function update(next){
@@ -196,10 +201,10 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function reduced(){return externalPause||state.motion.reduced||motionQuery.matches;}
   function tick(now){
-    raf=0;if(disposed||contextLost)return;const dt=Math.min((now-last)/1000||.016,.05);last=now;const stop=reduced()||state.motion.paused;
+    raf=0;if(disposed||contextLost)return;const elapsed=Math.min((now-last)/1000||.016,.25),dt=Math.min(elapsed,.05);last=now;const stop=reduced()||state.motion.paused;
     for(const id of Object.keys(clocks)){
-      if(state.motion.mode==='auto'){if(!stop&&!state[id].motion.paused){clocks[id]+=dt;phases[id]+=dt*state[id].motion.speed;}}
-      else if(!reduced()&&!state[id].motion.paused){const progress=state.motion.mode==='scroll'?clamp((scrollY-state.motion.scrollStart)/Math.max(1,state.motion.scrollEnd-state.motion.scrollStart),0,1):state.motion.progress;clocks[id]=progress*20;phases[id]=clocks[id]*state[id].motion.speed;}
+      if(state.motion.mode==='auto'){if(!stop&&!state[id].motion.paused){clocks[id]+=dt;phases[id]+=(isDip(id)?elapsed/state.sphere.motion.duration:dt)*state[id].motion.speed;}}
+      else if(!reduced()&&!state[id].motion.paused){const progress=state.motion.mode==='scroll'?clamp((scrollY-state.motion.scrollStart)/Math.max(1,state.motion.scrollEnd-state.motion.scrollStart),0,1):state.motion.progress;clocks[id]=progress*20;phases[id]=isDip(id)?progress:clocks[id]*state[id].motion.speed;}
     }
     const mobile=mobileView()&&state.mobile.enabled;
     const a=pose(world,{...state.scene,x:state.scene.x+(mobile?state.mobile.x:0),y:state.scene.y+(mobile?state.mobile.y:0),z:state.scene.z+(mobile?state.mobile.z:0),scale:state.scene.scale*(mobile?state.mobile.scale:1)},dt);
@@ -225,17 +230,20 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     for(const id of stackIds){
       const cfg=state[id],m=cfg.motion,phase=phases[id]*Math.PI*2,root=stackRoots[id];
       const origin=usesBlender()?(id==='sphere'?blenderSource.spherePosition:id==='slabs'?blenderSource.platePosition:new THREE.Vector3()):new THREE.Vector3();
-      pose(root,{...cfg,x:cfg.x+origin.x,z:cfg.z+origin.z,y:cfg.y+origin.y+(reduced()?0:Math.sin(phase)*m.height)},dt);
+      dipAxis.set(0,0,0);
+      if(isDip(id)&&!reduced()){slabRotation.set(rad(state.slabs.rx),rad(state.slabs.ry),rad(state.slabs.rz));dipAxis.fromArray(blenderSource.meta.plate.normal).normalize().applyEuler(slabRotation).multiplyScalar(dipProgress(phases[id])*m.depth);}
+      const floatY=isDip(id)||reduced()?0:Math.sin(phase)*m.height;
+      pose(root,{...cfg,x:cfg.x+origin.x+dipAxis.x,z:cfg.z+origin.z+dipAxis.z,y:cfg.y+origin.y+floatY+dipAxis.y},dt);
       rotate(root,cfg.rx+clocks[id]*m.spinX,cfg.ry+clocks[id]*m.spinY,cfg.rz+clocks[id]*m.spinZ,dt);
       root.visible=state.model==='glassStack'&&cfg.visible&&(!usesBlender()||id!=='rings');
     }
-    const autoActive=state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&(m.height*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
+    const autoActive=state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&((isDip(id)?m.depth:m.height)*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
     cameraUpdate(dt);renderFrame();if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
   }
   function renderFrame(){
     if(state.model==='glassStack'){
       world.updateMatrixWorld(true);camera.updateMatrixWorld(true);stackRoots.sphere.getWorldPosition(focusPoint);
-      lens.render(scene,camera,state.lens,focusPoint);
+      lens.render(scene,camera,state.lens,focusPoint,usesBlender()&&state.slabs.optics==='layered'?destination=>glassComposite.render(scene,camera,stackRoots.slabs,destination):undefined);
     }else renderer.render(scene,camera);
   }
   function schedule(){if(!raf&&!disposed&&!contextLost&&inView&&!document.hidden)raf=requestAnimationFrame(tick);}
@@ -271,7 +279,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     finally{renderer.setClearColor(old,alpha);scene.background=background;scene.fog=fog;ground.visible=g;contact.visible=c;renderFrame();}
   }
   function selectPattern(pattern){selection.clear();for(const t of tileData)if(pattern==='all'||pattern==='border'&&(t.row===0||t.column===0||t.row===state.tiles.rows-1||t.column===state.tiles.columns-1)||pattern==='center'&&Math.hypot(t.x,t.z)<3)selection.add(t.id);onSelection([...selection]);settleUntil=performance.now()+200;schedule();}
-  function destroy(){disposed=true;cancelAnimationFrame(raf);clearTimeout(environmentTimer);resizeObserver.disconnect();visibilityObserver.disconnect();document.removeEventListener('visibilitychange',visibility);removeEventListener('scroll',scroll);for(const[name,fn]of Object.entries(events))renderer.domElement.removeEventListener(name,fn);renderer.domElement.removeEventListener('wheel',wheel);tilesMesh?.dispose();disposeGroup(scene);for(const m of [...Object.values(mats),coreMat,edgeMat])m.dispose();environmentTarget?.dispose();shadowTexture.dispose();backgroundTexture?.dispose();lens.dispose();blenderSource.dispose();renderer.dispose();renderer.domElement.remove();}
+  function destroy(){disposed=true;cancelAnimationFrame(raf);clearTimeout(environmentTimer);resizeObserver.disconnect();visibilityObserver.disconnect();document.removeEventListener('visibilitychange',visibility);removeEventListener('scroll',scroll);for(const[name,fn]of Object.entries(events))renderer.domElement.removeEventListener(name,fn);renderer.domElement.removeEventListener('wheel',wheel);tilesMesh?.dispose();disposeGroup(scene);for(const m of [...Object.values(mats),coreMat,edgeMat])m.dispose();environmentTarget?.dispose();shadowTexture.dispose();backgroundTexture?.dispose();lens.dispose();glassComposite.dispose();blenderSource.dispose();renderer.dispose();renderer.domElement.remove();}
   addEventListener('pagehide',e=>{if(!e.persisted)destroy();},{once:true});update(state);resize();
   return {
     update(next){settleUntil=performance.now()+1200;update(next);},setPaused(value){externalPause=value;last=performance.now();settleUntil=performance.now()+50;schedule();},

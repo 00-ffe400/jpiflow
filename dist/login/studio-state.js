@@ -9,10 +9,10 @@ function proceduralDefaults(){return {
   version:2,model:'glassStack',modelRevision:3,look:'002-glass-stack',
   geometry:{source:'procedural002',revision:1},
   scene:{...transform(),scale:1},
-  sphere:{...transform(),x:-.95,y:1.14,z:-.7,radius:1.08,smooth:false,material:{...material('#2e2fae',.055,0),reflection:.012,coat:.08,coatRoughness:.09,attenuationColor:'#ffffff',emissive:'#202ca6',emission:.35},motion:{paused:false,height:.045,speed:.22,spinX:0,spinY:0,spinZ:0}},
-  slabs:{...transform(),x:-.8,width:8.9,depth:5.7,thickness:.16,bevel:.008,count:4,spacing:2.15,offsetX:1.4,offsetZ:.4,fan:0,edgeColor:'#303b49',edgeTransmission:.2,sideColor:'#a6a7b3',sideTransmission:.88,normalStrength:1,edgeOpacity:1,sideOpacity:1,material:{...material('#f1f2f5',.025,0,1),reflection:.25,ior:1.5,opticalThickness:.16,attenuationColor:'#c4cbd3',attenuationDistance:8,coat:0,coatRoughness:.04,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
+  sphere:{...transform(),x:-.95,y:1.14,z:-.7,radius:1.08,smooth:false,segments:128,surfaceRevision:0,material:{...material('#2e2fae',.055,0),reflection:.012,coat:.08,coatRoughness:.09,attenuationColor:'#ffffff',emissive:'#202ca6',emission:.35},motion:{paused:false,type:'float',dipRevision:0,depth:.62,duration:6,height:.045,speed:.22,spinX:0,spinY:0,spinZ:0}},
+  slabs:{...transform(),x:-.8,width:8.9,depth:5.7,thickness:.16,bevel:.008,count:4,spacing:2.15,offsetX:1.4,offsetZ:.4,fan:0,edgeColor:'#303b49',edgeTransmission:.2,sideColor:'#a6a7b3',sideTransmission:.88,optics:'standard',glassRevision:0,smoothCuts:false,edgeOpticalThickness:2,edgeAbsorptionColor:'#96a6b8',edgeAbsorptionDistance:1,normalStrength:1,edgeOpacity:1,sideOpacity:1,material:{...material('#f1f2f5',.025,0,1),reflection:.25,ior:1.5,opticalThickness:.16,attenuationColor:'#c4cbd3',attenuationDistance:8,coat:0,coatRoughness:.04,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
   rings:{...transform(),x:-1.15,y:.95,z:1.2,radius:1.12,tube:.065,tiltX:-23,tiltZ:28,count:3,spacing:2.15,offsetX:1.4,offsetZ:.4,material:{...material('#b9c4d0',.035,0,.96),reflection:1.2,ior:1.5,opticalThickness:.14,attenuationColor:'#b9c4d0',attenuationDistance:1.5,coat:.35,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
-  lens:{enabled:true,strength:5.5,range:2.6,offset:0},
+  lens:{enabled:true,strength:5.5,range:2.6,sharpRange:0,detailRevision:0,offset:0},
   loops:{...transform(),rz:-8,shapeRevision:2,silhouette:'sweep',preview:'clay',count:2,radiusX:2.35,radiusY:2.5,width:.48,depth:.38,bend:.55,twist:48,spacing:.75,fullness:.9,taper:.9,segments:240,radialSegments:24,material:{...material('#9bdaf6',.035,0,.92),reflection:2.3,ior:1.75,opticalThickness:.65,attenuationColor:'#69c5ed',attenuationDistance:1.8,coatRoughness:.055},motion:{paused:false,height:.06,speed:.15,spinX:0,spinY:1.2,spinZ:.25,tilt:1.5}},
   camera:{...camera(),type:'orthographic',distance:23.5,azimuth:-36,elevation:40,targetX:-.8,targetY:-1.15,targetZ:-.3,fov:38,padding:0},mobileCamera:{...camera(),type:'orthographic',distance:15,azimuth:-36,elevation:40,targetX:-.8,targetY:-.5,targetZ:-.3,fov:38,padding:0},
   mobile:{enabled:true,scale:1,x:0,y:0,z:0},
@@ -37,7 +37,7 @@ export function defaults(){
   state.lens={enabled:true,strength:6,range:.65,offset:0};
   state.lights={key:light('point','#ffffff',159,4.0762453,9.4124508,.8374953),fill:light('point','#ffffff',1.2,.1257412,-.481882,1.2957581),rim:{...state.lights.rim,enabled:false},ambient:light('ambient','#ffffff',1.4,0,0,0),base:{...state.lights.base,enabled:false}};
   state.background.color='#b0a9bd';
-  state.sphere.motion.height=.02;state.environment.intensity=.85;
+  state.sphere.motion.height=.02;applySphereDip(state);applySphereDetail(state);applyGlassOptics(state);state.environment.intensity=.85;
   return state;
 }
 
@@ -53,12 +53,12 @@ export function fieldsFor(target,tab,profile='camera',lightId='key',geometrySour
   const wrap=(fields,p=prefix)=>fields.map(f=>({...f,path:`${p}.${f.key}`}));
   if(tab==='구도'){
     if(target!=='all')return wrap([b('visible','그룹 표시'),...pose]);
-    return [...wrap(pose),...wrap(cameraFields,profile),...wrap([b('enabled','피사계 심도 사용','구를 초점으로 삼고 앞뒤 유리판을 흐리게 만듭니다.'),n('strength','렌즈 흐림 강도',0,10,.1,'px'),n('range','선명한 깊이 범위',.5,12,.1,'u'),n('offset','초점 앞뒤 이동',-8,8,.05,'u')],'lens'),...wrap([b('enabled','모바일 전용 설정'),n('scale','모바일 크기',.2,2,.01,'×'),n('x','모바일 X',-5,5,.05,'u'),n('y','모바일 Y',-5,5,.05,'u'),n('z','모바일 Z',-5,5,.05,'u')],'mobile')];
+    return [...wrap(pose),...wrap(cameraFields,profile),...wrap([b('enabled','피사계 심도 사용','구를 초점으로 삼고 앞뒤 유리판을 흐리게 만듭니다.'),n('strength','렌즈 흐림 강도',0,10,.1,'px'),n('sharpRange','구 주변 선명 범위',0,2,.05,'u','구 앞뒤의 이 깊이 범위는 흐리지 않습니다. 구와 가까운 구멍 테두리를 함께 선명하게 유지합니다.'),n('range','흐림 전환 거리',.5,12,.05,'u','선명한 영역 밖에서 서서히 흐려지는 거리입니다.'),n('offset','초점 앞뒤 이동',-8,8,.05,'u')],'lens'),...wrap([b('enabled','모바일 전용 설정'),n('scale','모바일 크기',.2,2,.01,'×'),n('x','모바일 X',-5,5,.05,'u'),n('y','모바일 Y',-5,5,.05,'u'),n('z','모바일 Z',-5,5,.05,'u')],'mobile')];
   }
-  if(tab==='색상·재질')return target==='all'?[]:wrap(matFields);
+  if(tab==='색상·재질')return target==='all'?[]:wrap([...matFields,...(target==='slabs'&&geometrySource==='blend261101'?[n('edgeOpticalThickness','단면 굴절 경로 길이',.1,4,.01,'u','얇은 윗면과 달리 절단면에서는 판 안쪽을 가로질러 빛이 이동합니다.'),c('edgeAbsorptionColor','단면 내부 흡수 색상'),n('edgeAbsorptionDistance','단면 색 흡수 거리',.2,6,.05,'u')]:[])]);
   if(tab==='형태·배열'){
-    if(target==='sphere')return wrap([b('visible','구 표시'),n('radius','구 반지름',.1,2.5,.001,'u'),...(geometrySource==='blend261101'?[b('smooth','표면 노멀 다시 부드럽게','끄면 Blender 원본의 면과 노멀을 그대로 사용합니다.')]:[])]);
-    if(target==='slabs'&&geometrySource==='blend261101')return wrap([b('visible','유리판 표시'),n('width','원본 판 가로',.3,10,.01,'u','원형 구멍을 포함한 원본 메시를 가로로 조절합니다.'),n('depth','원본 판 세로',.3,10,.01,'u'),n('thickness','실제 판 두께',.02,1,.001,'u'),n('count','원본 배열 개수',1,12,1,'장'),n('spacing','배열 사이 거리',.1,3,.001,'u','Blender 원본 배열 방향을 유지합니다. 기본 상대 오프셋은 두께의 7배입니다.'),n('offsetX','층마다 추가 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 추가 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 추가 회전',-20,20,.1,'°'),n('normalStrength','원본 미세 질감 강도',0,1.5,.01,'×','원본 절차적 긁힘·라인을 베이크한 노멀맵입니다.'),c('edgeColor','절단면·구멍 안쪽 색상'),n('edgeTransmission','절단면·구멍 투과율',0,1,.01),n('edgeOpacity','절단면·구멍 불투명도',.05,1,.01),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),n('sideOpacity','옆·뒤 단면 불투명도',.05,1,.01)]);
+    if(target==='sphere')return wrap([b('visible','구 표시'),n('radius','구 반지름',.1,2.5,.001,'u'),...(geometrySource==='blend261101'?[b('smooth','고밀도 구 메시','켜면 구를 촘촘하게 재생성합니다. 끄면 Blender 원본 메시를 사용합니다.'),n('segments','구 가로 분할 수',32,192,1,'분할','세로 분할은 가로의 75%입니다. 기본 128 × 96 분할로 윤곽과 반사를 매끈하게 만듭니다.')]:[])]);
+    if(target==='slabs'&&geometrySource==='blend261101')return wrap([b('visible','유리판 표시'),s('optics','겹친 유리 표현',{layered:'겹침 굴절 · 원본 재질 방향',standard:'기본 렌더 · 가벼운 처리'},'겹침 굴절은 뒤쪽 유리까지 투과해 보이도록 순서대로 렌더합니다.'),b('smoothCuts','구멍 단면을 매끈하게','형상은 그대로 두고 원형 구멍의 반사 노멀을 매끈하게 연결합니다.'),n('width','원본 판 가로',.3,10,.01,'u','원형 구멍을 포함한 원본 메시를 가로로 조절합니다.'),n('depth','원본 판 세로',.3,10,.01,'u'),n('thickness','실제 판 두께',.02,1,.001,'u'),n('count','원본 배열 개수',1,12,1,'장'),n('spacing','배열 사이 거리',.1,3,.001,'u','Blender 원본 배열 방향을 유지합니다. 기본 상대 오프셋은 두께의 7배입니다.'),n('offsetX','층마다 추가 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 추가 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 추가 회전',-20,20,.1,'°'),n('normalStrength','원본 미세 질감 강도',0,1.5,.01,'×','원본 절차적 긁힘·라인을 베이크한 노멀맵입니다.'),c('edgeColor','절단면·구멍 안쪽 색상'),n('edgeTransmission','절단면·구멍 투과율',0,1,.01),n('edgeOpacity','절단면·구멍 불투명도',.05,1,.01),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),n('sideOpacity','옆·뒤 단면 불투명도',.05,1,.01)]);
     if(target==='slabs')return wrap([b('visible','유리판 표시'),n('width','판 가로',2,12,.01,'u'),n('depth','판 세로',2,12,.01,'u'),n('thickness','실제 판 두께',.03,.6,.005,'u'),n('bevel','모서리 라운드',.002,.1,.001,'u'),n('count','판 개수',1,6,1,'장'),n('spacing','층 사이 높이',.3,3,.01,'u'),n('offsetX','층마다 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 회전',-20,20,.1,'°'),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),c('edgeColor','앞 단면 색상'),n('edgeTransmission','앞 단면 투과율',0,1,.01,'','카메라 쪽 앞 단면에 적용됩니다. 윗면과 옆·뒤 단면은 독립적으로 조절합니다.')]);
     if(target==='rings')return wrap([b('visible','링 표시'),n('radius','링 반지름',.2,2.5,.01,'u'),n('tube','링 실제 두께',.015,.2,.005,'u'),n('tiltX','각 링 X 기울기',-80,80,1,'°'),n('tiltZ','각 링 Z 기울기',-80,80,1,'°'),n('count','링 개수',1,6,1,'개'),n('spacing','링 사이 높이',.3,3,.01,'u'),n('offsetX','링마다 좌우 이동',-2,2,.01,'u'),n('offsetZ','링마다 앞뒤 이동',-2,2,.01,'u')]);
     if(target==='loops')return wrap([s('silhouette','조형 시안',{fold:'01 · 접힌 흐름',sweep:'02 · 긴 S',knot:'03 · 느슨한 꼬임',legacy:'이전 · 원형 루프'}),s('preview','보기 방식',{clay:'회색 형태 보기',glass:'유리 재질 보기'}),n('fullness','중간 굵기 변화',0,1.5,.01),n('taper','끝으로 가늘어지는 정도',0,1,.01),b('visible','조형 표시'),n('count','곡선 개수',1,3,1,'개'),n('radiusX','가로 펼침',.8,4,.01,'u'),n('radiusY','세로 펼침',.8,4,.01,'u'),n('width','곡선 폭',.08,.9,.01,'u'),n('depth','실제 곡선 두께',.04,.5,.005,'u'),n('bend','입체 굽힘',0,1,.01),n('twist','단면 비틀기',-180,180,1,'°'),n('spacing','곡선 사이 간격',.1,1.8,.01,'u'),n('segments','경로 부드러움',80,400,1,'분할'),n('radialSegments','단면 부드러움',8,40,1,'분할')]);
@@ -70,6 +70,7 @@ export function fieldsFor(target,tab,profile='camera',lightId='key',geometrySour
   if(tab==='조명·반사')return [...wrap([b('enabled','선택 조명 켜기'),c('color','조명 색상'),n('intensity','밝기',0,geometrySource==='blend261101'&&lightId==='key'?500:lightId==='base'||lightId==='rim'?60:30,.05),...['x','y','z'].map(a=>n(a,`조명 ${a.toUpperCase()}`,-15,15,.1,'u')),...['X','Y','Z'].map(a=>n(`target${a}`,`바라보는 지점 ${a}`,-8,8,.1,'u')),b('shadow','그림자 생성')],`lights.${lightId}`),...wrap([n('intensity','주변 반사 강도',0,3),n('rotation','반사 환경 회전',-180,180,1,'°'),n('blur','반사 환경 흐림',0,.5,.01,'','PMREM 환경맵을 갱신하므로 입력을 마친 뒤 반영됩니다.'),n('exposure','전체 노출',.2,2,.01,'EV')],'environment')];
   if(tab==='그림자·배경')return wrap([s('mode','배경',{solid:'단색',gradient:'그라데이션',transparent:'투명'}),c('color','배경 색상'),c('color2','그라데이션 두 번째 색'),n('angle','그라데이션 방향',0,360,1,'°'),b('ground','바닥 평면 표시'),c('groundColor','바닥 색상'),n('groundRoughness','바닥 반사 흐림',.05,1),n('shadowOpacity','접촉 그림자 진하기',0,.65),n('shadowSoftness','그림자 부드러움',1,6,.1),b('fog','안개 사용'),c('fogColor','안개 색상'),n('fogNear','안개 시작 거리',5,60,.5,'u'),n('fogFar','안개 종료 거리',10,90,.5,'u')],'background');
   if(tab==='모션'){
+    if(target==='sphere'&&geometrySource==='blend261101')return wrap([b('motion.paused','그룹 일시정지'),s('motion.type','구 움직임',{dip:'유리 사이로 들어갔다 나오기',float:'기존 수직 부유'}),n('motion.depth','들어가는 깊이',0,1.2,.01,'u','유리판에 수직인 방향으로 이동합니다. 기본 0.62u는 첫 판의 구멍 안으로 살짝 들어가는 깊이입니다.'),n('motion.duration','왕복 주기',2,15,.1,'s','속도 1× 기준 한 번 들어갔다 나오는 시간. 양 끝에서 잠시 머뭅니다.'),n('motion.speed','모션 속도',0,2,.01,'×','0이면 현재 진행 위치에서 멈춥니다.'),n('motion.height','수직 부유 높이',0,.5,.01,'u'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s'))]);
     if(['sphere','slabs','rings'].includes(target))return wrap([b('motion.paused','그룹 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s'))]);
     if(target==='loops')return wrap([b('motion.paused','유리 곡선 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s')),n('motion.tilt','기울기 범위',0,10,.1,'°')]);
     if(target==='tiles')return wrap([b('motion.paused','타일 일시정지'),s('motion.type','타일 움직임',{rise:'순차 상승',wave:'파도',ripple:'중앙 파동',float:'은은한 부유'}),n('motion.height','이동 높이',0,.8,.01,'u'),n('motion.speed','파동 속도',0,3,.01,'×'),n('motion.wavelength','파장',.5,12,.1,'u'),n('motion.direction','진행 방향',-180,180,1,'°'),n('motion.delay','타일별 지연',0,.5,.01,'s'),n('motion.phase','모션 위상',0,360,1,'°')]);
@@ -158,5 +159,24 @@ export function applyShapeReview(state){
 export function applyGlassStack(state){
   const fresh=defaults();
   for(const key of ['model','modelRevision','look','geometry','sphere','slabs','rings','lens','camera','mobileCamera','mobile','environment','lights','background','scene','motion'])state[key]=clone(fresh[key]);
+  return state;
+}
+
+// Apply only the requested motion; keep the user's model, camera and materials.
+export function applySphereDip(state){
+  Object.assign(state.sphere.motion,{type:'dip',dipRevision:1,depth:.62,duration:6,speed:1,paused:false});
+  state.motion.paused=false;state.motion.mode='auto';
+  return state;
+}
+
+export function applySphereDetail(state){
+  Object.assign(state.sphere,{smooth:true,segments:128,surfaceRevision:1});
+  Object.assign(state.lens,{enabled:true,strength:3,sharpRange:.7,range:1.25,offset:0,detailRevision:1});
+  return state;
+}
+
+export function applyGlassOptics(state){
+  Object.assign(state.slabs,{optics:'layered',glassRevision:1,smoothCuts:true,normalStrength:.25,edgeOpticalThickness:2,edgeAbsorptionColor:'#96a6b8',edgeAbsorptionDistance:1,edgeColor:'#ffffff',edgeTransmission:1,edgeOpacity:1,sideColor:'#ffffff',sideTransmission:1,sideOpacity:1});
+  Object.assign(state.slabs.material,{color:'#ffffff',opacity:1,transmission:1,roughness:.085,metalness:0,ior:1.5,opticalThickness:state.slabs.thickness,attenuationColor:'#eff2f8',attenuationDistance:12,reflection:1,coat:0});
   return state;
 }

@@ -43,8 +43,15 @@ export async function loadBlenderSource(){
 export function createBlenderModels(state,materials,source){
   const sphere=new THREE.Group(),slabs=new THREE.Group(),rings=new THREE.Group();
   const p=state.slabs,s=state.sphere;
-  const plateGeometry=source.plateGeometry.clone(),sphereGeometry=source.sphereGeometry.clone();
-  if(state.sphere.smooth)sphereGeometry.computeVertexNormals();
+  const plateGeometry=source.plateGeometry.clone();
+  if(p.smoothCuts){
+    const positions=plateGeometry.attributes.position,normals=plateGeometry.attributes.normal;
+    for(let i=0;i<positions.count;i++){
+      const x=positions.getX(i),y=positions.getY(i),radius=Math.hypot(x,y);
+      if(Math.abs(normals.getZ(i))<.5&&radius<.9&&radius>.01)normals.setXYZ(i,-x/radius,-y/radius,0);
+    }
+  }
+  const sphereGeometry=s.smooth?new THREE.SphereGeometry(source.meta.sphere.radius,s.segments,Math.max(16,Math.round(s.segments*.75))):source.sphereGeometry.clone();
   const ball=new THREE.Mesh(sphereGeometry,materials.sphere);
   ball.quaternion.copy(source.sphereQuaternion);
   ball.scale.setScalar(s.radius/source.meta.sphere.radius);sphere.add(ball);

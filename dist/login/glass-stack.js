@@ -34,18 +34,18 @@ export function createDepthLens(renderer){
   target.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);
   const depthTarget=new THREE.WebGLRenderTarget(1,1,{depthBuffer:true});depthTarget.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);
   const depthMaterial=new THREE.MeshDepthMaterial({side:THREE.DoubleSide});depthMaterial.colorWrite=false;
-  const uniforms={image:{value:target.texture},depth:{value:depthTarget.depthTexture},resolution:{value:new THREE.Vector2(1,1)},near:{value:.1},far:{value:200},ortho:{value:false},focus:{value:12},range:{value:4},strength:{value:3}};
+  const uniforms={image:{value:target.texture},depth:{value:depthTarget.depthTexture},resolution:{value:new THREE.Vector2(1,1)},near:{value:.1},far:{value:200},ortho:{value:false},focus:{value:12},range:{value:4},sharpRange:{value:0},strength:{value:3}};
   const material=new THREE.ShaderMaterial({uniforms,depthTest:false,depthWrite:false,transparent:false,
     vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
     fragmentShader:`
       varying vec2 vUv;
       uniform sampler2D image;uniform sampler2D depth;uniform vec2 resolution;
       uniform float near;uniform float far;uniform bool ortho;
-      uniform float focus;uniform float range;uniform float strength;
+      uniform float focus;uniform float range;uniform float sharpRange;uniform float strength;
       float distanceAt(vec2 uv){float d=texture2D(depth,uv).x;return ortho?mix(near,far,d):near*far/(far-d*(far-near));}
       void main(){
         float z=distanceAt(vUv);
-        float coc=clamp(abs(z-focus)/max(range,.1),0.,1.)*strength;
+        float coc=clamp((abs(z-focus)-sharpRange)/max(range,.1),0.,1.)*strength;
         if(z>far*.99)coc=0.;
         vec4 sum=texture2D(image,vUv);float weight=1.;
         for(int i=0;i<16;i++){
@@ -54,7 +54,7 @@ export function createDepthLens(renderer){
           vec2 uv=clamp(vUv+delta,vec2(0.),vec2(1.));
           float sampleZ=distanceAt(uv);
           // Avoid smearing a focused object across background and near edges.
-          float w=sampleZ<z-.4&&abs(sampleZ-focus)<.3?.08:1.;
+          float w=sampleZ<z-.4&&abs(sampleZ-focus)<max(.3,sharpRange)?.08:1.;
           sum+=texture2D(image,uv)*w;weight+=w;
         }
         gl_FragColor=sum/weight;
@@ -65,17 +65,17 @@ export function createDepthLens(renderer){
   screen.add(new THREE.Mesh(geometry,material));const size=new THREE.Vector2();
   return {
     setSamples(count){if(target.samples!==count){target.samples=count;target.dispose();}},
-    render(scene,view,config,focusPoint){
-      if(!config.enabled||config.strength===0){renderer.render(scene,view);return;}
+    render(scene,view,config,focusPoint,renderColor){
+      if(!config.enabled||config.strength===0){if(renderColor)renderColor(null);else renderer.render(scene,view);return;}
       renderer.getDrawingBufferSize(size);
       if(target.width!==size.x||target.height!==size.y){target.setSize(size.x,size.y);depthTarget.setSize(size.x,size.y);uniforms.resolution.value.copy(size);}
       uniforms.near.value=view.near;uniforms.far.value=view.far;uniforms.ortho.value=view.isOrthographicCamera===true;
       uniforms.focus.value=-focusPoint.clone().applyMatrix4(view.matrixWorldInverse).z+config.offset;
-      uniforms.range.value=config.range;uniforms.strength.value=config.strength*renderer.getPixelRatio();
+      uniforms.range.value=config.range;uniforms.sharpRange.value=config.sharpRange;uniforms.strength.value=config.strength*renderer.getPixelRatio();
       const oldOverride=scene.overrideMaterial,oldBackground=scene.background;
       try{scene.overrideMaterial=depthMaterial;scene.background=null;renderer.setRenderTarget(depthTarget);renderer.render(scene,view);}
       finally{scene.overrideMaterial=oldOverride;scene.background=oldBackground;}
-      renderer.setRenderTarget(target);renderer.render(scene,view);
+      if(renderColor)renderColor(target);else{renderer.setRenderTarget(target);renderer.render(scene,view);}
       renderer.setRenderTarget(null);renderer.render(screen,camera);
     },
     dispose(){target.dispose();target.depthTexture.dispose();depthTarget.dispose();depthTarget.depthTexture.dispose();depthMaterial.dispose();geometry.dispose();material.dispose();}

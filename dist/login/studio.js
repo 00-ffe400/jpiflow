@@ -1,4 +1,4 @@
-import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyGlassStack} from './studio-state.js';
+import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics} from './studio-state.js';
 
 const $=s=>document.querySelector(s),KEY='examvue.studio.v2',PRESETS='examvue.studio.presets.v2';
 const safe={read(key){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}};
@@ -9,6 +9,12 @@ export function initStudio(){
     if(!safe.read(KEY+'.blend261101')){
       if(saved)safe.write(KEY+'.beforeBlend261101',saved);
       applyGlassStack(state);safe.write(KEY+'.blend261101',true);safe.write(KEY,state);
+    }
+    if(saved?.model==='glassStack'&&saved.geometry?.source==='blend261101'){
+      if(!saved.sphere?.motion?.dipRevision)applySphereDip(state);
+      if(!saved.sphere?.surfaceRevision||!saved.lens?.detailRevision)applySphereDetail(state);
+      if(!saved.slabs?.glassRevision){safe.write(KEY+'.beforeGlassOptics',saved);applyGlassOptics(state);}
+      safe.write(KEY,state);
     }
   }catch{state=defaults();}
   let scene,target=state.model==='glassStack'?'all':state.model==='loops'?'loops':'crystal',tab=state.model==='glassStack'?'구도':'형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:blender',saveTimer;
@@ -57,6 +63,7 @@ export function initStudio(){
     return `<div class="control-row ${f.type==='boolean'?'boolean-row':''}" data-row="${f.path}">${label}${input}<p class="control-hint" id="${hint}">${f.hint||''}</p></div>`;
   }
   function actionsHTML(){
+    if(isSource()&&tab==='형태·배열'&&target==='sphere')return '<p class="studio-help">구의 원본 크기·위치를 유지하면서 메시를 더 촘촘하게 만들었습니다. 고밀도를 끄면 Blender 원본 메시와 비교할 수 있습니다.</p>';
     if(isSource()&&tab==='형태·배열'&&target!=='all')return '<p class="studio-help">261101.blend의 실제 메시·노멀·구멍을 사용합니다. 원형 고리로 보이는 부분은 판에 뚫린 구멍의 절단면입니다. 6개 배열과 원본 카메라를 기본값으로 제공합니다.</p>';
     if(state.model==='glassStack'&&tab==='형태·배열'&&target!=='all')return '<p class="studio-help">002.png 기준으로 다시 만든 실제 3D입니다. 구·판·링을 각각 편집할 수 있습니다. 전체 이동과 카메라는 구도 탭에서 조절하세요.</p>';
     if(state.model==='glassStack'&&tab==='색상·재질'&&target!=='all')return `<div class="scope-note">선택 대상 적용 <strong>${GROUPS[target]} · 실시간</strong></div><label class="material-link"><input id="material-link" type="checkbox" ${state.links.material?'checked':''}> 표시된 그룹의 이후 재질 변경 연결</label><p class="studio-help">형상의 두께와 굴절 계산용 두께는 별개입니다. 원본 재질로 돌아가려면 선택 그룹을 초기화하세요.</p><button class="full-button" data-action="material-all">전체에 현재 재질 적용</button>`;
@@ -84,7 +91,7 @@ export function initStudio(){
     document.querySelectorAll('[data-tab]').forEach(button=>{const active=button.dataset.tab===tab;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});
     $('#studio-content').setAttribute('aria-labelledby',`tab-${TABS.indexOf(tab)}`);
     const fields=fieldsFor(target,tab,profile,lightId,state.geometry.source).filter(f=>!(['loops.silhouette','loops.preview'].includes(f.path)&&tab==='형태·배열'));
-    if(tab==='구도'&&target==='all'){const pose=fields.filter(f=>f.path.startsWith('scene.')),camera=fields.filter(f=>!f.path.startsWith('scene.'));$('#studio-content').innerHTML=`<details class="whole-model-panel" open><summary>전체 모델 이동</summary><p class="studio-help">${state.model==='glassStack'?(isSource()?'구와 구멍이 있는 유리판을 함께':'구·유리판·링을 함께'):state.model==='loops'?'유리 곡선 전체를':'타일·받침대·크리스탈을 함께'} 이동합니다. 카메라는 유지됩니다.</p><div class="control-list">${pose.map(descriptorHTML).join('')}</div><button class="full-button" data-action="scene-center">위치를 원점으로</button></details>${state.model==='glassStack'?`<a class="reference-preview-link" href="?view=scene" target="_blank" rel="noopener">장면만 크게 보기 ↗</a><p class="studio-help">${isSource()?'261101.blend 원본 기준 · 구멍을 포함한 실제 메시와 원본 카메라입니다.':'002 이미지 기준 · 구·판·링을 조합한 이전 시안입니다.'} 구의 광택, 유리 단면, 층 간격과 초점을 개별 편집할 수 있습니다. 기본은 원본 비교를 위한 정지 상태입니다.</p>`:''}${actionsHTML()}<div class="control-list">${camera.map(descriptorHTML).join('')}</div>`;}else $('#studio-content').innerHTML=tab==='저장'?storageHTML():`${actionsHTML()}<div class="control-list">${fields.map(descriptorHTML).join('')}</div>`;
+    if(tab==='구도'&&target==='all'){const pose=fields.filter(f=>f.path.startsWith('scene.')),camera=fields.filter(f=>!f.path.startsWith('scene.'));$('#studio-content').innerHTML=`<details class="whole-model-panel" open><summary>전체 모델 이동</summary><p class="studio-help">${state.model==='glassStack'?(isSource()?'구와 구멍이 있는 유리판을 함께':'구·유리판·링을 함께'):state.model==='loops'?'유리 곡선 전체를':'타일·받침대·크리스탈을 함께'} 이동합니다. 카메라는 유지됩니다.</p><div class="control-list">${pose.map(descriptorHTML).join('')}</div><button class="full-button" data-action="scene-center">위치를 원점으로</button></details>${state.model==='glassStack'?`<a class="reference-preview-link" href="?view=scene" target="_blank" rel="noopener">장면만 크게 보기 ↗</a><p class="studio-help">${isSource()?'261101.blend 원본 기준 · 구멍을 포함한 실제 메시와 원본 카메라입니다.':'002 이미지 기준 · 구·판·링을 조합한 이전 시안입니다.'} 구의 광택, 유리 단면, 층 간격과 초점을 개별 편집할 수 있습니다. ${isSource()?'기본은 구가 첫 유리판 구멍에 들어갔다 나오는 6초 자동 반복입니다.':'기본은 원본 비교를 위한 정지 상태입니다.'}</p>`:''}${actionsHTML()}<div class="control-list">${camera.map(descriptorHTML).join('')}</div>`;}else $('#studio-content').innerHTML=tab==='저장'?storageHTML():`${actionsHTML()}<div class="control-list">${fields.map(descriptorHTML).join('')}</div>`;
     $('#studio-content').scrollTop=0;if(tab==='저장')renderPresets();disableFields();
   }
   function syncInputs(){for(const input of document.querySelectorAll('[data-path]')){if(input===document.activeElement)continue;const value=get(state,input.dataset.path);if(input.type==='checkbox')input.checked=value;else input.value=value;}}
@@ -104,6 +111,9 @@ export function initStudio(){
       if(path.startsWith('background.fog')&&path!=='background.fog'&&!state.background.fog)reason='안개를 켜면 사용할 수 있습니다.';
       if(['background.color2','background.angle'].includes(path)&&state.background.mode!=='gradient')reason='그라데이션 배경에서 사용합니다.';
       if(path.startsWith('lens.')&&path!=='lens.enabled'&&(state.model!=='glassStack'||!state.lens.enabled))reason=state.model!=='glassStack'?'002 유리판 장면에서 사용하는 렌즈 효과입니다.':'피사계 심도를 켜면 사용할 수 있습니다.';
+      if(isSource()&&path==='sphere.segments'&&!state.sphere.smooth)reason='고밀도 구 메시를 켜면 분할 수를 조절할 수 있습니다.';
+      if(isSource()&&path==='sphere.motion.height'&&state.sphere.motion.type==='dip')reason='기존 수직 부유에서 사용합니다. 왕복 모션은 들어가는 깊이를 조절하세요.';
+      if(isSource()&&['sphere.motion.depth','sphere.motion.duration'].includes(path)&&state.sphere.motion.type!=='dip')reason='유리 사이로 들어갔다 나오기 모션에서 사용합니다.';
       if(path==='motion.progress'&&state.motion.mode!=='manual')reason='특정 진행률에서 정지 모드에서 사용합니다.';
       if(['motion.scrollStart','motion.scrollEnd'].includes(path)&&state.motion.mode!=='scroll')reason='스크롤 진행 모드에서 사용합니다.';
       const descriptor=fieldsFor(target,tab,profile,lightId,state.geometry.source).find(f=>f.path===path);row.querySelector('.control-hint').textContent=reason||descriptor?.hint||'';row.classList.toggle('is-disabled',Boolean(reason));row.querySelectorAll('input,select').forEach(input=>input.disabled=Boolean(reason));
@@ -137,6 +147,7 @@ export function initStudio(){
   function renderPresets(){
     const select=$('#preset-list');if(!select)return;select.replaceChildren();
     for(const [id,p]of Object.entries(builtInPresets()))select.add(new Option(p.name,`builtin:${id}`));
+    if(safe.read(KEY+'.beforeGlassOptics'))select.add(new Option('유리 질감 변경 전 · 장면 백업','backup:glass'));
     if(safe.read(KEY+'.beforeBlend261101'))select.add(new Option('Blender 교체 전 · 자동 백업','backup:blend'));
     if(safe.read(KEY+'.before002'))select.add(new Option('이전 장면 · 자동 백업','backup:002'));
     presets().forEach((p,i)=>select.add(new Option(p.name,String(i))));
@@ -178,7 +189,7 @@ export function initStudio(){
       if(action==='all-reset'){state=modelDefaults();scene?.restart();update('전체 설정을 기본 장면으로 초기화했습니다.');render();}
       if(action.startsWith('preset-')){
         const list=presets(),key=$('#preset-list').value,index=Number(key),name=$('#preset-name').value.trim();
-        if(key.startsWith('backup:')&&action==='preset-load'){state=validate(safe.read(KEY+(key==='backup:blend'?'.beforeBlend261101':'.before002')));scene?.restart();update('이전 장면 자동 백업을 불러왔습니다.');render();return;}
+        if(key.startsWith('backup:')&&action==='preset-load'){state=validate(safe.read(KEY+(key==='backup:glass'?'.beforeGlassOptics':key==='backup:blend'?'.beforeBlend261101':'.before002')));scene?.restart();update('이전 장면 자동 백업을 불러왔습니다.');render();return;}
         if(key.startsWith('builtin:')&&action==='preset-load'){const preset=builtInPresets()[key.slice(8)];state=validate(preset.settings);scene?.restart();update(`${preset.name} 프리셋을 적용했습니다.`);render();return;}
         if(action==='preset-save'){if(!name)throw Error('프리셋 이름을 입력해 주세요.');list.push({name,settings:clone(state)});if(list.length>30)list.shift();selectedPreset=String(list.length-1);}
         else {if(!list[index])throw Error('저장한 프리셋을 선택해 주세요.');if(action==='preset-load'){state=validate(list[index].settings);update('프리셋을 불러왔습니다.');render();}if(action==='preset-rename'){if(!name)throw Error('새 이름을 위에 입력해 주세요.');list[index].name=name;}if(action==='preset-delete')list.splice(index,1);}
