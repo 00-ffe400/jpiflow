@@ -1,5 +1,6 @@
+import {applyGradientMotion} from './gradient-motion.js';
 import {applyClearGlass} from './glass-look.js';
-import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics,applyPinHemisphere,applyHollowGlass,PIN_SHELL_TARGETS,targetPath,materialTargets,changeMaterial,copyMaterial,applyHollowCore,selectedSettings,applyCoreSphere} from './studio-state.js';
+import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics,applyPinHemisphere,applyHollowGlass,PIN_SHELL_TARGETS,targetPath,materialTargets,changeMaterial,changeWallThickness,copyMaterial,applyHollowCore,selectedSettings,applyCoreSphere} from './studio-state.js';
 
 const $=s=>document.querySelector(s),KEY='examvue.studio.v2',PRESETS='examvue.studio.presets.v2';
 const safe={read(key){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}};
@@ -25,7 +26,8 @@ export function initStudio(){
     if(state.model==='pinOrbit'&&state.pinCore.shape==='hemisphere'&&state.pinCore.shapeRevision<2){safe.write(KEY+'.beforeHollowCore',state);applyHollowCore(state);safe.write(KEY,state);}
     if(state.model==='pinOrbit'&&!safe.read(KEY+'.coreSphere20261117')){safe.write(KEY+'.beforeCoreSphere',state);applyCoreSphere(state);safe.write(KEY+'.coreSphere20261117',true);safe.write(KEY,state);}
     if(state.model==='pinOrbit'&&!safe.read(KEY+'.clearGlass1')){safe.write(KEY+'.beforeClearGlass',saved||state);applyClearGlass(state);safe.write(KEY+'.clearGlass1',true);safe.write(KEY,state);}
-  }catch{state=selectedSettings();applyClearGlass(state);}
+    if(state.model==='pinOrbit'&&!safe.read(KEY+'.gradientMotion1')){safe.write(KEY+'.beforeGradientMotion',state);applyGradientMotion(state);safe.write(KEY+'.gradientMotion1',true);safe.write(KEY,state);}
+  }catch{state=selectedSettings();applyClearGlass(state);applyGradientMotion(state);}
   let scene,target=['glassStack','pinOrbit'].includes(state.model)?'all':state.model==='loops'?'loops':'crystal',tab=['glassStack','pinOrbit'].includes(state.model)?'구도':'형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:selected20261117',saveTimer;
   const isSource=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
   const groupIds=()=>state.model==='pinOrbit'?['pinCore','pinRings',...Object.keys(PIN_SHELL_TARGETS).slice(0,state.pinRings.count)]:state.model==='glassStack'?(isSource()?['sphere','slabs']:['sphere','slabs','rings']):state.model==='loops'?['loops']:['tiles','pedestal','crystal'];
@@ -121,6 +123,7 @@ export function initStudio(){
       if(path.startsWith('lights.')){const cfg=state.lights[lightId];if(cfg.type==='ambient'&&!path.endsWith('.intensity')&&!path.endsWith('.enabled')&&!path.endsWith('.color'))reason='주변광은 위치·방향·그림자가 없습니다.';if(cfg.type==='point'&&path.includes('.target'))reason='포인트 조명은 모든 방향으로 빛을 냅니다.';}
       if(path.includes('.material.')&&['ior','opticalThickness','attenuationColor','attenuationDistance'].includes(path.split('.').at(-1))&&get(state,`${targetPath(target)}.material`)?.transmission===0)reason='유리 투과율이 0보다 클 때 사용합니다.';
       if(path.startsWith('pinCore.gradient.')&&path!=='pinCore.gradient.mode'&&state.pinCore.gradient.mode==='solid')reason='그라데이션 색상 방식을 선택하면 사용할 수 있습니다.';
+      if(['pinCore.gradient.rotationAxis','pinCore.gradient.rotationSpeed'].includes(path)&&state.pinCore.gradient.mode!=='solid'&&!state.pinCore.gradient.rotate)reason='그라데이션 회전을 켜면 사용할 수 있습니다.';
       if(['pinCore.gradient.color3','pinCore.gradient.midpoint'].includes(path)&&state.pinCore.gradient.mode!=='three')reason='3색 그라데이션에서 사용하는 설정입니다.';
       if(path==='pinCore.gradient.angle'&&state.pinCore.gradient.direction!=='angle')reason='대각선 · 각도 지정 방향에서 사용합니다.';
       if(path==='pinCore.material.color'&&state.pinCore.gradient.mode!=='solid')reason='그라데이션 색상들이 기본 색상을 대신합니다. 위의 색상을 조절하세요.';
@@ -153,7 +156,7 @@ export function initStudio(){
     let value=input.type==='checkbox'?input.checked:f.type==='number'?Number(input.value):input.value;
     if(f.type==='number'){if(input.value===''||!Number.isFinite(value))return;value=Math.max(f.min,Math.min(f.max,value));if(f.step===1)value=Math.round(value);}
     if(f.type==='color'&&!/^#[0-9a-f]{6}$/i.test(value)){input.setCustomValidity('색상을 #RRGGBB 형식으로 입력해 주세요.');status('색상을 #RRGGBB 형식으로 입력해 주세요.');return;}input.setCustomValidity('');
-    const old=get(state,path);set(state,path,value);
+    const old=get(state,path);if(!(f.key==='wallThickness'&&changeWallThickness(state,target,value)))set(state,path,value);
     if(path==='crystal.shape'&&value==='cube')state.crystal.height=state.crystal.depth=state.crystal.width;
     if(state.crystal.lockRatio&&/^crystal\.(width|height|depth)$/.test(path)){const ratio=value/old;for(const key of ['width','height','depth'])if(path!==`crystal.${key}`)state.crystal[key]=Math.max(.4,Math.min(4,state.crystal[key]*ratio));}
     if(path.includes('.material.'))changeMaterial(state,target,path.split('.').at(-1),value);

@@ -117,7 +117,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function buildPin(){
     const c=state.pinCore,r=state.pinRings;
-    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,c.wallThickness,c.lipRoundness,r.count,r.radius,r.spacing,r.wallThickness,r.rimRoundness,r.segments]);
+    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,c.wallThickness,c.lipRoundness,r.count,r.radius,r.spacing,r.wallThickness,r.rimRoundness,r.segments,SHELL_KEYS.slice(0,r.count).map(k=>r.layers[k].wallThickness)]);
     if(keys.pin===key)return;keys.pin=key;for(const root of Object.values(pinRoots))disposeGroup(root);
     const fresh=createPinOrbits(state,mats,box);for(const id of pinIds){const children=fresh[id].children.slice();if(children.length)pinRoots[id].add(...children);}
     coreGradient.setGeometry(pinRoots.pinCore.children[0].geometry);
@@ -280,8 +280,12 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       const start=state.pinRings.alignedStart?state.pinRings.layers.one:cfg;
       rotate(mesh,start.rx+spin.x,start.ry+spin.y,start.rz+spin.z,dt);
     }
+    const gradient=state.pinCore.gradient;
+    const gradientProgress=state.motion.mode==='scroll'?clamp((scrollY-state.motion.scrollStart)/Math.max(1,state.motion.scrollEnd-state.motion.scrollStart),0,1):state.motion.progress;
+    coreGradient.animate(gradient,{dt,mode:state.motion.mode,progress:gradientProgress,paused:stop||state.pinCore.motion.paused});
+    const gradientActive=state.pinCore.visible&&!state.pinCore.motion.paused&&gradient.mode!=='solid'&&gradient.rotate&&gradient.rotationSpeed!==0;
     const autoActive=state.model==='pinOrbit'?pinIds.some(id=>{const m=state[id].motion;return state[id].visible&&!m.paused&&(m.height*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0||id==='pinRings'&&SHELL_KEYS.slice(0,state.pinRings.count).some(k=>state.pinRings.layers[k].visible&&!state.pinRings.layers[k].paused&&['X','Y','Z'].some(a=>state.pinRings.layers[k]['spin'+a]!==0)));}):state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&((isDip(id)?m.depth:m.height)*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
-    cameraUpdate(dt);renderFrame();if(state.model==='pinOrbit')pinStartFrame=false;if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
+    cameraUpdate(dt);renderFrame();if(state.model==='pinOrbit')pinStartFrame=false;if((!stop&&state.motion.mode==='auto'&&(autoActive||state.model==='pinOrbit'&&gradientActive))||now<settleUntil)schedule();
   }
   function renderFrame(){
     if(state.model==='pinOrbit'){world.updateMatrixWorld(true);camera.updateMatrixWorld(true);pinRoots.pinCore.getWorldPosition(focusPoint);lens.render(scene,camera,state.lens,focusPoint,state.pinRings.optics==='layered'?destination=>hemisphereComposite.render(scene,camera,[...pinRoots.pinCore.children,...pinRoots.pinRings.children],destination):undefined);}
@@ -329,6 +333,6 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     update(next){settleUntil=performance.now()+1200;update(next);},setPaused(value){externalPause=value;last=performance.now();settleUntil=performance.now()+50;schedule();},
     setProfile(value){cameraProfile=value;cameraDirty=true;schedule();},setInteraction(mode){interaction=mode;renderer.domElement.style.touchAction=mode==='camera'?'none':'pan-y';renderer.domElement.style.cursor=mode==='camera'?'grab':'crosshair';},
     getCamera:()=>({profile:activeCameraKey(),value:structuredClone(state[activeCameraKey()])}),selectPattern,getSelection:()=>[...selection],capture,
-    restart(){pinStartFrame=true;for(const spin of [...Object.values(pinSpin),...Object.values(shellSpin)])spin.x=spin.y=spin.z=0;for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
+    restart(){pinStartFrame=true;coreGradient.restart();for(const spin of [...Object.values(pinSpin),...Object.values(shellSpin)])spin.x=spin.y=spin.z=0;for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
   };
 }

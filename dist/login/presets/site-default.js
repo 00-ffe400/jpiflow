@@ -31,7 +31,12 @@ export default {
     "wallThickness": 0.045,
     "lipRoundness": 1,
     "gradient": {
-      "mode": "solid",
+      "rotate": true,
+      "rotationAxis": "z",
+      "rotationSpeed": 18,
+      "rotationPhase": 0,
+      "motionRevision": 1,
+      "mode": "two",
       "color1": "#1260ea",
       "color2": "#94eaff",
       "color3": "#b5a0ff",
@@ -102,6 +107,7 @@ export default {
         "spinZ": 0,
         "visible": true,
         "paused": false,
+        "wallThickness": 0.04,
         "material": {
           "preset": "glass",
           "color": "#eaf7ff",
@@ -129,6 +135,7 @@ export default {
         "spinZ": 0,
         "visible": true,
         "paused": false,
+        "wallThickness": 0.04,
         "material": {
           "preset": "glass",
           "color": "#eaf7ff",
@@ -156,6 +163,7 @@ export default {
         "spinZ": 0.6,
         "visible": true,
         "paused": false,
+        "wallThickness": 0.04,
         "material": {
           "preset": "glass",
           "color": "#eaf7ff",
@@ -183,6 +191,7 @@ export default {
         "spinZ": 0,
         "visible": true,
         "paused": false,
+        "wallThickness": 0.04,
         "material": {
           "preset": "glass",
           "color": "#eaf7ff",

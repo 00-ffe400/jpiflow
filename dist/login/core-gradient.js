@@ -1,14 +1,17 @@
 import * as THREE from '../vendor/three.module.js';
+import {createGradientRotation} from './gradient-motion.js';
 
 // Object-space PBR color: no texture seams, no extra mesh, and compatible with
 // the subsequent depth-peeling shader hook used for transparent hemispheres.
 export function installCoreGradient(material){
+  const rotation=createGradientRotation();
   const uniforms={
     uCoreGradientMode:{value:0},uCoreGradientDirection:{value:0},
     uCoreGradientA:{value:new THREE.Color()},uCoreGradientB:{value:new THREE.Color()},uCoreGradientC:{value:new THREE.Color()},
     uCoreGradientMin:{value:new THREE.Vector3(-.5,-.5,-.5)},uCoreGradientSize:{value:new THREE.Vector3(1,1,1)},
     uCoreGradientAngle:{value:Math.PI/4},uCoreGradientWidth:{value:1},uCoreGradientOffset:{value:0},
     uCoreGradientMid:{value:.5},uCoreGradientTintEmission:{value:1},uCoreGradientEmission:{value:0},
+    uCoreGradientRotation:{value:new THREE.Matrix3()},
   };
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
   material.onBeforeCompile=function(shader,renderer){
@@ -19,8 +22,9 @@ export function installCoreGradient(material){
       varying vec3 vCoreGradientPosition;
       uniform float uCoreGradientMode,uCoreGradientDirection,uCoreGradientAngle,uCoreGradientWidth,uCoreGradientOffset,uCoreGradientMid,uCoreGradientTintEmission,uCoreGradientEmission;
       uniform vec3 uCoreGradientA,uCoreGradientB,uCoreGradientC,uCoreGradientMin,uCoreGradientSize;
+      uniform mat3 uCoreGradientRotation;
       vec3 coreGradientColor(){
-        vec3 p=(vCoreGradientPosition-uCoreGradientMin)/uCoreGradientSize;
+        vec3 p=uCoreGradientRotation*((vCoreGradientPosition-uCoreGradientMin)/uCoreGradientSize-0.5)+0.5;
         float t=p.y;
         if(uCoreGradientDirection>0.5&&uCoreGradientDirection<1.5)t=p.x;
         else if(uCoreGradientDirection>1.5&&uCoreGradientDirection<2.5)t=p.z;
@@ -34,8 +38,10 @@ export function installCoreGradient(material){
     shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nif(uCoreGradientMode>0.5)diffuseColor.rgb=coreGradientColor();');
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\nif(uCoreGradientMode>0.5&&uCoreGradientTintEmission>0.5)totalEmissiveRadiance=coreGradientColor()*uCoreGradientEmission;');
   };
-  material.customProgramCacheKey=function(){return key.call(this)+'|core-gradient-v1';};material.needsUpdate=true;
+  material.customProgramCacheKey=function(){return key.call(this)+'|core-gradient-v2';};material.needsUpdate=true;
   return {
+    animate(settings,frame){uniforms.uCoreGradientRotation.value.copy(rotation.update(settings,frame));},
+    restart(){rotation.reset();},
     update(settings,emission){
       uniforms.uCoreGradientMode.value={solid:0,two:1,three:2}[settings.mode];
       uniforms.uCoreGradientDirection.value={vertical:0,horizontal:1,depth:2,angle:3,radial:4}[settings.direction];
