@@ -2,7 +2,7 @@
 
 ## 로그인 3D 첫 구현 — 검토 브랜치
 
-`feature/login-3d-preview`에는 Figma 로그인 화면과 실시간 곡선 조형 3D 스튜디오의 `/login/` 미리보기가 있습니다. 설정은 오른쪽 패널이며, 회색 정지 조형 3안, 유리 보기 전환, 전체 모델 이동과 두께·곡률·비틀기 설정을 제공합니다. 이전 타일 모델도 비교 프리셋으로 유지합니다. 기존 소개 사이트는 유지됩니다. `node tools/serve-login.mjs` 실행 후 http://127.0.0.1:4173/login/?controls=1 에서 확인하세요. 자세한 실행·설정 구조·GitHub 작업·배포 방법과 후속 확장 범위는 [로그인 README](dist/login/README.md)를 참고하세요. **공개 배포와 main 병합은 수행하지 않습니다.**
+`feature/login-3d-preview`에는 Figma 로그인 화면과 **261101.blend 원본 메시·카메라를 사용하는 실시간 3D 스튜디오**의 `/login/` 미리보기가 있습니다. 파란 구와 원형 구멍이 있는 유리판 6개 배열을 기본으로 제공하며, 오른쪽 패널에서 형상·재질·초점·전체 이동을 편집합니다. 이전 곡선·타일 모델은 비교 프리셋으로 보존합니다. `node tools/serve-login.mjs` 실행 후 http://127.0.0.1:4173/login/?controls=1 에서 확인하세요. 실행·설정·Blender 재추출·GitHub·배포 방법은 [로그인 README](dist/login/README.md)를 참고하세요. **공개 배포와 main 병합은 수행하지 않습니다.**
 
 ExamVue 365 Flow 소개 웹사이트의 현재 작업 코드입니다.
 

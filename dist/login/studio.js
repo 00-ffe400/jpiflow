@@ -1,12 +1,21 @@
-import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyLoopModel,applyShapeReview} from './studio-state.js';
+import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyGlassStack} from './studio-state.js';
 
 const $=s=>document.querySelector(s),KEY='examvue.studio.v2',PRESETS='examvue.studio.presets.v2';
 const safe={read(key){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}};
 
 export function initStudio(){
-  let state;try{const saved=safe.read(KEY);state=saved?validate(saved):defaults();if(saved&&!saved.modelRevision)applyLoopModel(state);if(saved&&state.model==='loops'&&!saved.loops?.shapeRevision)applyShapeReview(state);if(saved)safe.write(KEY,state);}catch{state=defaults();}
-  let scene,target=state.model==='loops'?'loops':'crystal',tab='형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:glassLoops',saveTimer;
-  const modelDefaults=()=>state.model==='tiles'?builtInPresets().reference.settings:defaults();
+  let state;try{
+    const saved=safe.read(KEY);state=saved?validate(saved):defaults();
+    if(!safe.read(KEY+'.blend261101')){
+      if(saved)safe.write(KEY+'.beforeBlend261101',saved);
+      applyGlassStack(state);safe.write(KEY+'.blend261101',true);safe.write(KEY,state);
+    }
+  }catch{state=defaults();}
+  let scene,target=state.model==='glassStack'?'all':state.model==='loops'?'loops':'crystal',tab=state.model==='glassStack'?'구도':'형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:blender',saveTimer;
+  const isSource=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
+  const groupIds=()=>state.model==='glassStack'?(isSource()?['sphere','slabs']:['sphere','slabs','rings']):state.model==='loops'?['loops']:['tiles','pedestal','crystal'];
+  const modelDefaults=()=>state.model==='tiles'?builtInPresets().reference.settings:state.model==='loops'?builtInPresets().glassLoops.settings:isSource()?defaults():builtInPresets().glassStack.settings;
+  if(new URLSearchParams(location.search).get('view')==='scene')document.body.classList.add('scene-only');
   const osMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const panel=$('#studio');
   panel.innerHTML=`
@@ -48,12 +57,15 @@ export function initStudio(){
     return `<div class="control-row ${f.type==='boolean'?'boolean-row':''}" data-row="${f.path}">${label}${input}<p class="control-hint" id="${hint}">${f.hint||''}</p></div>`;
   }
   function actionsHTML(){
+    if(isSource()&&tab==='형태·배열'&&target!=='all')return '<p class="studio-help">261101.blend의 실제 메시·노멀·구멍을 사용합니다. 원형 고리로 보이는 부분은 판에 뚫린 구멍의 절단면입니다. 6개 배열과 원본 카메라를 기본값으로 제공합니다.</p>';
+    if(state.model==='glassStack'&&tab==='형태·배열'&&target!=='all')return '<p class="studio-help">002.png 기준으로 다시 만든 실제 3D입니다. 구·판·링을 각각 편집할 수 있습니다. 전체 이동과 카메라는 구도 탭에서 조절하세요.</p>';
+    if(state.model==='glassStack'&&tab==='색상·재질'&&target!=='all')return `<div class="scope-note">선택 대상 적용 <strong>${GROUPS[target]} · 실시간</strong></div><label class="material-link"><input id="material-link" type="checkbox" ${state.links.material?'checked':''}> 표시된 그룹의 이후 재질 변경 연결</label><p class="studio-help">형상의 두께와 굴절 계산용 두께는 별개입니다. 원본 재질로 돌아가려면 선택 그룹을 초기화하세요.</p><button class="full-button" data-action="material-all">전체에 현재 재질 적용</button>`;
     if(tab==='형태·배열'&&state.model==='loops'&&target==='loops')return `<div class="shape-review"><h3>기본 조형 검토</h3><p class="studio-help">큰 흐름 하나와 가는 보조 곡선입니다. 회색 정지 모형으로 실루엣부터 비교해 보세요.</p><div class="shape-options">${Object.entries({fold:'01 접힌 흐름',sweep:'02 긴 S',knot:'03 느슨한 꼬임'}).map(([id,label])=>`<button type="button" data-sculpture="${id}" aria-pressed="${state.loops.silhouette===id}">${label}</button>`).join('')}</div><div class="shape-preview-modes"><button type="button" data-preview="clay" aria-pressed="${state.loops.preview==='clay'}">회색 형태 보기</button><button type="button" data-preview="glass" aria-pressed="${state.loops.preview==='glass'}">유리 재질 보기</button></div></div>`;
     if(tab==='색상·재질'&&state.model==='loops')return target==='all'?'<p class="studio-help">유리 곡선을 선택하면 모든 곡선의 재질을 함께 편집할 수 있습니다.</p><button class="full-button" data-target="loops">유리 곡선 재질 편집 →</button>':'<div class="scope-note">선택 대상 적용 <strong>유리 곡선 전체 · 실시간</strong></div><p class="studio-help">실제 단면 두께와 굴절 계산용 두께를 각각 조절할 수 있습니다.</p><div class="shape-preview-modes"><button type="button" data-preview="clay">회색 형태 보기</button><button type="button" data-preview="glass">유리 재질 보기</button></div>';
-    if(tab==='구도'&&target==='all')return `<div class="studio-section-head"><label for="camera-profile">편집할 카메라</label><select id="camera-profile"><option value="camera" ${profile==='camera'?'selected':''}>데스크톱</option><option value="mobileCamera" ${profile==='mobileCamera'?'selected':''}>모바일 전용</option></select></div><p class="studio-help">수치는 장면 단위 u입니다. 기본 타일 가로가 약 1u입니다.</p><div class="action-grid"><button data-action="camera-reset">카메라 초기화</button><button data-action="camera-save">현재 구도 저장</button><button data-action="camera-load">저장 구도 불러오기</button></div>`;
+    if(tab==='구도'&&target==='all')return `<div class="studio-section-head"><label for="camera-profile">편집할 카메라</label><select id="camera-profile"><option value="camera" ${profile==='camera'?'selected':''}>데스크톱</option><option value="mobileCamera" ${profile==='mobileCamera'?'selected':''}>모바일 전용</option></select></div><p class="studio-help">수치는 장면 단위 u입니다. ${isSource()?'Blender 원본 판의 가로는 2u입니다.':'기본 타일 가로가 약 1u입니다.'}</p><div class="action-grid"><button data-action="camera-reset">카메라 초기화</button><button data-action="camera-save">현재 구도 저장</button><button data-action="camera-load">저장 구도 불러오기</button></div>`;
     if(tab==='형태·배열'&&target==='tiles')return `<div class="selection-tools"><div class="selection-heading"><strong>타일 선택</strong><span id="selection-count">${selected.length}개 선택</span></div><div class="pattern-buttons"><button data-pattern="all">전체</button><button data-pattern="border">테두리</button><button data-pattern="center">중앙 주변</button><button data-pattern="none">해제</button></div><p class="studio-help">선택 모드에서 클릭하면 여러 타일을 누적 선택합니다.</p><details><summary>선택 타일 개별 변경</summary><div class="selection-edit">${['x','y','z','rx','rz','scale'].map((k,i)=>`<label>${['좌우','높이','앞뒤','X 기울기','Z 기울기','크기 배율'][i]}<input data-selected="${k}" type="number" value="${k==='scale'?1:0}" step=".05" min="${k==='scale'?.1:-5}" max="${k==='scale'?3:5}"></label>`).join('')}<label>개별 색상<input id="selection-color" type="color" value="#348fee"></label></div><div class="action-grid"><button data-action="selection-apply">선택 타일에 적용</button><button data-action="selection-reset">선택 타일 복원</button></div></details></div><button class="full-button" data-action="reseed">랜덤 시드 다시 생성</button>`;
-    if(tab==='형태·배열'&&target==='all')return `<p class="studio-help">편집할 모델을 선택해 형태를 조절하세요.</p><div class="group-shortcuts">${Object.entries(GROUPS).filter(([id])=>id!=='all'&&(state.model==='loops'?id==='loops':id!=='loops')).map(([id,name])=>`<button data-target="${id}">${name} 편집 →</button>`).join('')}</div>`;
-    if(tab==='색상·재질')return target==='all'?`<p class="studio-help">재질은 그룹별로 저장합니다. 그룹을 선택하면 해당 그룹에 즉시 반영되고, ‘전체에 현재 재질 적용’을 누르면 세 그룹에 복사됩니다.</p><div class="group-shortcuts">${(state.model==='loops'?['loops']:['tiles','pedestal','crystal']).map(id=>`<button data-target="${id}">${GROUPS[id]} 재질 →</button>`).join('')}</div>`:`<div class="scope-note">선택 대상 적용 <strong>${GROUPS[target]} · 실시간</strong></div><label class="material-link"><input id="material-link" type="checkbox" ${state.links.material?'checked':''}> 세 그룹의 재질 설정 연결</label><p class="studio-help">연결은 이후 변경한 속성만 함께 바꿉니다. 전체 적용은 현재 재질 전체를 한 번 복사합니다.</p><button class="full-button" data-action="material-all">전체에 현재 재질 적용</button>`;
+    if(tab==='형태·배열'&&target==='all')return `<p class="studio-help">편집할 모델을 선택해 형태를 조절하세요.</p><div class="group-shortcuts">${Object.entries(GROUPS).filter(([id])=>groupIds().includes(id)).map(([id,name])=>`<button data-target="${id}">${name} 편집 →</button>`).join('')}</div>`;
+    if(tab==='색상·재질')return target==='all'?`<p class="studio-help">재질은 그룹별로 저장합니다. 그룹을 선택하면 해당 그룹에 즉시 반영되고, ‘전체에 현재 재질 적용’을 누르면 세 그룹에 복사됩니다.</p><div class="group-shortcuts">${groupIds().map(id=>`<button data-target="${id}">${GROUPS[id]} 재질 →</button>`).join('')}</div>`:`<div class="scope-note">선택 대상 적용 <strong>${GROUPS[target]} · 실시간</strong></div><label class="material-link"><input id="material-link" type="checkbox" ${state.links.material?'checked':''}> 세 그룹의 재질 설정 연결</label><p class="studio-help">연결은 이후 변경한 속성만 함께 바꿉니다. 전체 적용은 현재 재질 전체를 한 번 복사합니다.</p><button class="full-button" data-action="material-all">전체에 현재 재질 적용</button>`;
     if(tab==='조명·반사')return `<div class="studio-section-head"><label for="light-select">개별 조명</label><select id="light-select">${Object.entries({key:'주광',fill:'보조광',rim:'테두리광',ambient:'주변광',base:'받침대 아래 포인트'}).map(([id,label])=>`<option value="${id}" ${id===lightId?'selected':''}>${label}</option>`).join('')}</select></div><div class="action-grid three"><button data-action="light-reset">선택 초기화</button><button data-action="lights-reset">전체 초기화</button><button data-action="lights-off">모두 끄기</button></div>`;
     if(tab==='모션'&&target==='all')return `<button class="full-button" data-action="restart">모션 다시 시작</button><p class="studio-help">그룹별 정지는 각 그룹의 모션 탭에서 독립적으로 설정합니다. OS 움직임 줄이기가 우선 적용됩니다.</p>`;
     return '';
@@ -65,14 +77,14 @@ export function initStudio(){
     <h3>이미지 · 미리보기</h3><div class="action-grid"><button data-action="png">현재 화면 PNG</button><button data-action="png-transparent">투명 배경 PNG</button><button data-action="mobile-preview">모바일 미리보기</button><button data-action="desktop-preview">원래 화면</button></div><div id="export-preview" class="export-preview" hidden></div>
     <label class="text-label" for="quality-select">렌더링 품질</label><select id="quality-select">${Object.entries({auto:'자동 · 모바일 절약',low:'낮음',medium:'보통',high:'높음'}).map(([id,label])=>`<option value="${id}" ${state.render.quality===id?'selected':''}>${label}</option>`).join('')}</select><p class="studio-help">품질은 해상도, 유리 투과 버퍼, 그림자 맵 크기를 조절합니다.</p><button class="full-button danger" data-action="all-reset">전체 설정 초기화</button>`;}
   function render(){
-    $('#scene').setAttribute('aria-label',state.model==='loops'?(state.loops.preview==='clay'?'비대칭 곡선 조형 회색 모형':'비대칭 유리 곡선 조형'):'푸른 유리 크리스탈과 격자 타일');$('.visual-panel').setAttribute('aria-label','실시간 3D 그래픽');
-    $('.studio-top .eyebrow').textContent=state.model==='loops'&&state.loops.preview==='clay'?`FORM STUDY · ${{fold:'01',sweep:'02',knot:'03'}[state.loops.silhouette]||'LEGACY'}`:'REALTIME SCENE';
-    const validTargets=state.model==='loops'?['all','loops']:['all','tiles','pedestal','crystal'];if(!validTargets.includes(target))target=state.model==='loops'?'loops':'crystal';const targetSelect=$('#studio-target');targetSelect.replaceChildren(...validTargets.map(id=>new Option(GROUPS[id],id)));targetSelect.value=target;$('#tile-mode').disabled=state.model==='loops';$('#tile-mode').title=state.model==='loops'?'유리 곡선 모델에는 선택할 타일이 없습니다.':'';if(state.model==='loops'){scene?.setInteraction('camera');$('#camera-mode').setAttribute('aria-pressed','true');$('#tile-mode').setAttribute('aria-pressed','false');}
+    $('#scene').setAttribute('aria-label',state.model==='glassStack'?(isSource()?'Blender 원본 파란 구와 원형 구멍이 있는 6개 유리판':'코발트색 구와 겹쳐진 투명 유리판, 유리 링'):state.model==='loops'?(state.loops.preview==='clay'?'비대칭 곡선 조형 회색 모형':'비대칭 유리 곡선 조형'):'푸른 유리 크리스탈과 격자 타일');$('.visual-panel').setAttribute('aria-label','실시간 3D 그래픽');
+    $('.studio-top .eyebrow').textContent=isSource()?'BLENDER SOURCE · 261101':state.model==='loops'&&state.loops.preview==='clay'?`FORM STUDY · ${{fold:'01',sweep:'02',knot:'03'}[state.loops.silhouette]||'LEGACY'}`:'REALTIME SCENE';
+    const validTargets=['all',...groupIds()];if(!validTargets.includes(target))target=groupIds()[0];const targetSelect=$('#studio-target');targetSelect.replaceChildren(...validTargets.map(id=>new Option(GROUPS[id],id)));targetSelect.value=target;$('#tile-mode').disabled=state.model!=='tiles';$('#tile-mode').title=state.model!=='tiles'?'현재 모델에는 선택할 타일이 없습니다.':'';if(state.model!=='tiles'){scene?.setInteraction('camera');$('#camera-mode').setAttribute('aria-pressed','true');$('#tile-mode').setAttribute('aria-pressed','false');}
     const common=['조명·반사','그림자·배경','저장'].includes(tab);$('#studio-target').disabled=common;$('#studio-scope').hidden=!common;$('#group-reset').disabled=common;$('#group-reset').title=common?'그룹 초기화는 구도·형태·재질·모션 탭에서 사용하세요.':'';
     document.querySelectorAll('[data-tab]').forEach(button=>{const active=button.dataset.tab===tab;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});
     $('#studio-content').setAttribute('aria-labelledby',`tab-${TABS.indexOf(tab)}`);
-    const fields=fieldsFor(target,tab,profile,lightId).filter(f=>!(['loops.silhouette','loops.preview'].includes(f.path)&&tab==='형태·배열'));
-    if(tab==='구도'&&target==='all'){const pose=fields.filter(f=>f.path.startsWith('scene.')),camera=fields.filter(f=>!f.path.startsWith('scene.'));$('#studio-content').innerHTML=`<details class="whole-model-panel" open><summary>전체 모델 이동</summary><p class="studio-help">${state.model==='loops'?'유리 곡선 전체를':'타일·받침대·크리스탈을 함께'} 이동합니다. 카메라는 유지됩니다.</p><div class="control-list">${pose.map(descriptorHTML).join('')}</div><button class="full-button" data-action="scene-center">위치를 원점으로</button></details>${actionsHTML()}<div class="control-list">${camera.map(descriptorHTML).join('')}</div>`;}else $('#studio-content').innerHTML=tab==='저장'?storageHTML():`${actionsHTML()}<div class="control-list">${fields.map(descriptorHTML).join('')}</div>`;
+    const fields=fieldsFor(target,tab,profile,lightId,state.geometry.source).filter(f=>!(['loops.silhouette','loops.preview'].includes(f.path)&&tab==='형태·배열'));
+    if(tab==='구도'&&target==='all'){const pose=fields.filter(f=>f.path.startsWith('scene.')),camera=fields.filter(f=>!f.path.startsWith('scene.'));$('#studio-content').innerHTML=`<details class="whole-model-panel" open><summary>전체 모델 이동</summary><p class="studio-help">${state.model==='glassStack'?(isSource()?'구와 구멍이 있는 유리판을 함께':'구·유리판·링을 함께'):state.model==='loops'?'유리 곡선 전체를':'타일·받침대·크리스탈을 함께'} 이동합니다. 카메라는 유지됩니다.</p><div class="control-list">${pose.map(descriptorHTML).join('')}</div><button class="full-button" data-action="scene-center">위치를 원점으로</button></details>${state.model==='glassStack'?`<a class="reference-preview-link" href="?view=scene" target="_blank" rel="noopener">장면만 크게 보기 ↗</a><p class="studio-help">${isSource()?'261101.blend 원본 기준 · 구멍을 포함한 실제 메시와 원본 카메라입니다.':'002 이미지 기준 · 구·판·링을 조합한 이전 시안입니다.'} 구의 광택, 유리 단면, 층 간격과 초점을 개별 편집할 수 있습니다. 기본은 원본 비교를 위한 정지 상태입니다.</p>`:''}${actionsHTML()}<div class="control-list">${camera.map(descriptorHTML).join('')}</div>`;}else $('#studio-content').innerHTML=tab==='저장'?storageHTML():`${actionsHTML()}<div class="control-list">${fields.map(descriptorHTML).join('')}</div>`;
     $('#studio-content').scrollTop=0;if(tab==='저장')renderPresets();disableFields();
   }
   function syncInputs(){for(const input of document.querySelectorAll('[data-path]')){if(input===document.activeElement)continue;const value=get(state,input.dataset.path);if(input.type==='checkbox')input.checked=value;else input.value=value;}}
@@ -91,14 +103,15 @@ export function initStudio(){
       if(['pedestal.width','pedestal.depth'].includes(path)&&(state.pedestal.autoFit||state.pedestal.linkCrystal))reason='자동 크기 연결이 켜져 있습니다.';
       if(path.startsWith('background.fog')&&path!=='background.fog'&&!state.background.fog)reason='안개를 켜면 사용할 수 있습니다.';
       if(['background.color2','background.angle'].includes(path)&&state.background.mode!=='gradient')reason='그라데이션 배경에서 사용합니다.';
+      if(path.startsWith('lens.')&&path!=='lens.enabled'&&(state.model!=='glassStack'||!state.lens.enabled))reason=state.model!=='glassStack'?'002 유리판 장면에서 사용하는 렌즈 효과입니다.':'피사계 심도를 켜면 사용할 수 있습니다.';
       if(path==='motion.progress'&&state.motion.mode!=='manual')reason='특정 진행률에서 정지 모드에서 사용합니다.';
       if(['motion.scrollStart','motion.scrollEnd'].includes(path)&&state.motion.mode!=='scroll')reason='스크롤 진행 모드에서 사용합니다.';
-      const descriptor=fieldsFor(target,tab,profile,lightId).find(f=>f.path===path);row.querySelector('.control-hint').textContent=reason||descriptor?.hint||'';row.classList.toggle('is-disabled',Boolean(reason));row.querySelectorAll('input,select').forEach(input=>input.disabled=Boolean(reason));
+      const descriptor=fieldsFor(target,tab,profile,lightId,state.geometry.source).find(f=>f.path===path);row.querySelector('.control-hint').textContent=reason||descriptor?.hint||'';row.classList.toggle('is-disabled',Boolean(reason));row.querySelectorAll('input,select').forEach(input=>input.disabled=Boolean(reason));
     }
   }
   $('#studio-content').addEventListener('input',e=>{
     const input=e.target,path=input.dataset.path;if(!path)return;
-    const f=fieldsFor(target,tab,profile,lightId).find(f=>f.path===path);if(!f)return;
+    const f=fieldsFor(target,tab,profile,lightId,state.geometry.source).find(f=>f.path===path);if(!f)return;
     let value=input.type==='checkbox'?input.checked:f.type==='number'?Number(input.value):input.value;
     if(f.type==='number'){if(input.value===''||!Number.isFinite(value))return;value=Math.max(f.min,Math.min(f.max,value));if(f.step===1)value=Math.round(value);}
     if(f.type==='color'&&!/^#[0-9a-f]{6}$/i.test(value)){input.setCustomValidity('색상을 #RRGGBB 형식으로 입력해 주세요.');status('색상을 #RRGGBB 형식으로 입력해 주세요.');return;}input.setCustomValidity('');
@@ -106,7 +119,7 @@ export function initStudio(){
     if(path==='crystal.shape'&&value==='cube')state.crystal.height=state.crystal.depth=state.crystal.width;
     if(state.crystal.lockRatio&&/^crystal\.(width|height|depth)$/.test(path)){const ratio=value/old;for(const key of ['width','height','depth'])if(path!==`crystal.${key}`)state.crystal[key]=Math.max(.4,Math.min(4,state.crystal[key]*ratio));}
     if(path.endsWith('.material.preset'))Object.assign(state[target].material,MATERIAL_PRESETS[value]);
-    if(state.links.material&&path.includes('.material.'))for(const id of (state.model==='loops'?['loops']:['tiles','pedestal','crystal']))if(id!==target){if(path.endsWith('.preset'))Object.assign(state[id].material,clone(state[target].material));else set(state,`${id}.material.${path.split('.').at(-1)}`,value);}
+    if(state.links.material&&path.includes('.material.'))for(const id of groupIds())if(id!==target){if(path.endsWith('.preset'))Object.assign(state[id].material,clone(state[target].material));else set(state,`${id}.material.${path.split('.').at(-1)}`,value);}
     update();
   });
   $('#studio-content').addEventListener('change',async e=>{
@@ -124,11 +137,13 @@ export function initStudio(){
   function renderPresets(){
     const select=$('#preset-list');if(!select)return;select.replaceChildren();
     for(const [id,p]of Object.entries(builtInPresets()))select.add(new Option(p.name,`builtin:${id}`));
+    if(safe.read(KEY+'.beforeBlend261101'))select.add(new Option('Blender 교체 전 · 자동 백업','backup:blend'));
+    if(safe.read(KEY+'.before002'))select.add(new Option('이전 장면 · 자동 백업','backup:002'));
     presets().forEach((p,i)=>select.add(new Option(p.name,String(i))));
     if([...select.options].some(o=>o.value===selectedPreset))select.value=selectedPreset;else selectedPreset=select.value;
     presetPermissions();
   }
-  function presetPermissions(){const builtIn=$('#preset-list')?.value.startsWith('builtin:');for(const action of ['preset-rename','preset-delete']){const button=document.querySelector(`[data-action="${action}"]`);if(button){button.disabled=builtIn;button.title=builtIn?'기본 프리셋은 보존합니다. 현재 설정을 새 이름으로 저장한 뒤 편집하세요.':'';}}}
+  function presetPermissions(){const builtIn=/^(builtin|backup):/.test($('#preset-list')?.value||'');for(const action of ['preset-rename','preset-delete']){const button=document.querySelector(`[data-action="${action}"]`);if(button){button.disabled=builtIn;button.title=builtIn?'기본 프리셋은 보존합니다. 현재 설정을 새 이름으로 저장한 뒤 편집하세요.':'';}}}
   $('#studio-content').addEventListener('click',async e=>{
     const button=e.target.closest('button');if(!button)return;
     if(button.dataset.target){target=button.dataset.target;$('#studio-target').value=target;render();return;}
@@ -140,7 +155,7 @@ export function initStudio(){
       if(action==='camera-save'){const view=scene?.getCamera();if(view){state[view.profile]=view.value;safe.write('examvue.studio.savedCamera',view);persist();status('현재 구도를 저장했습니다.');}}
       if(action==='camera-load'){const saved=safe.read('examvue.studio.savedCamera');if(!saved||!['camera','mobileCamera'].includes(saved.profile))throw Error('저장한 구도가 없습니다.');const candidate=clone(state);candidate[saved.profile]=saved.value;state=validate(candidate);profile=saved.profile;scene?.setProfile(profile);update('저장한 구도를 불러왔습니다.');render();}
       if(action==='reseed'){state.tiles.seed=Math.floor(Math.random()*99999)+1;update();}
-      if(action==='material-all'){for(const id of (state.model==='loops'?['loops']:['tiles','pedestal','crystal']))state[id].material=clone(state[target].material);update('현재 재질을 세 그룹에 적용했습니다.');}
+      if(action==='material-all'){for(const id of groupIds())state[id].material=clone(state[target].material);update(`현재 재질을 ${groupIds().length}개 그룹에 적용했습니다.`);}
       if(action==='selection-apply'){
         if(!selected.length)throw Error('타일을 먼저 선택해 주세요.');const values={};for(const input of document.querySelectorAll('[data-selected]')){const number=Number(input.value);if(!Number.isFinite(number))throw Error('선택 타일의 수치를 확인하세요.');values[input.dataset.selected]=Math.max(Number(input.min),Math.min(Number(input.max),number));}values.color=$('#selection-color').value;for(const id of selected)state.tiles.overrides[id]={...state.tiles.overrides[id],...values};update(`${selected.length}개 타일에 적용했습니다.`);
       }
@@ -163,6 +178,7 @@ export function initStudio(){
       if(action==='all-reset'){state=modelDefaults();scene?.restart();update('전체 설정을 기본 장면으로 초기화했습니다.');render();}
       if(action.startsWith('preset-')){
         const list=presets(),key=$('#preset-list').value,index=Number(key),name=$('#preset-name').value.trim();
+        if(key.startsWith('backup:')&&action==='preset-load'){state=validate(safe.read(KEY+(key==='backup:blend'?'.beforeBlend261101':'.before002')));scene?.restart();update('이전 장면 자동 백업을 불러왔습니다.');render();return;}
         if(key.startsWith('builtin:')&&action==='preset-load'){const preset=builtInPresets()[key.slice(8)];state=validate(preset.settings);scene?.restart();update(`${preset.name} 프리셋을 적용했습니다.`);render();return;}
         if(action==='preset-save'){if(!name)throw Error('프리셋 이름을 입력해 주세요.');list.push({name,settings:clone(state)});if(list.length>30)list.shift();selectedPreset=String(list.length-1);}
         else {if(!list[index])throw Error('저장한 프리셋을 선택해 주세요.');if(action==='preset-load'){state=validate(list[index].settings);update('프리셋을 불러왔습니다.');render();}if(action==='preset-rename'){if(!name)throw Error('새 이름을 위에 입력해 주세요.');list[index].name=name;}if(action==='preset-delete')list.splice(index,1);}
@@ -172,12 +188,12 @@ export function initStudio(){
   });
   render();motionSync();$('#scene-fallback').style.background=state.model==='loops'&&state.loops.preview==='clay'?'linear-gradient(140deg,#d3d9df,#f4f5f6)':state.background.mode==='gradient'?`linear-gradient(${state.background.angle}deg,${state.background.color},${state.background.color2})`:state.background.color;
   const query=new URLSearchParams(location.search);open(query.get('controls')==='1');if(query.get('controls')==='0'){launcher.hidden=true;$('#scene-tools').hidden=true;}
-  import('./scene-v2.js').then(({createScene})=>{
-    scene=createScene($('#scene'),state,{
+  import('./scene-v2.js').then(async({createScene})=>{
+    scene=await createScene($('#scene'),state,{
       onCamera(key,value){state[key]=value;persist();syncInputs();},
       onSelection(ids){selected=ids;const count=$('#selection-count');if(count)count.textContent=`${ids.length}개 선택`;if(ids.length===1){const value=state.tiles.overrides[ids[0]]||{};for(const input of document.querySelectorAll('[data-selected]'))input.value=value[input.dataset.selected]??(input.dataset.selected==='scale'?1:0);if($('#selection-color'))$('#selection-color').value=value.color||state.tiles.material.color;}},
-      onStats(stats){$('#studio-stats').textContent=stats.model==='loops'?`${stats.count}개 곡선 · ${stats.preview==='clay'?'회색 조형 검토':'유리 재질 보기'}`:`${stats.tiles}개 타일 · InstancedMesh · 실제 유리 지오메트리`;},
-    });motionSync();$('#scene-fallback').classList.add('ready');
+      onStats(stats){if(stats.source==='blend261101')$('#scene').setAttribute('aria-label',`Blender 원본 파란 구와 원형 구멍이 있는 ${stats.slabs}개 유리판`);$('#studio-stats').textContent=stats.model==='glassStack'?stats.source==='blend261101'?`원본 메시 · 구 1 · 구멍 유리판 ${stats.slabs}장`:`구 1 · 유리판 ${stats.slabs} · 링 ${stats.rings} · 실제 3D`:stats.model==='loops'?`${stats.count}개 곡선 · ${stats.preview==='clay'?'회색 조형 검토':'유리 재질 보기'}`:`${stats.tiles}개 타일 · InstancedMesh · 실제 유리 지오메트리`;},
+    });scene.update(state);motionSync();$('#scene-fallback').classList.add('ready');
   }).catch(error=>{console.error(error);$('#scene-error').hidden=false;status('3D 초기화에 실패했습니다. 페이지를 새로고침해 주세요.');});
   return {reducedMotion:()=>osMotion.matches||state.motion.reduced};
 }
