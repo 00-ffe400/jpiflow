@@ -8,7 +8,9 @@ Install Node.js, then run `node tools/serve.mjs` and open http://127.0.0.1:4182/
 
 The right-hand 3D settings panel supports individual materials, sphere gradients, shared initial glass orientation, animation, presets, JSON import/export and PNG export. `?controls=1` opens the panel. `?controls=0` hides the controls. Changes are saved in this browser only.
 
-`dist/login/presets/site-default.json` starts from the scene exported from the user's working browser. Its camera, geometry, motion, gradient controls and text are preserved; the clear-glass revision updates materials and reflection lighting. The paired `.js` module is used at startup and as the reset preset.
+`dist/login/presets/site-default.json` contains the user's selected JSON settings from November 17, 2026. Every supplied value is preserved; newer fields absent from that export retain the existing rotating-gradient defaults and inherit the shared glass wall thickness. The original export is kept in `tools/fixtures/user-preset-20261117.json`. The paired `.js` module is used at startup and as the reset preset.
+
+`dist/login/site-settings.js` applies an explicit preset revision once to new and existing browsers, backing up their previous settings under `examvue.studio.v2.beforeSitePreset.<revision>`. Later browser edits remain untouched on reload. For another requested default change, update both default files and the exported `SITE_PRESET_REVISION` in the JS module. Historical automatic material/shape migrations are marked complete so they cannot replace the user's exact settings.
 
 The previous saved scene had opaque clay preview enabled. `glass-look.js` switches it to glass once, uses transmission with opacity 1, reduces absorption and optical thickness, and adds soft studio reflections through `glass-environment.js`. Existing visitors receive this material-only migration once (`examvue.studio.v2.clearGlass1`); subsequent material edits remain theirs. The original settings are backed up in the browser under `examvue.studio.v2.beforeClearGlass` and available in the Save tab as **이전 재질 · 변경 전 비교**. **사이트 기본 설정 · HEX** restores the new default.
 
@@ -31,6 +33,7 @@ node tools/serve.mjs
 node tools/check-materials.mjs
 node tools/check-glass-look.mjs
 node tools/check-thickness-motion.mjs
+node tools/check-site-preset.mjs
 ```
 
 ## Publish
