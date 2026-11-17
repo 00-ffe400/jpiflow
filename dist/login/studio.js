@@ -1,4 +1,4 @@
-import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics} from './studio-state.js';
+import {GROUPS,TABS,clone,defaults,fieldsFor,get,set,validate,MATERIAL_PRESETS,builtInPresets,applyGlassStack,applySphereDip,applySphereDetail,applyGlassOptics,applyPinHemisphere} from './studio-state.js';
 
 const $=s=>document.querySelector(s),KEY='examvue.studio.v2',PRESETS='examvue.studio.presets.v2';
 const safe={read(key){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{}}};
@@ -18,6 +18,7 @@ export function initStudio(){
     }
     if(!safe.read(KEY+'.pin633881716349791611')){if(saved)safe.write(KEY+'.beforePinOrbit',saved);state=defaults();safe.write(KEY,state);safe.write(KEY+'.pin633881716349791611',true);}
     if(state.model==='pinOrbit'&&state.modelRevision<6){safe.write(KEY+'.beforeContentOnly',state);state=defaults();safe.write(KEY,state);}
+    if(state.model==='pinOrbit'&&!state.pinCore.shapeRevision){safe.write(KEY+'.beforeHemisphere',state);applyPinHemisphere(state);safe.write(KEY,state);}
   }catch{state=defaults();}
   let scene,target=['glassStack','pinOrbit'].includes(state.model)?'all':state.model==='loops'?'loops':'crystal',tab=['glassStack','pinOrbit'].includes(state.model)?'구도':'형태·배열',profile='camera',lightId='key',selected=[],selectedPreset='builtin:pinOrbit',saveTimer;
   const isSource=()=>state.model==='glassStack'&&state.geometry.source==='blend261101';
@@ -91,7 +92,7 @@ export function initStudio(){
     <label class="text-label" for="quality-select">렌더링 품질</label><select id="quality-select">${Object.entries({auto:'자동 · 모바일 절약',low:'낮음',medium:'보통',high:'높음'}).map(([id,label])=>`<option value="${id}" ${state.render.quality===id?'selected':''}>${label}</option>`).join('')}</select><p class="studio-help">품질은 해상도, 유리 투과 버퍼, 그림자 맵 크기를 조절합니다.</p><button class="full-button danger" data-action="all-reset">전체 설정 초기화</button>`;}
   function render(){
     heroCopy.hidden=state.model!=='pinOrbit';
-    $('#scene').setAttribute('aria-label',state.model==='pinOrbit'?'회전하는 파란 중심 오브젝트와 세 겹의 유리 궤도':state.model==='glassStack'?(isSource()?'Blender 원본 파란 구와 원형 구멍이 있는 6개 유리판':'코발트색 구와 겹쳐진 투명 유리판, 유리 링'):state.model==='loops'?(state.loops.preview==='clay'?'비대칭 곡선 조형 회색 모형':'비대칭 유리 곡선 조형'):'푸른 유리 크리스탈과 격자 타일');$('.visual-panel').setAttribute('aria-label','실시간 3D 그래픽');
+    $('#scene').setAttribute('aria-label',state.model==='pinOrbit'?'평평한 원형 절단면이 있는 파란 반구와 유리 궤도':state.model==='glassStack'?(isSource()?'Blender 원본 파란 구와 원형 구멍이 있는 6개 유리판':'코발트색 구와 겹쳐진 투명 유리판, 유리 링'):state.model==='loops'?(state.loops.preview==='clay'?'비대칭 곡선 조형 회색 모형':'비대칭 유리 곡선 조형'):'푸른 유리 크리스탈과 격자 타일');$('.visual-panel').setAttribute('aria-label','실시간 3D 그래픽');
     $('.studio-top .eyebrow').textContent=state.model==='pinOrbit'?'BLUE CORE · GLASS ORBITS':isSource()?'BLENDER SOURCE · 261101':state.model==='loops'&&state.loops.preview==='clay'?`FORM STUDY · ${{fold:'01',sweep:'02',knot:'03'}[state.loops.silhouette]||'LEGACY'}`:'REALTIME SCENE';
     const validTargets=['all',...groupIds()];if(!validTargets.includes(target))target=groupIds()[0];const targetSelect=$('#studio-target');targetSelect.replaceChildren(...validTargets.map(id=>new Option(GROUPS[id],id)));targetSelect.value=target;$('#tile-mode').disabled=state.model!=='tiles';$('#tile-mode').title=state.model!=='tiles'?'현재 모델에는 선택할 타일이 없습니다.':'';if(state.model!=='tiles'){scene?.setInteraction('camera');$('#camera-mode').setAttribute('aria-pressed','true');$('#tile-mode').setAttribute('aria-pressed','false');}
     const common=['조명·반사','그림자·배경','저장'].includes(tab);$('#studio-target').disabled=common;$('#studio-scope').hidden=!common;$('#group-reset').disabled=common;$('#group-reset').title=common?'그룹 초기화는 구도·형태·재질·모션 탭에서 사용하세요.':'';
@@ -118,7 +119,8 @@ export function initStudio(){
       if(path.startsWith('background.fog')&&path!=='background.fog'&&!state.background.fog)reason='안개를 켜면 사용할 수 있습니다.';
       if(['background.color2','background.angle'].includes(path)&&state.background.mode!=='gradient')reason='그라데이션 배경에서 사용합니다.';
       if(path.startsWith('lens.')&&path!=='lens.enabled'&&(!['glassStack','pinOrbit'].includes(state.model)||!state.lens.enabled))reason=!['glassStack','pinOrbit'].includes(state.model)?'유리 오브젝트 장면에서 사용하는 렌즈 효과입니다.':'피사계 심도를 켜면 사용할 수 있습니다.';
-      if(state.model==='pinOrbit'&&path==='pinCore.roundness'&&state.pinCore.shape==='sphere')reason='구는 곡률이 일정합니다. 둥근 큐브 형태에서 모서리 곡률을 조절하세요.';
+      if(state.model==='pinOrbit'&&path==='pinCore.roundness'&&state.pinCore.shape!=='roundedCube')reason='둥근 큐브 형태에서 사용하는 설정입니다. 반구는 절단면 테두리 라운드를 조절하세요.';
+      if(state.model==='pinOrbit'&&path==='pinCore.rimRoundness'&&state.pinCore.shape!=='hemisphere')reason='반구 형태에서 절단면의 가장자리를 조절합니다.';
       if(isSource()&&path==='sphere.segments'&&!state.sphere.smooth)reason='고밀도 구 메시를 켜면 분할 수를 조절할 수 있습니다.';
       if(isSource()&&path==='sphere.motion.height'&&state.sphere.motion.type==='dip')reason='기존 수직 부유에서 사용합니다. 왕복 모션은 들어가는 깊이를 조절하세요.';
       if(isSource()&&['sphere.motion.depth','sphere.motion.duration'].includes(path)&&state.sphere.motion.type!=='dip')reason='유리 사이로 들어갔다 나오기 모션에서 사용합니다.';

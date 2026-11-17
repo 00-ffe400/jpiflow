@@ -110,7 +110,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function buildPin(){
     const c=state.pinCore,r=state.pinRings;
-    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,r.count,r.radiusX,r.radiusY,r.width,r.depth,r.twist,r.fan,r.segments]);
+    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,r.count,r.radiusX,r.radiusY,r.width,r.depth,r.twist,r.fan,r.segments]);
     if(keys.pin===key)return;keys.pin=key;for(const root of Object.values(pinRoots))disposeGroup(root);
     const fresh=createPinOrbits(state,mats,box);for(const id of pinIds){const children=fresh[id].children.slice();if(children.length)pinRoots[id].add(...children);}
   }

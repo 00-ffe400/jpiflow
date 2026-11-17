@@ -10,7 +10,7 @@ function proceduralDefaults(){return {
   version:2,model:'glassStack',modelRevision:3,look:'002-glass-stack',
   geometry:{source:'procedural002',revision:1},
   scene:{...transform(),scale:1},
-  pinCore:{...transform(),x:.65,y:0,z:0,rx:8,ry:-16,rz:-5,shape:'roundedCube',width:2.5,height:2.55,depth:2.45,roundness:.38,material:{...material('#1260ea',.12,0),reflection:.8,transmission:0,coat:.7,coatRoughness:.1,emissive:'#1427a6',emission:.035,attenuationColor:'#2d57de',attenuationDistance:2},motion:{paused:false,height:.045,speed:.12,spinX:0,spinY:1.8,spinZ:0}},
+  pinCore:{...transform(),x:.65,y:0,z:0,rx:32,ry:-16,rz:24,shape:'hemisphere',shapeRevision:1,width:2.5,height:1.25,depth:2.45,roundness:.38,rimRoundness:.012,material:{...material('#1260ea',.12,0),reflection:.8,transmission:0,coat:.7,coatRoughness:.1,emissive:'#1427a6',emission:.035,attenuationColor:'#2d57de',attenuationDistance:2},motion:{paused:false,height:.045,speed:.12,spinX:0,spinY:1.8,spinZ:0}},
   pinRings:{...transform(),x:.65,y:0,z:0,count:3,radiusX:2.1,radiusY:1.63,width:.19,depth:.075,twist:12,fan:0,segments:220,material:{...material('#c6e5ff',.035,0,1),reflection:1.2,ior:1.5,opticalThickness:.13,attenuationColor:'#688fdb',attenuationDistance:2.5,coat:.75,coatRoughness:.055,emission:0},motion:{paused:false,height:.045,speed:.12,spinX:0,spinY:4.5,spinZ:.6}},
   sphere:{...transform(),x:-.95,y:1.14,z:-.7,radius:1.08,smooth:false,segments:128,surfaceRevision:0,material:{...material('#2e2fae',.055,0),reflection:.012,coat:.08,coatRoughness:.09,attenuationColor:'#ffffff',emissive:'#202ca6',emission:.35},motion:{paused:false,type:'float',dipRevision:0,depth:.62,duration:6,height:.045,speed:.22,spinX:0,spinY:0,spinZ:0}},
   slabs:{...transform(),x:-.8,width:8.9,depth:5.7,thickness:.16,bevel:.008,count:4,spacing:2.15,offsetX:1.4,offsetZ:.4,fan:0,edgeColor:'#303b49',edgeTransmission:.2,sideColor:'#a6a7b3',sideTransmission:.88,optics:'standard',glassRevision:0,smoothCuts:false,edgeOpticalThickness:2,edgeAbsorptionColor:'#96a6b8',edgeAbsorptionDistance:1,normalStrength:1,edgeOpacity:1,sideOpacity:1,material:{...material('#f1f2f5',.025,0,1),reflection:.25,ior:1.5,opticalThickness:.16,attenuationColor:'#c4cbd3',attenuationDistance:8,coat:0,coatRoughness:.04,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
@@ -71,7 +71,7 @@ export function fieldsFor(target,tab,profile='camera',lightId='key',geometrySour
   }
   if(tab==='색상·재질')return target==='all'?[]:wrap([...matFields,...(target==='slabs'&&geometrySource==='blend261101'?[n('edgeOpticalThickness','단면 굴절 경로 길이',.1,4,.01,'u','얇은 윗면과 달리 절단면에서는 판 안쪽을 가로질러 빛이 이동합니다.'),c('edgeAbsorptionColor','단면 내부 흡수 색상'),n('edgeAbsorptionDistance','단면 색 흡수 거리',.2,6,.05,'u')]:[])]);
   if(tab==='형태·배열'){
-    if(target==='pinCore')return wrap([b('visible','중심 오브젝트 표시'),s('shape','중심 형태',{roundedCube:'매끈한 둥근 큐브',sphere:'매끈한 구'}),n('width','가로 크기',1,4,.01,'u'),n('height','높이',1,4,.01,'u'),n('depth','앞뒤 크기',1,4,.01,'u'),n('roundness','큐브 모서리 곡률',.05,.48,.005,'비율')]);
+    if(target==='pinCore')return wrap([b('visible','중심 오브젝트 표시'),s('shape','중심 형태',{hemisphere:'반구 · 평평한 원형 절단면',roundedCube:'이전 · 둥근 큐브',sphere:'매끈한 구'}),n('width','가로 크기',1,4,.01,'u'),n('height','높이',.3,4,.01,'u'),n('depth','앞뒤 크기',1,4,.01,'u'),n('rimRoundness','반구 절단면 테두리 라운드',.001,.08,.001,'비율','실제 반구의 둥근 곡면과 평평한 절단면을 연결하는 작은 경사입니다.'),n('roundness','큐브 모서리 곡률',.05,.48,.005,'비율')]);
     if(target==='pinRings')return wrap([b('visible','유리 궤도 표시'),n('count','궤도 개수',1,4,1,'개'),n('radiusX','궤도 가로 반경',1,3,.01,'u'),n('radiusY','궤도 세로 반경',1,3,.01,'u'),n('width','유리 띠 폭',.06,.4,.005,'u'),n('depth','유리 띠 두께',.025,.2,.005,'u'),n('twist','띠의 완만한 비틀기',0,90,1,'°'),n('fan','궤도 사이 추가 회전',-30,30,1,'°'),n('segments','곡선 분할',96,320,1,'분할')]);
     if(target==='sphere')return wrap([b('visible','구 표시'),n('radius','구 반지름',.1,2.5,.001,'u'),...(geometrySource==='blend261101'?[b('smooth','고밀도 구 메시','켜면 구를 촘촘하게 재생성합니다. 끄면 Blender 원본 메시를 사용합니다.'),n('segments','구 가로 분할 수',32,192,1,'분할','세로 분할은 가로의 75%입니다. 기본 128 × 96 분할로 윤곽과 반사를 매끈하게 만듭니다.')]:[])]);
     if(target==='slabs'&&geometrySource==='blend261101')return wrap([b('visible','유리판 표시'),s('optics','겹친 유리 표현',{layered:'겹침 굴절 · 원본 재질 방향',standard:'기본 렌더 · 가벼운 처리'},'겹침 굴절은 뒤쪽 유리까지 투과해 보이도록 순서대로 렌더합니다.'),b('smoothCuts','구멍 단면을 매끈하게','형상은 그대로 두고 원형 구멍의 반사 노멀을 매끈하게 연결합니다.'),n('width','원본 판 가로',.3,10,.01,'u','원형 구멍을 포함한 원본 메시를 가로로 조절합니다.'),n('depth','원본 판 세로',.3,10,.01,'u'),n('thickness','실제 판 두께',.02,1,.001,'u'),n('count','원본 배열 개수',1,12,1,'장'),n('spacing','배열 사이 거리',.1,3,.001,'u','Blender 원본 배열 방향을 유지합니다. 기본 상대 오프셋은 두께의 7배입니다.'),n('offsetX','층마다 추가 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 추가 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 추가 회전',-20,20,.1,'°'),n('normalStrength','원본 미세 질감 강도',0,1.5,.01,'×','원본 절차적 긁힘·라인을 베이크한 노멀맵입니다.'),c('edgeColor','절단면·구멍 안쪽 색상'),n('edgeTransmission','절단면·구멍 투과율',0,1,.01),n('edgeOpacity','절단면·구멍 불투명도',.05,1,.01),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),n('sideOpacity','옆·뒤 단면 불투명도',.05,1,.01)]);
@@ -115,6 +115,7 @@ export function validate(input){
     }
   }
   walk(result,input);
+  if(input.model==='pinOrbit'&&!input.pinCore?.shapeRevision)result.pinCore.shapeRevision=0;
   if(input.model==='glassStack'&&!input.geometry)result.geometry.source='procedural002';
   const descriptors=[];
   for(const target of Object.keys(GROUPS))for(const tab of TABS)for(const profile of ['camera','mobileCamera'])for(const lightId of Object.keys(result.lights))descriptors.push(...fieldsFor(target,tab,profile,lightId,result.geometry.source));
@@ -195,4 +196,11 @@ export function applyGlassOptics(state){
   Object.assign(state.slabs,{optics:'layered',glassRevision:1,smoothCuts:true,normalStrength:.25,edgeOpticalThickness:2,edgeAbsorptionColor:'#96a6b8',edgeAbsorptionDistance:1,edgeColor:'#ffffff',edgeTransmission:1,edgeOpacity:1,sideColor:'#ffffff',sideTransmission:1,sideOpacity:1});
   Object.assign(state.slabs.material,{color:'#ffffff',opacity:1,transmission:1,roughness:.085,metalness:0,ior:1.5,opticalThickness:state.slabs.thickness,attenuationColor:'#eff2f8',attenuationDistance:12,reflection:1,coat:0});
   return state;
+}
+
+// Shape-only correction: preserve camera, materials, orbits, text and motion.
+export function applyPinHemisphere(state){
+  if(state.model!=='pinOrbit'||state.pinCore.shapeRevision)return;
+  const core=state.pinCore;core.shape='hemisphere';core.height*=.5;
+  core.rx+=24;core.rz+=29;core.rimRoundness=.012;core.shapeRevision=1;
 }
