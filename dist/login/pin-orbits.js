@@ -77,12 +77,13 @@ export const SHELL_KEYS=['one','two','three','four'];
 export function createPinOrbits(state,materials,roundedBox){
   const pinCore=new THREE.Group(),pinRings=new THREE.Group();
   const core=state.pinCore,rings=state.pinRings;
-  const geometry=core.shape==='hemisphere'?cappedHemisphere(core.rimRoundness):core.shape==='sphere'?new THREE.SphereGeometry(1,96,64):roundedBox(1,1,1,core.roundness,18);
+  const geometry=core.shape==='hemisphere'?hollowHemisphere(.5,core.wallThickness/core.width,core.lipRoundness):core.shape==='solidHemisphere'?cappedHemisphere(core.rimRoundness):core.shape==='sphere'?new THREE.SphereGeometry(1,96,64):roundedBox(1,1,1,core.roundness,18);
   const center=new THREE.Mesh(geometry,materials.pinCore);
   center.scale.set(core.width,core.height,core.depth);
   if(core.shape==='sphere')center.scale.multiplyScalar(.5);
   // All hemispheres share their sphere center and equatorial opening plane.
-  if(core.shape==='hemisphere')center.position.y=-core.height/2;
+  if(core.shape==='solidHemisphere')center.position.y=-core.height/2;
+  if(core.shape==='hemisphere')center.scale.y*=2;
   pinCore.add(center);
   for(let i=0;i<rings.count;i++){
     const cfg=rings.layers[SHELL_KEYS[i]];

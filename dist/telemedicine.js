@@ -116,8 +116,10 @@
    const fill=reduceMotion.matches?1:(i<2?clamp((progress-.025)*7.2-i):clamp((progress-.63)*6.1-(i-2)));
    line.style.setProperty('--read-fill',fill*100+'%');
   });
-  reading.style.setProperty('--description-opacity','1');
-  reading.style.setProperty('--description-y','0px');
+  const headlineComplete=reduceMotion.matches||progress>=(.63+2/6.1);
+  reading.style.setProperty('--description-opacity',headlineComplete?'1':'0');
+  reading.style.setProperty('--description-y',headlineComplete?'0px':'14px');
+  reading.style.setProperty('--description-delay',headlineComplete?'.12s':'0s');
 
  }
  function requestReading(){if(!readingFrame)readingFrame=requestAnimationFrame(updateReading)}

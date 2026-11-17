@@ -3,6 +3,7 @@ import {createGlassLoops} from './glass-loops.js';
 import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
 import {dipProgress,applyAnimatedTranslation} from './scene-motion.js';
+import {createHemisphereComposite} from './hemisphere-composite.js';
 import {createGlassComposite} from './glass-composite.js';
 import {PIN_SHELL_TARGETS} from './studio-state.js';
 import {createPinOrbits,SHELL_KEYS} from './pin-orbits.js';
@@ -47,7 +48,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const tileRoot=new THREE.Group(),pedRoot=new THREE.Group(),crystalRoot=new THREE.Group(),coreRoot=new THREE.Group(),loopRoot=new THREE.Group();world.add(tileRoot,pedRoot,crystalRoot,coreRoot,loopRoot);
   const stackRoots={sphere:new THREE.Group(),slabs:new THREE.Group(),rings:new THREE.Group()};world.add(...Object.values(stackRoots));
   const pinRoots=Object.fromEntries(pinIds.map(id=>[id,new THREE.Group()]));world.add(...Object.values(pinRoots));
-  const glassComposite=createGlassComposite(renderer),lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
+  const hemisphereComposite=createHemisphereComposite(renderer),glassComposite=createGlassComposite(renderer),lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
   const perspective=new THREE.PerspectiveCamera(36,1,.1,200),orthographic=new THREE.OrthographicCamera(-10,10,10,-10,.1,200);let camera=perspective;
   const mats={};for(const id of ['tiles','pedestal','crystal','loops',...stackIds,...pinIds,...Object.keys(PIN_SHELL_TARGETS)]){mats[id]=new THREE.MeshPhysicalMaterial();mats[id].userData.shared=true;}
   mats.slabEdge=new THREE.MeshPhysicalMaterial();mats.slabEdge.userData.shared=true;
@@ -111,7 +112,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function buildPin(){
     const c=state.pinCore,r=state.pinRings;
-    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,r.count,r.radius,r.spacing,r.wallThickness,r.rimRoundness,r.segments]);
+    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,c.rimRoundness,c.wallThickness,c.lipRoundness,r.count,r.radius,r.spacing,r.wallThickness,r.rimRoundness,r.segments]);
     if(keys.pin===key)return;keys.pin=key;for(const root of Object.values(pinRoots))disposeGroup(root);
     const fresh=createPinOrbits(state,mats,box);for(const id of pinIds){const children=fresh[id].children.slice();if(children.length)pinRoots[id].add(...children);}
   }
@@ -143,7 +144,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   }
   function updateMaterials(){
     for(const [id,m]of Object.entries(mats).filter(([id])=>!['slabEdge','slabSide'].includes(id))){
-      const stored=(PIN_SHELL_TARGETS[id]?state.pinRings.layers[PIN_SHELL_TARGETS[id]]:state[id]).material,v=(id==='loops'&&clayPreview())||((id==='pinRings'||PIN_SHELL_TARGETS[id])&&state.pinRings.preview==='clay')?{...stored,color:'#a8bfd5',roughness:.48,metalness:0,transmission:0,opacity:1,reflection:.45,coat:0,emissive:'#000000',emission:0}:stored;m.color.set(id==='tiles'?'#ffffff':v.color);m.roughness=v.roughness;m.metalness=v.metalness;m.transmission=v.transmission;m.opacity=v.opacity;m.transparent=v.opacity<1;m.depthWrite=v.opacity>=1;
+      const stored=(PIN_SHELL_TARGETS[id]?state.pinRings.layers[PIN_SHELL_TARGETS[id]]:state[id]).material,v=(id==='loops'&&clayPreview())||((id==='pinRings'||PIN_SHELL_TARGETS[id])&&state.pinRings.preview==='clay')?{...stored,color:'#a8bfd5',roughness:.48,metalness:0,transmission:0,opacity:1,reflection:.45,coat:0,emissive:'#000000',emission:0}:stored;m.color.set(id==='tiles'?'#ffffff':v.color);m.roughness=v.roughness;m.metalness=v.metalness;m.transmission=v.transmission;m.opacity=v.opacity;m.transparent=id==='pinCore'||Boolean(PIN_SHELL_TARGETS[id])||v.opacity<1;m.depthWrite=id!=='pinCore'&&!PIN_SHELL_TARGETS[id]&&v.opacity>=1;
       m.specularIntensity=id==='loops'&&!clayPreview()?1.7:1;m.ior=v.ior;m.thickness=v.opticalThickness;m.attenuationColor.set(v.attenuationColor);m.attenuationDistance=v.attenuationDistance;m.clearcoat=v.coat;m.clearcoatRoughness=v.coatRoughness;m.emissive.set(v.emissive);m.emissiveIntensity=v.emission;
       m.envMapIntensity=v.reflection*(clayPreview()?1:state.environment.intensity);m.envMapRotation.set(0,rad(clayPreview()?0:state.environment.rotation),0);m.flatShading=id==='crystal'&&state.crystal.flat;m.side=usesBlender()&&id==='slabs'?THREE.DoubleSide:THREE.FrontSide;
       m.normalMap=id==='slabs'&&usesBlender()?blenderSource.normal:null;m.normalScale.setScalar(id==='slabs'?state.slabs.normalStrength:1);
@@ -275,7 +276,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     cameraUpdate(dt);renderFrame();if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
   }
   function renderFrame(){
-    if(state.model==='pinOrbit'){world.updateMatrixWorld(true);camera.updateMatrixWorld(true);pinRoots.pinCore.getWorldPosition(focusPoint);lens.render(scene,camera,state.lens,focusPoint,state.pinRings.optics==='layered'&&state.pinRings.preview==='glass'&&pinRoots.pinRings.children.some(o=>o.visible&&o.material.transmission>0)?destination=>glassComposite.render(scene,camera,pinRoots.pinRings,destination):undefined);}
+    if(state.model==='pinOrbit'){world.updateMatrixWorld(true);camera.updateMatrixWorld(true);pinRoots.pinCore.getWorldPosition(focusPoint);lens.render(scene,camera,state.lens,focusPoint,state.pinRings.optics==='layered'?destination=>hemisphereComposite.render(scene,camera,[...pinRoots.pinCore.children,...pinRoots.pinRings.children],destination):undefined);}
     else if(state.model==='glassStack'){
       world.updateMatrixWorld(true);camera.updateMatrixWorld(true);stackRoots.sphere.getWorldPosition(focusPoint);
       lens.render(scene,camera,state.lens,focusPoint,usesBlender()&&state.slabs.optics==='layered'?destination=>glassComposite.render(scene,camera,stackRoots.slabs,destination):undefined);
@@ -314,7 +315,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     finally{renderer.setClearColor(old,alpha);scene.background=background;scene.fog=fog;ground.visible=g;contact.visible=c;renderFrame();}
   }
   function selectPattern(pattern){selection.clear();for(const t of tileData)if(pattern==='all'||pattern==='border'&&(t.row===0||t.column===0||t.row===state.tiles.rows-1||t.column===state.tiles.columns-1)||pattern==='center'&&Math.hypot(t.x,t.z)<3)selection.add(t.id);onSelection([...selection]);settleUntil=performance.now()+200;schedule();}
-  function destroy(){disposed=true;cancelAnimationFrame(raf);clearTimeout(environmentTimer);resizeObserver.disconnect();visibilityObserver.disconnect();document.removeEventListener('visibilitychange',visibility);removeEventListener('scroll',scroll);for(const[name,fn]of Object.entries(events))renderer.domElement.removeEventListener(name,fn);renderer.domElement.removeEventListener('wheel',wheel);tilesMesh?.dispose();disposeGroup(scene);for(const m of [...Object.values(mats),coreMat,edgeMat])m.dispose();environmentTarget?.dispose();shadowTexture.dispose();backgroundTexture?.dispose();lens.dispose();glassComposite.dispose();blenderSource.dispose();renderer.dispose();renderer.domElement.remove();}
+  function destroy(){disposed=true;cancelAnimationFrame(raf);clearTimeout(environmentTimer);resizeObserver.disconnect();visibilityObserver.disconnect();document.removeEventListener('visibilitychange',visibility);removeEventListener('scroll',scroll);for(const[name,fn]of Object.entries(events))renderer.domElement.removeEventListener(name,fn);renderer.domElement.removeEventListener('wheel',wheel);tilesMesh?.dispose();disposeGroup(scene);for(const m of [...Object.values(mats),coreMat,edgeMat])m.dispose();environmentTarget?.dispose();shadowTexture.dispose();backgroundTexture?.dispose();lens.dispose();hemisphereComposite.dispose();glassComposite.dispose();blenderSource.dispose();renderer.dispose();renderer.domElement.remove();}
   addEventListener('pagehide',e=>{if(!e.persisted)destroy();},{once:true});update(state);resize();
   return {
     update(next){settleUntil=performance.now()+1200;update(next);},setPaused(value){externalPause=value;last=performance.now();settleUntil=performance.now()+50;schedule();},
