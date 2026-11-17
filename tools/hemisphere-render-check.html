@@ -1,0 +1,37 @@
+<!doctype html><meta charset="utf-8"><title>Hemisphere transparency regression</title>
+<style>body{font:16px/1.6 system-ui;background:#122031;color:#dbefff;padding:24px}canvas{width:256px;height:256px;image-rendering:pixelated}pre{white-space:pre-wrap}</style>
+<h1>Transparency regression</h1><pre id="result">Running GPU checks…</pre>
+<script type="module">
+import * as THREE from '/vendor/three.module.js';
+import {createHemisphereComposite} from '/login/hemisphere-composite.js';
+import {hollowHemisphere} from '/login/pin-orbits.js';
+const result=document.querySelector('#result'),messages=[];
+const check=(ok,message)=>{if(!ok)throw Error(message);messages.push('PASS: '+message);};
+const renderer=new THREE.WebGLRenderer({antialias:false});renderer.setSize(64,64);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;document.body.append(renderer.domElement);
+const composite=createHemisphereComposite(renderer),scene=new THREE.Scene();scene.background=new THREE.Color(0);
+const camera=new THREE.OrthographicCamera(-2,2,2,-2,.1,20);camera.position.z=6;camera.lookAt(0,0,0);camera.updateMatrixWorld();
+const target=new THREE.WebGLRenderTarget(64,64,{colorSpace:THREE.LinearSRGBColorSpace}),pixels=new Uint8Array(64*64*4);
+const red=new THREE.MeshBasicMaterial({color:0xff0000,opacity:1,transparent:true,depthWrite:false});
+const green=new THREE.MeshBasicMaterial({color:0x00ff00,opacity:1,transparent:true,depthWrite:false});
+const front=new THREE.Mesh(new THREE.PlaneGeometry(3,3).translate(0,0,1),red),back=new THREE.Mesh(new THREE.PlaneGeometry(3,3).translate(0,0,-1),green);scene.add(front,back);
+function draw(objects){scene.updateMatrixWorld(true);composite.render(scene,camera,objects,target);renderer.readRenderTargetPixels(target,0,0,64,64,pixels);return [...pixels.slice((32*64+32)*4,(32*64+32)*4+3)];}
+try{
+  const opaque=draw([front,back]);check(opaque[0]>250&&opaque[1]<3,'Opaque front surface occludes the rear surface');
+  red.opacity=.99;const almost=draw([front,back]);
+  check(Math.abs(almost[0]-opaque[0])<5&&almost[1]<5,'1 → 0.99 opacity does not invert depth order');
+  red.opacity=.4;const faded=draw([front,back]);
+  check(Math.abs(faded[0]-102)<4&&Math.abs(faded[1]-153)<4,'0.4 opacity blends the actual front and rear surfaces');
+  const reversed=draw([back,front]);check(reversed.every((v,i)=>Math.abs(v-faded[i])<=1),'Reversing coincident object centers does not change the result');
+  scene.remove(front,back);
+  const bowls=[1,1.3,1.6].map((r,i)=>{const material=new THREE.MeshBasicMaterial({color:[0x2277ff,0x00bb88,0xff5533][i],transparent:true,opacity:.45,depthWrite:false});const mesh=new THREE.Mesh(hollowHemisphere(r,.04,1,96,48),material);mesh.rotation.set(.8+i*.5,i*.4,.3-i*.5);scene.add(mesh);return mesh;});
+  draw(bowls);const image=pixels.slice();draw([...bowls].reverse());
+  check(pixels.every((v,i)=>Math.abs(v-image[i])<=1),'Rotated hollow bowls compose identically in either object order');
+  scene.background=null;renderer.setClearColor(0,0);draw(bowls);
+  check(pixels[3]===0,'Transparent exports keep the background alpha clear');
+  scene.background=new THREE.Color(0);renderer.setClearColor(0,1);
+  renderer.setRenderTarget(null);composite.render(scene,camera,bowls);
+  for(const mesh of bowls){mesh.geometry.dispose();mesh.material.dispose();}
+  result.textContent=messages.join('\n')+'\nALL GPU CHECKS PASSED';result.dataset.status='passed';
+}catch(error){result.textContent=messages.join('\n')+'\nFAIL: '+error.message;result.dataset.status='failed';console.error(error);}
+finally{composite.dispose();target.dispose();front.geometry.dispose();back.geometry.dispose();red.dispose();green.dispose();}
+</script>

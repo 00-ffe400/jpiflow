@@ -260,33 +260,22 @@ const FXAAShader = {
 
 		}
 
-		vec4 ApplyFXAA( sampler2D  tex2D, vec2 texSize, vec2 uv ) {
-
-			LuminanceData luminance = SampleLuminanceNeighborhood( tex2D, texSize, uv );
-			if ( ShouldSkipPixel( luminance ) ) {
-
-				return Sample( tex2D, uv );
-
-			}
-
-			float pixelBlend = DeterminePixelBlendFactor( luminance );
-			EdgeData edge = DetermineEdge( texSize, luminance );
-			float edgeBlend = DetermineEdgeBlendFactor( tex2D, texSize, luminance, edge, uv );
-			float finalBlend = max( pixelBlend, edgeBlend );
-
-			if (edge.isHorizontal) {
-
-				uv.y += edge.pixelStep * finalBlend;
-
-			} else {
-
-				uv.x += edge.pixelStep * finalBlend;
-
-			}
-
-			return Sample( tex2D, uv );
-
-		}
+		vec4 ApplyFXAA( sampler2D tex2D, vec2 texSize, vec2 uv ) {
+            // A single initialized return also avoids a spurious ANGLE/D3D
+            // uninitialized-return warning for the upstream early-return form.
+            vec4 result = Sample( tex2D, uv );
+            LuminanceData luminance = SampleLuminanceNeighborhood( tex2D, texSize, uv );
+            if ( !ShouldSkipPixel( luminance ) ) {
+                float pixelBlend = DeterminePixelBlendFactor( luminance );
+                EdgeData edge = DetermineEdge( texSize, luminance );
+                float edgeBlend = DetermineEdgeBlendFactor( tex2D, texSize, luminance, edge, uv );
+                float finalBlend = max( pixelBlend, edgeBlend );
+                if ( edge.isHorizontal ) uv.y += edge.pixelStep * finalBlend;
+                else uv.x += edge.pixelStep * finalBlend;
+                result = Sample( tex2D, uv );
+            }
+            return result;
+        }
 
 		void main() {
 

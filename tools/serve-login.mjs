@@ -8,6 +8,10 @@ const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8',
 const server=http.createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://localhost');
+    if(url.pathname==='/__checks__/hemispheres'){
+      res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});
+      res.end(await readFile(new URL('./hemisphere-render-check.html',import.meta.url)));return;
+    }
     if(url.pathname==='/'){res.writeHead(302,{Location:'/login/'});res.end();return;}
     let file=path.resolve(root,'.'+decodeURIComponent(url.pathname));
     const relative=path.relative(root,file);
