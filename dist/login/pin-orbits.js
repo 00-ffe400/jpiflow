@@ -72,15 +72,30 @@ export function hollowHemisphere(radius=1.45,thickness=.04,rimRoundness=1,segmen
   g.computeBoundingBox();g.computeBoundingSphere();return g;
 }
 
+// Closed spherical wall, retaining the empty interior of the former bowl.
+export function hollowSphere(thickness=.018){
+  const outer=new THREE.SphereGeometry(.5,128,96),inner=new THREE.SphereGeometry(.5-Math.min(.49,Math.max(.001,thickness)),128,96);
+  const normals=inner.attributes.normal;
+  for(let i=0;i<normals.count;i++)normals.setXYZ(i,-normals.getX(i),-normals.getY(i),-normals.getZ(i));
+  const inside=inner.index.array;
+  for(let i=0;i<inside.length;i+=3){const temp=inside[i+1];inside[i+1]=inside[i+2];inside[i+2]=temp;}
+  const geometry=new THREE.BufferGeometry();
+  for(const key of ['position','normal','uv']){
+    const a=outer.attributes[key],b=inner.attributes[key],array=new Float32Array(a.array.length+b.array.length);
+    array.set(a.array);array.set(b.array,a.array.length);geometry.setAttribute(key,new THREE.BufferAttribute(array,a.itemSize));
+  }
+  geometry.setIndex([...outer.index.array,...inner.index.array].map((v,i)=>i<outer.index.count?v:v+outer.attributes.position.count));
+  outer.dispose();inner.dispose();geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
+}
+
 export const SHELL_KEYS=['one','two','three','four'];
 
 export function createPinOrbits(state,materials,roundedBox){
   const pinCore=new THREE.Group(),pinRings=new THREE.Group();
   const core=state.pinCore,rings=state.pinRings;
-  const geometry=core.shape==='hemisphere'?hollowHemisphere(.5,core.wallThickness/core.width,core.lipRoundness):core.shape==='solidHemisphere'?cappedHemisphere(core.rimRoundness):core.shape==='sphere'?new THREE.SphereGeometry(1,96,64):roundedBox(1,1,1,core.roundness,18);
+  const geometry=core.shape==='hemisphere'?hollowHemisphere(.5,core.wallThickness/core.width,core.lipRoundness):core.shape==='solidHemisphere'?cappedHemisphere(core.rimRoundness):core.shape==='sphere'?hollowSphere(core.wallThickness/core.width):roundedBox(1,1,1,core.roundness,18);
   const center=new THREE.Mesh(geometry,materials.pinCore);
   center.scale.set(core.width,core.height,core.depth);
-  if(core.shape==='sphere')center.scale.multiplyScalar(.5);
   // All hemispheres share their sphere center and equatorial opening plane.
   if(core.shape==='solidHemisphere')center.position.y=-core.height/2;
   if(core.shape==='hemisphere')center.scale.y*=2;
