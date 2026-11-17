@@ -1,4 +1,5 @@
-export const GROUPS = {all:'전체',sphere:'코발트 구',slabs:'유리판',rings:'유리 링',loops:'유리 곡선',tiles:'바닥 타일',pedestal:'중앙 받침대',crystal:'중앙 크리스탈'};
+import baseline from './presets/current-baseline.js';
+export const GROUPS = {all:'전체',pinCore:'파란 중심 오브젝트',pinRings:'유리 궤도',sphere:'코발트 구',slabs:'유리판',rings:'유리 링',loops:'유리 곡선',tiles:'바닥 타일',pedestal:'중앙 받침대',crystal:'중앙 크리스탈'};
 export const TABS = ['구도','형태·배열','색상·재질','조명·반사','그림자·배경','모션','저장'];
 export const clone = value => structuredClone(value);
 const transform = () => ({visible:true,x:0,y:0,z:0,rx:0,ry:0,rz:0,scale:1});
@@ -9,6 +10,8 @@ function proceduralDefaults(){return {
   version:2,model:'glassStack',modelRevision:3,look:'002-glass-stack',
   geometry:{source:'procedural002',revision:1},
   scene:{...transform(),scale:1},
+  pinCore:{...transform(),x:.65,y:0,z:0,rx:8,ry:-16,rz:-5,shape:'roundedCube',width:2.5,height:2.55,depth:2.45,roundness:.38,material:{...material('#1260ea',.12,0),reflection:.8,transmission:0,coat:.7,coatRoughness:.1,emissive:'#1427a6',emission:.035,attenuationColor:'#2d57de',attenuationDistance:2},motion:{paused:false,height:.045,speed:.12,spinX:0,spinY:1.8,spinZ:0}},
+  pinRings:{...transform(),x:.65,y:0,z:0,count:3,radiusX:2.1,radiusY:1.63,width:.19,depth:.075,twist:12,fan:0,segments:220,material:{...material('#c6e5ff',.035,0,1),reflection:1.2,ior:1.5,opticalThickness:.13,attenuationColor:'#688fdb',attenuationDistance:2.5,coat:.75,coatRoughness:.055,emission:0},motion:{paused:false,height:.045,speed:.12,spinX:0,spinY:4.5,spinZ:.6}},
   sphere:{...transform(),x:-.95,y:1.14,z:-.7,radius:1.08,smooth:false,segments:128,surfaceRevision:0,material:{...material('#2e2fae',.055,0),reflection:.012,coat:.08,coatRoughness:.09,attenuationColor:'#ffffff',emissive:'#202ca6',emission:.35},motion:{paused:false,type:'float',dipRevision:0,depth:.62,duration:6,height:.045,speed:.22,spinX:0,spinY:0,spinZ:0}},
   slabs:{...transform(),x:-.8,width:8.9,depth:5.7,thickness:.16,bevel:.008,count:4,spacing:2.15,offsetX:1.4,offsetZ:.4,fan:0,edgeColor:'#303b49',edgeTransmission:.2,sideColor:'#a6a7b3',sideTransmission:.88,optics:'standard',glassRevision:0,smoothCuts:false,edgeOpticalThickness:2,edgeAbsorptionColor:'#96a6b8',edgeAbsorptionDistance:1,normalStrength:1,edgeOpacity:1,sideOpacity:1,material:{...material('#f1f2f5',.025,0,1),reflection:.25,ior:1.5,opticalThickness:.16,attenuationColor:'#c4cbd3',attenuationDistance:8,coat:0,coatRoughness:.04,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
   rings:{...transform(),x:-1.15,y:.95,z:1.2,radius:1.12,tube:.065,tiltX:-23,tiltZ:28,count:3,spacing:2.15,offsetX:1.4,offsetZ:.4,material:{...material('#b9c4d0',.035,0,.96),reflection:1.2,ior:1.5,opticalThickness:.14,attenuationColor:'#b9c4d0',attenuationDistance:1.5,coat:.35,emissive:'#000000'},motion:{paused:false,height:0,speed:0,spinX:0,spinY:0,spinZ:0}},
@@ -26,7 +29,7 @@ function proceduralDefaults(){return {
   render:{quality:'auto'},links:{material:false},
 };}
 
-export function defaults(){
+function blenderDefaults(){
   const state=proceduralDefaults();state.geometry.source='blend261101';state.modelRevision=4;state.look='blender-261101';
   Object.assign(state.sphere,{x:0,y:0,z:0,radius:.3548051416873932,smooth:false});
   Object.assign(state.sphere.material,{color:'#4942bd',emissive:'#323cab',emission:.6});
@@ -38,6 +41,17 @@ export function defaults(){
   state.lights={key:light('point','#ffffff',159,4.0762453,9.4124508,.8374953),fill:light('point','#ffffff',1.2,.1257412,-.481882,1.2957581),rim:{...state.lights.rim,enabled:false},ambient:light('ambient','#ffffff',1.4,0,0,0),base:{...state.lights.base,enabled:false}};
   state.background.color='#b0a9bd';
   state.sphere.motion.height=.02;applySphereDip(state);applySphereDetail(state);applyGlassOptics(state);state.environment.intensity=.85;
+  return state;
+}
+
+export function defaults(){
+  const state=proceduralDefaults();state.model='pinOrbit';state.modelRevision=6;state.look='pinterest-633881716349791611';state.geometry.source='pinOrbit';
+  state.camera={...camera(),distance:10.8,azimuth:-4,elevation:6,targetX:0,targetY:0,targetZ:0,fov:34,padding:0};
+  state.mobileCamera={...state.camera,distance:11.5,fov:38,targetX:.65};state.mobile={enabled:true,scale:1,x:0,y:0,z:0};
+  state.background={...state.background,mode:'gradient',color:'#c2d0e2',color2:'#7695bd',angle:170,ground:false,groundColor:'#b7c6d7',groundRoughness:.38,shadowOpacity:.1,fog:false,fogColor:'#c7d2df',fogNear:27,fogFar:55};
+  state.environment={intensity:.7,rotation:-10,blur:.14,exposure:.9};
+  state.lights={key:light('directional','#ffffff',2.8,-5,10,7),fill:light('directional','#d4e8ff',1.1,7,5,4),rim:light('point','#e1eeff',22,-4,6,-3),ambient:light('ambient','#eaf3ff',1.1,0,0,0),base:light('point','#2a65f5',3,.5,2.6,2)};
+  state.motion={...state.motion,paused:false,parallax:0,smoothness:.14};state.lens={enabled:false,strength:2,range:4,sharpRange:1.8,detailRevision:1,offset:0};
   return state;
 }
 
@@ -53,10 +67,12 @@ export function fieldsFor(target,tab,profile='camera',lightId='key',geometrySour
   const wrap=(fields,p=prefix)=>fields.map(f=>({...f,path:`${p}.${f.key}`}));
   if(tab==='구도'){
     if(target!=='all')return wrap([b('visible','그룹 표시'),...pose]);
-    return [...wrap(pose),...wrap(cameraFields,profile),...wrap([b('enabled','피사계 심도 사용','구를 초점으로 삼고 앞뒤 유리판을 흐리게 만듭니다.'),n('strength','렌즈 흐림 강도',0,10,.1,'px'),n('sharpRange','구 주변 선명 범위',0,2,.05,'u','구 앞뒤의 이 깊이 범위는 흐리지 않습니다. 구와 가까운 구멍 테두리를 함께 선명하게 유지합니다.'),n('range','흐림 전환 거리',.5,12,.05,'u','선명한 영역 밖에서 서서히 흐려지는 거리입니다.'),n('offset','초점 앞뒤 이동',-8,8,.05,'u')],'lens'),...wrap([b('enabled','모바일 전용 설정'),n('scale','모바일 크기',.2,2,.01,'×'),n('x','모바일 X',-5,5,.05,'u'),n('y','모바일 Y',-5,5,.05,'u'),n('z','모바일 Z',-5,5,.05,'u')],'mobile')];
+    return [...wrap(pose),...wrap(cameraFields,profile),...wrap([b('enabled','피사계 심도 사용','중심 오브젝트를 기준으로 앞뒤 깊이를 흐리게 만듭니다.'),n('strength','렌즈 흐림 강도',0,10,.1,'px'),n('sharpRange','구 주변 선명 범위',0,2,.05,'u','구 앞뒤의 이 깊이 범위는 흐리지 않습니다. 구와 가까운 구멍 테두리를 함께 선명하게 유지합니다.'),n('range','흐림 전환 거리',.5,12,.05,'u','선명한 영역 밖에서 서서히 흐려지는 거리입니다.'),n('offset','초점 앞뒤 이동',-8,8,.05,'u')],'lens'),...wrap([b('enabled','모바일 전용 설정'),n('scale','모바일 크기',.2,2,.01,'×'),n('x','모바일 X',-5,5,.05,'u'),n('y','모바일 Y',-5,5,.05,'u'),n('z','모바일 Z',-5,5,.05,'u')],'mobile')];
   }
   if(tab==='색상·재질')return target==='all'?[]:wrap([...matFields,...(target==='slabs'&&geometrySource==='blend261101'?[n('edgeOpticalThickness','단면 굴절 경로 길이',.1,4,.01,'u','얇은 윗면과 달리 절단면에서는 판 안쪽을 가로질러 빛이 이동합니다.'),c('edgeAbsorptionColor','단면 내부 흡수 색상'),n('edgeAbsorptionDistance','단면 색 흡수 거리',.2,6,.05,'u')]:[])]);
   if(tab==='형태·배열'){
+    if(target==='pinCore')return wrap([b('visible','중심 오브젝트 표시'),s('shape','중심 형태',{roundedCube:'매끈한 둥근 큐브',sphere:'매끈한 구'}),n('width','가로 크기',1,4,.01,'u'),n('height','높이',1,4,.01,'u'),n('depth','앞뒤 크기',1,4,.01,'u'),n('roundness','큐브 모서리 곡률',.05,.48,.005,'비율')]);
+    if(target==='pinRings')return wrap([b('visible','유리 궤도 표시'),n('count','궤도 개수',1,4,1,'개'),n('radiusX','궤도 가로 반경',1,3,.01,'u'),n('radiusY','궤도 세로 반경',1,3,.01,'u'),n('width','유리 띠 폭',.06,.4,.005,'u'),n('depth','유리 띠 두께',.025,.2,.005,'u'),n('twist','띠의 완만한 비틀기',0,90,1,'°'),n('fan','궤도 사이 추가 회전',-30,30,1,'°'),n('segments','곡선 분할',96,320,1,'분할')]);
     if(target==='sphere')return wrap([b('visible','구 표시'),n('radius','구 반지름',.1,2.5,.001,'u'),...(geometrySource==='blend261101'?[b('smooth','고밀도 구 메시','켜면 구를 촘촘하게 재생성합니다. 끄면 Blender 원본 메시를 사용합니다.'),n('segments','구 가로 분할 수',32,192,1,'분할','세로 분할은 가로의 75%입니다. 기본 128 × 96 분할로 윤곽과 반사를 매끈하게 만듭니다.')]:[])]);
     if(target==='slabs'&&geometrySource==='blend261101')return wrap([b('visible','유리판 표시'),s('optics','겹친 유리 표현',{layered:'겹침 굴절 · 원본 재질 방향',standard:'기본 렌더 · 가벼운 처리'},'겹침 굴절은 뒤쪽 유리까지 투과해 보이도록 순서대로 렌더합니다.'),b('smoothCuts','구멍 단면을 매끈하게','형상은 그대로 두고 원형 구멍의 반사 노멀을 매끈하게 연결합니다.'),n('width','원본 판 가로',.3,10,.01,'u','원형 구멍을 포함한 원본 메시를 가로로 조절합니다.'),n('depth','원본 판 세로',.3,10,.01,'u'),n('thickness','실제 판 두께',.02,1,.001,'u'),n('count','원본 배열 개수',1,12,1,'장'),n('spacing','배열 사이 거리',.1,3,.001,'u','Blender 원본 배열 방향을 유지합니다. 기본 상대 오프셋은 두께의 7배입니다.'),n('offsetX','층마다 추가 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 추가 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 추가 회전',-20,20,.1,'°'),n('normalStrength','원본 미세 질감 강도',0,1.5,.01,'×','원본 절차적 긁힘·라인을 베이크한 노멀맵입니다.'),c('edgeColor','절단면·구멍 안쪽 색상'),n('edgeTransmission','절단면·구멍 투과율',0,1,.01),n('edgeOpacity','절단면·구멍 불투명도',.05,1,.01),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),n('sideOpacity','옆·뒤 단면 불투명도',.05,1,.01)]);
     if(target==='slabs')return wrap([b('visible','유리판 표시'),n('width','판 가로',2,12,.01,'u'),n('depth','판 세로',2,12,.01,'u'),n('thickness','실제 판 두께',.03,.6,.005,'u'),n('bevel','모서리 라운드',.002,.1,.001,'u'),n('count','판 개수',1,6,1,'장'),n('spacing','층 사이 높이',.3,3,.01,'u'),n('offsetX','층마다 좌우 이동',-2,2,.01,'u'),n('offsetZ','층마다 앞뒤 이동',-2,2,.01,'u'),n('fan','층마다 회전',-20,20,.1,'°'),c('sideColor','옆·뒤 단면 색상'),n('sideTransmission','옆·뒤 단면 투과율',0,1,.01),c('edgeColor','앞 단면 색상'),n('edgeTransmission','앞 단면 투과율',0,1,.01,'','카메라 쪽 앞 단면에 적용됩니다. 윗면과 옆·뒤 단면은 독립적으로 조절합니다.')]);
@@ -71,7 +87,7 @@ export function fieldsFor(target,tab,profile='camera',lightId='key',geometrySour
   if(tab==='그림자·배경')return wrap([s('mode','배경',{solid:'단색',gradient:'그라데이션',transparent:'투명'}),c('color','배경 색상'),c('color2','그라데이션 두 번째 색'),n('angle','그라데이션 방향',0,360,1,'°'),b('ground','바닥 평면 표시'),c('groundColor','바닥 색상'),n('groundRoughness','바닥 반사 흐림',.05,1),n('shadowOpacity','접촉 그림자 진하기',0,.65),n('shadowSoftness','그림자 부드러움',1,6,.1),b('fog','안개 사용'),c('fogColor','안개 색상'),n('fogNear','안개 시작 거리',5,60,.5,'u'),n('fogFar','안개 종료 거리',10,90,.5,'u')],'background');
   if(tab==='모션'){
     if(target==='sphere'&&geometrySource==='blend261101')return wrap([b('motion.paused','그룹 일시정지'),s('motion.type','구 움직임',{dip:'유리 사이로 들어갔다 나오기',float:'기존 수직 부유'}),n('motion.depth','들어가는 깊이',0,1.2,.01,'u','유리판에 수직인 방향으로 이동합니다. 기본 0.62u는 첫 판의 구멍 안으로 살짝 들어가는 깊이입니다.'),n('motion.duration','왕복 주기',2,15,.1,'s','속도 1× 기준 한 번 들어갔다 나오는 시간. 끝에서 부드럽게 감속한 뒤 끊김 없이 돌아옵니다.'),n('motion.speed','모션 속도',0,2,.01,'×','0이면 현재 진행 위치에서 멈춥니다.'),n('motion.height','수직 부유 높이',0,.5,.01,'u'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s'))]);
-    if(['sphere','slabs','rings'].includes(target))return wrap([b('motion.paused','그룹 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s'))]);
+    if(['sphere','slabs','rings','pinCore','pinRings'].includes(target))return wrap([b('motion.paused','그룹 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s'))]);
     if(target==='loops')return wrap([b('motion.paused','유리 곡선 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),...['X','Y','Z'].map(a=>n(`motion.spin${a}`,`${a} 회전 속도`,-30,30,.1,'°/s')),n('motion.tilt','기울기 범위',0,10,.1,'°')]);
     if(target==='tiles')return wrap([b('motion.paused','타일 일시정지'),s('motion.type','타일 움직임',{rise:'순차 상승',wave:'파도',ripple:'중앙 파동',float:'은은한 부유'}),n('motion.height','이동 높이',0,.8,.01,'u'),n('motion.speed','파동 속도',0,3,.01,'×'),n('motion.wavelength','파장',.5,12,.1,'u'),n('motion.direction','진행 방향',-180,180,1,'°'),n('motion.delay','타일별 지연',0,.5,.01,'s'),n('motion.phase','모션 위상',0,360,1,'°')]);
     if(target==='pedestal')return wrap([b('motion.paused','받침대 일시정지'),n('motion.height','부유 높이',0,.5,.01,'u'),n('motion.speed','부유 속도',0,2,.01,'×'),n('motion.spin','Y 회전 속도',-30,30,.1,'°/s'),n('motion.pulse','테두리 빛 변화',0,1),b('motion.linkCrystal','크리스탈 부유와 연결')]);
@@ -103,8 +119,8 @@ export function validate(input){
   const descriptors=[];
   for(const target of Object.keys(GROUPS))for(const tab of TABS)for(const profile of ['camera','mobileCamera'])for(const lightId of Object.keys(result.lights))descriptors.push(...fieldsFor(target,tab,profile,lightId,result.geometry.source));
   for(const d of descriptors){const value=get(result,d.path);if(d.type==='number'){let v=Math.max(d.min,Math.min(d.max,value));if(d.step===1)v=Math.round(v);set(result,d.path,v);}if(d.type==='select'&&!Object.hasOwn(d.options,value))throw Error(`${d.label}: 지원하지 않는 값입니다.`);}
-  if(!['blend261101','procedural002'].includes(result.geometry.source))throw Error('지원하지 않는 원본 형상입니다.');
-  if(!['glassStack','loops','tiles'].includes(result.model))throw Error('지원하지 않는 장면 모델입니다.');
+  if(!['blend261101','procedural002','pinOrbit'].includes(result.geometry.source))throw Error('지원하지 않는 원본 형상입니다.');
+  if(!['glassStack','loops','tiles','pinOrbit'].includes(result.model))throw Error('지원하지 않는 장면 모델입니다.');
   for(const value of Object.values(result.lights))if(!['point','directional','ambient'].includes(value.type))throw Error('지원하지 않는 조명 유형입니다.');
   if(!['auto','low','medium','high'].includes(result.render.quality))throw Error('렌더링 품질 값이 올바르지 않습니다.');
   if(result.background.fogFar<=result.background.fogNear)result.background.fogFar=result.background.fogNear+1;
@@ -123,7 +139,7 @@ export const MATERIAL_PRESETS={blueSoft:{color:'#0c2b58',roughness:.32,metalness
 
 // Built-in comparison looks never overwrite user-created named presets.
 export function builtInPresets(){
-  const blender=defaults(),glassStack=proceduralDefaults(),glassLoops=proceduralDefaults(),legacyGlass=proceduralDefaults(),reference=proceduralDefaults(),original=proceduralDefaults();for(const p of [glassLoops,legacyGlass]){p.model='loops';p.camera={...camera(),distance:11.5,azimuth:-12,elevation:18,targetY:.25,fov:38,padding:0};p.mobileCamera={...p.camera,distance:12,fov:40};p.background={...p.background,color:'#0064a1',color2:'#9de9ef',angle:120};p.environment={intensity:1.25,rotation:-15,blur:.08,exposure:1};}Object.assign(legacyGlass.loops,{silhouette:'legacy',preview:'glass',count:3,width:.34,depth:.3,rz:-12});legacyGlass.motion.paused=false;for(const preset of [reference,original]){preset.model='tiles';preset.camera=camera();preset.mobileCamera={...camera(),distance:16,elevation:42,fov:38};preset.environment={intensity:1,rotation:0,blur:.28,exposure:.86};Object.assign(preset.background,{mode:'solid',color:'#02060c',color2:'#13223a',ground:true,fog:true});}original.look='original';
+  const pinOrbit=defaults(),blender=blenderDefaults(),glassStack=proceduralDefaults(),glassLoops=proceduralDefaults(),legacyGlass=proceduralDefaults(),reference=proceduralDefaults(),original=proceduralDefaults();for(const p of [glassLoops,legacyGlass]){p.model='loops';p.camera={...camera(),distance:11.5,azimuth:-12,elevation:18,targetY:.25,fov:38,padding:0};p.mobileCamera={...p.camera,distance:12,fov:40};p.background={...p.background,color:'#0064a1',color2:'#9de9ef',angle:120};p.environment={intensity:1.25,rotation:-15,blur:.08,exposure:1};}Object.assign(legacyGlass.loops,{silhouette:'legacy',preview:'glass',count:3,width:.34,depth:.3,rz:-12});legacyGlass.motion.paused=false;for(const preset of [reference,original]){preset.model='tiles';preset.camera=camera();preset.mobileCamera={...camera(),distance:16,elevation:42,fov:38};preset.environment={intensity:1,rotation:0,blur:.28,exposure:.86};Object.assign(preset.background,{mode:'solid',color:'#02060c',color2:'#13223a',ground:true,fog:true});}original.look='original';
   original.tiles.crown=0;original.tiles.material=material('#123764',.28,.42);
   original.pedestal.material=material('#13365c',.22,.48);
   Object.assign(original.pedestal,{edgeWidth:.035,edgeColor:'#4cc9ff',edgeEmission:1.5});
@@ -131,7 +147,7 @@ export function builtInPresets(){
   original.lights={key:light('directional','#d5edff',3.8,-3,8,4,true),fill:light('directional','#78acff',1.3,5,4,2),rim:light('point','#0084ff',24,-2,3,-3),ambient:light('ambient','#b4d4ff',1.1,0,0,0),base:light('point','#2bbaff',18,0,.5,0)};
   Object.assign(original.background,{color:'#171e29',color2:'#324452',groundColor:'#132035',groundRoughness:.45,fogColor:'#171e29',fogNear:15,fogFar:40});
   for(const preset of [glassLoops,legacyGlass,reference,original])preset.lights={key:light('directional','#e1f8ff',2.8,-3,8,4,true),fill:light('directional','#a9f2ff',1.1,5,4,2),rim:light('point','#1685e4',14,-2,3,-3),ambient:light('ambient','#d4f2ff',.65,0,0,0),base:light('point','#279ae5',10,0,.5,0)};
-  return {blender:{name:'261101.blend · 원본 메시와 카메라',settings:blender},glassStack:{name:'002 · 코발트 구와 투명 유리판',settings:glassStack},glassLoops:{name:'새 조형 · 회색 형태 검토',settings:glassLoops},legacyGlass:{name:'이전 모델 · 원형 유리 루프',settings:legacyGlass},reference:{name:'이전 모델 · 코발트 타일',settings:reference},original:{name:'이전 모델 · 선명한 유리 반사',settings:original}};
+  return {pinOrbit:{name:'새 시안 · 파란 중심과 유리 궤도',settings:pinOrbit},baseline:{name:'기억한 현재 설정 · 유리판과 파란 구',settings:baseline},blender:{name:'261101.blend · 원본 메시와 카메라',settings:blender},glassStack:{name:'002 · 코발트 구와 투명 유리판',settings:glassStack},glassLoops:{name:'새 조형 · 회색 형태 검토',settings:glassLoops},legacyGlass:{name:'이전 모델 · 원형 유리 루프',settings:legacyGlass},reference:{name:'이전 모델 · 코발트 타일',settings:reference},original:{name:'이전 모델 · 선명한 유리 반사',settings:original}};
 }
 export function applyReferenceLook(state){
   const ref=defaults();state.look=ref.look;state.tiles.material=ref.tiles.material;state.tiles.crown=ref.tiles.crown;state.pedestal.material=ref.pedestal.material;
@@ -157,7 +173,7 @@ export function applyShapeReview(state){
 // A new reference replaces the active model once; the previous scene is backed up
 // by the controller before this migration. Named presets and imported old JSON remain usable.
 export function applyGlassStack(state){
-  const fresh=defaults();
+  const fresh=blenderDefaults();
   for(const key of ['model','modelRevision','look','geometry','sphere','slabs','rings','lens','camera','mobileCamera','mobile','environment','lights','background','scene','motion'])state[key]=clone(fresh[key]);
   return state;
 }

@@ -4,6 +4,7 @@ import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
 import {dipProgress,applyAnimatedTranslation} from './scene-motion.js';
 import {createGlassComposite} from './glass-composite.js';
+import {createPinOrbits} from './pin-orbits.js';
 const rad=THREE.MathUtils.degToRad,clamp=THREE.MathUtils.clamp;
 
 // Analytic normals join the six rounded box faces without visible seams.
@@ -20,7 +21,7 @@ function box(w,h,d,r,segments=8,chamfer=false,crown=0){
 }
 function disposeGroup(group){
   const gs=new Set(),ms=new Set();group.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>ms.add(m));});
-  for(const g of gs)g.dispose();for(const m of ms)if(!m.userData.shared)m.dispose();group.clear();
+  for(const g of gs)g.dispose();for(const m of ms)if(!m.userData.shared){for(const texture of [m.map,m.alphaMap])if(texture?.userData.sceneOwned)texture.dispose();m.dispose();}group.clear();
 }
 function random(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 
@@ -31,8 +32,11 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const isDip=id=>id==='sphere'&&usesBlender()&&state.sphere.motion.type==='dip';
   const dipAxis=new THREE.Vector3(),slabRotation=new THREE.Euler();
   const clayPreview=()=>state.model==='loops'&&state.loops.preview==='clay';
+  const pinIds=['pinCore','pinRings'];
   const stackIds=['sphere','slabs','rings'];
   const keys={},clocks={tiles:0,pedestal:0,crystal:0,loops:0,sphere:0,slabs:0,rings:0},phases={tiles:0,pedestal:0,crystal:0,loops:0,pulse:0,sphere:0,slabs:0,rings:0},spins={pedestal:0,x:0,y:0,z:0,core:0,loopX:0,loopY:0,loopZ:0};
+  const pinSpin=Object.fromEntries(pinIds.map(id=>[id,{x:0,y:0,z:0}]));
+  for(const id of pinIds){clocks[id]=0;phases[id]=0;}
   let environmentTimer,environmentTarget,cameraProfile='auto',interaction='camera',selection=new Set(),hoverId=null;
   const pointer=new THREE.Vector2(),parallax=new THREE.Vector2(),dummy=new THREE.Object3D(),tempColor=new THREE.Color(),highlight=new THREE.Color('#7be6ff');
   const motionQuery=matchMedia('(prefers-reduced-motion: reduce)'),targetRotation=new THREE.Quaternion(),targetEuler=new THREE.Euler(),lookPosition=new THREE.Vector3();let cameraInitialized=false;
@@ -41,9 +45,10 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   const scene=new THREE.Scene(),world=new THREE.Group();scene.add(world);
   const tileRoot=new THREE.Group(),pedRoot=new THREE.Group(),crystalRoot=new THREE.Group(),coreRoot=new THREE.Group(),loopRoot=new THREE.Group();world.add(tileRoot,pedRoot,crystalRoot,coreRoot,loopRoot);
   const stackRoots={sphere:new THREE.Group(),slabs:new THREE.Group(),rings:new THREE.Group()};world.add(...Object.values(stackRoots));
+  const pinRoots=Object.fromEntries(pinIds.map(id=>[id,new THREE.Group()]));world.add(...Object.values(pinRoots));
   const glassComposite=createGlassComposite(renderer),lens=createDepthLens(renderer),focusPoint=new THREE.Vector3();
   const perspective=new THREE.PerspectiveCamera(36,1,.1,200),orthographic=new THREE.OrthographicCamera(-10,10,10,-10,.1,200);let camera=perspective;
-  const mats={};for(const id of ['tiles','pedestal','crystal','loops',...stackIds]){mats[id]=new THREE.MeshPhysicalMaterial();mats[id].userData.shared=true;}
+  const mats={};for(const id of ['tiles','pedestal','crystal','loops',...stackIds,...pinIds]){mats[id]=new THREE.MeshPhysicalMaterial();mats[id].userData.shared=true;}
   mats.slabEdge=new THREE.MeshPhysicalMaterial();mats.slabEdge.userData.shared=true;
   mats.slabSide=new THREE.MeshPhysicalMaterial();mats.slabSide.userData.shared=true;
   const coreMat=new THREE.MeshPhysicalMaterial({roughness:.12,metalness:.08,clearcoat:1}),edgeMat=new THREE.MeshStandardMaterial({roughness:.18});coreMat.userData.shared=edgeMat.userData.shared=true;
@@ -63,15 +68,15 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
   syncLights();
   let tilesMesh,tileData=[],crystalMesh,loopFitRadius=5;
   function environment(){
-    const stack=state.model==='glassStack',glass=state.model==='loops',clay=clayPreview();const e=new THREE.Scene();let softMap;e.background=new THREE.Color(stack?'#6f7078':clay?'#777777':glass?'#0b2941':'#20344b');
+    const pin=state.model==='pinOrbit',stack=state.model==='glassStack',glass=state.model==='loops',clay=clayPreview();const e=new THREE.Scene();let softMap;e.background=new THREE.Color(pin?'#bccbdb':stack?'#6f7078':clay?'#777777':glass?'#0b2941':'#20344b');
     if(usesBlender()){
       e.background=null;e.add(new THREE.Mesh(new THREE.SphereGeometry(12,48,32),new THREE.MeshBasicMaterial({map:blenderSource.hdr,side:THREE.BackSide,toneMapped:false})));
     }else{
-    e.add(new THREE.Mesh(new THREE.BoxGeometry(20,16,20),new THREE.MeshBasicMaterial({color:stack?'#9a98a2':clay?'#777777':glass?'#092237':'#263a52',side:THREE.BackSide})));
+    e.add(new THREE.Mesh(new THREE.BoxGeometry(20,16,20),new THREE.MeshBasicMaterial({color:pin?'#bfcddd':stack?'#9a98a2':clay?'#777777':glass?'#092237':'#263a52',side:THREE.BackSide})));
     for(const [x,y,z,w,h,power]of [[-5,4,0,2,7,3.5],[4,4,3,1.4,5,2],[0,7,-4,5,2,2.6],[0,1,-6,4,2,1.4],[0,-4,0,4,2,.7]]){
-      const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(clay||stack?'#ffffff':'#b9e4ff').multiplyScalar(power),side:THREE.DoubleSide}));p.position.set(x,y,z);p.lookAt(0,0,0);e.add(p);
+      const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(clay||stack||pin?'#ffffff':'#b9e4ff').multiplyScalar(power),side:THREE.DoubleSide}));p.position.set(x,y,z);p.lookAt(0,0,0);e.add(p);
     }
-    const softCanvas=document.createElement('canvas');softCanvas.width=softCanvas.height=128;const softCtx=softCanvas.getContext('2d'),softGradient=softCtx.createRadialGradient(64,64,5,64,64,68);softGradient.addColorStop(0,clay||stack?'#ffffff':'#d8efff');softGradient.addColorStop(.35,clay||stack?'#999999':'#659acb');softGradient.addColorStop(1,clay||stack?'#111111':'#06182c');softCtx.fillStyle=softGradient;softCtx.fillRect(0,0,128,128);
+    const softCanvas=document.createElement('canvas');softCanvas.width=softCanvas.height=128;const softCtx=softCanvas.getContext('2d'),softGradient=softCtx.createRadialGradient(64,64,5,64,64,68);softGradient.addColorStop(0,clay||stack||pin?'#ffffff':'#d8efff');softGradient.addColorStop(.35,clay||stack||pin?'#999999':'#659acb');softGradient.addColorStop(1,clay||stack||pin?'#111111':'#06182c');softCtx.fillStyle=softGradient;softCtx.fillRect(0,0,128,128);
     softMap=new THREE.CanvasTexture(softCanvas);softMap.colorSpace=THREE.SRGBColorSpace;const softPanel=new THREE.Mesh(new THREE.PlaneGeometry(9,8),new THREE.MeshBasicMaterial({map:softMap,color:new THREE.Color().setScalar(2.3),side:THREE.DoubleSide}));softPanel.position.set(-5,7,-6);softPanel.lookAt(0,0,0);e.add(softPanel);
     if(stack){
       for(const [x,y,z,w,h,color]of [[-7,1,0,3,12,'#18222d'],[0,1,8,12,2,'#222a36'],[8,2,-3,3,12,'#343c49'],[0,-7,0,16,16,'#7b7b85']]){
@@ -102,6 +107,12 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     if(keys.stack===key)return;keys.stack=key;
     for(const root of Object.values(stackRoots))disposeGroup(root);
     const fresh=usesBlender()?createBlenderModels(state,mats,blenderSource):createGlassStack(state,mats,box);for(const id of stackIds){const children=fresh[id].children.slice();if(children.length)stackRoots[id].add(...children);}
+  }
+  function buildPin(){
+    const c=state.pinCore,r=state.pinRings;
+    const key=JSON.stringify([c.shape,c.width,c.height,c.depth,c.roundness,r.count,r.radiusX,r.radiusY,r.width,r.depth,r.twist,r.fan,r.segments]);
+    if(keys.pin===key)return;keys.pin=key;for(const root of Object.values(pinRoots))disposeGroup(root);
+    const fresh=createPinOrbits(state,mats,box);for(const id of pinIds){const children=fresh[id].children.slice();if(children.length)pinRoots[id].add(...children);}
   }
   function pedestalSize(){const p=state.pedestal,t=state.tiles,c=state.crystal;return {width:p.autoFit?Math.max(.4,t.holeX*(t.width+t.gapX)-t.gapX):p.linkCrystal?c.width+.9:p.width,depth:p.autoFit?Math.max(.4,t.holeZ*(t.depth+t.gapZ)-t.gapZ):p.linkCrystal?c.depth+.9:p.depth};}
   function buildPedestal(){
@@ -151,7 +162,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     const cfg=state[activeCameraKey()],aspect=dimensions.width/dimensions.height;
     const nextCamera=cfg.type==='orthographic'?orthographic:perspective;if(nextCamera!==camera){nextCamera.position.copy(camera.position);nextCamera.quaternion.copy(camera.quaternion);}camera=nextCamera;
     const extent=Math.max(state.tiles.columns*(state.tiles.width+state.tiles.gapX),state.tiles.rows*(state.tiles.depth+state.tiles.gapZ))/2*state.tiles.scale+Math.max(Math.abs(state.tiles.x),Math.abs(state.tiles.z));
-    let radius=(state.model==='glassStack'?8:state.model==='loops'?(cfg.fit==='fit'?loopFitRadius:Math.hypot(state.loops.radiusX,state.loops.radiusY))*state.loops.scale:cfg.fit==='fit'?Math.hypot(extent,extent):Math.max(state.crystal.height+state.crystal.floatGap,2.5))*state.scene.scale;
+    let radius=(state.model==='pinOrbit'?3.1:state.model==='glassStack'?8:state.model==='loops'?(cfg.fit==='fit'?loopFitRadius:Math.hypot(state.loops.radiusX,state.loops.radiusY))*state.loops.scale:cfg.fit==='fit'?Math.hypot(extent,extent):Math.max(state.crystal.height+state.crystal.floatGap,2.5))*state.scene.scale;
     if(state.model==='glassStack'&&cfg.fit==='fit'){world.updateMatrixWorld(true);const bounds=new THREE.Box3();for(const root of Object.values(stackRoots))if(root.visible)bounds.union(new THREE.Box3().setFromObject(root));if(!bounds.isEmpty()){const sphere=bounds.getBoundingSphere(new THREE.Sphere());radius=sphere.radius+sphere.center.distanceTo(new THREE.Vector3(cfg.targetX,cfg.targetY,cfg.targetZ));}}
     const half=rad(cfg.fov/2),minFov=Math.atan(Math.tan(half)*Math.min(1,aspect)),safe=radius/Math.sin(minFov)*(1+cfg.padding);
     const distance=cfg.fit==='fit'?Math.max(cfg.distance,safe):cfg.distance*(1+cfg.padding)*(state.model==='glassStack'?1:Math.max(1,.85/aspect));
@@ -166,7 +177,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     const size=q==='high'?2048:q==='low'?512:1024;for(const l of Object.values(lights))if(l.shadow&&l.shadow.mapSize.x!==size){l.shadow.mapSize.set(size,size);l.shadow.map?.dispose();l.shadow.map=null;}renderer.setSize(dimensions.width,dimensions.height,false);
   }
   function update(next){
-    const previous=state;state=structuredClone(next);buildTiles();buildPedestal();buildCrystal();if(state.model==='loops')buildLoops();if(state.model==='glassStack')buildStack();updateMaterials();syncLights();onStats(state.model==='glassStack'?{model:'glassStack',source:state.geometry.source,slabs:state.slabs.count,rings:state.rings.count}:state.model==='loops'?{model:'loops',count:state.loops.count,preview:state.loops.preview}:{model:'tiles',tiles:tileData.length,instanced:true});
+    const previous=state;state=structuredClone(next);buildTiles();buildPedestal();buildCrystal();if(state.model==='loops')buildLoops();if(state.model==='glassStack')buildStack();if(state.model==='pinOrbit')buildPin();updateMaterials();syncLights();onStats(state.model==='pinOrbit'?{model:'pinOrbit',rings:state.pinRings.count}:state.model==='glassStack'?{model:'glassStack',source:state.geometry.source,slabs:state.slabs.count,rings:state.rings.count}:state.model==='loops'?{model:'loops',count:state.loops.count,preview:state.loops.preview}:{model:'tiles',tiles:tileData.length,instanced:true});
     for(const [id,l]of Object.entries(lights)){
       const stored=state.lights[id],cfg=clayPreview()?{...stored,enabled:id!=='base',color:'#ffffff',intensity:({key:3.3,fill:1,rim:6,ambient:.55,base:0})[id],x:({key:-3,fill:5,rim:-2,ambient:0,base:0})[id],y:({key:8,fill:4,rim:3,ambient:0,base:.5})[id],z:({key:4,fill:2,rim:-3,ambient:0,base:0})[id],targetX:0,targetY:0,targetZ:0,shadow:id==='key'}:stored;l.visible=cfg.enabled;l.color.set(cfg.color);l.intensity=cfg.intensity;l.position.set(cfg.x,cfg.y,cfg.z);if(l.target)l.target.position.set(cfg.targetX,cfg.targetY,cfg.targetZ);
       if(l.shadow){l.castShadow=cfg.shadow;l.shadow.radius=state.background.shadowSoftness;
@@ -240,11 +251,22 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       rotate(root,cfg.rx+clocks[id]*m.spinX,cfg.ry+clocks[id]*m.spinY,cfg.rz+clocks[id]*m.spinZ,dt);
       root.visible=state.model==='glassStack'&&cfg.visible&&(!usesBlender()||id!=='rings');
     }
-    const autoActive=state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&((isDip(id)?m.depth:m.height)*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
+    for(const id of pinIds){
+      const cfg=state[id],m=cfg.motion,root=pinRoots[id],spin=pinSpin[id];
+      // Integrate angular velocity so editing a speed never jumps the pose.
+      for(const axis of ['x','y','z']){
+        if(state.motion.mode==='auto'){if(!stop&&!m.paused)spin[axis]+=dt*m['spin'+axis.toUpperCase()];}
+        else if(!reduced()&&!m.paused)spin[axis]=clocks[id]*m['spin'+axis.toUpperCase()];
+      }
+      dipAxis.set(0,reduced()?0:Math.sin(phases[id]*Math.PI*2)*m.height,0);pose(root,cfg,dt,dipAxis);
+      rotate(root,cfg.rx+spin.x,cfg.ry+spin.y,cfg.rz+spin.z,dt);root.visible=state.model==='pinOrbit'&&cfg.visible;
+    }
+    const autoActive=state.model==='pinOrbit'?pinIds.some(id=>{const m=state[id].motion;return !m.paused&&(m.height*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='glassStack'?stackIds.some(id=>{const m=state[id].motion;return !m.paused&&((isDip(id)?m.depth:m.height)*m.speed!==0||m.spinX!==0||m.spinY!==0||m.spinZ!==0);}):state.model==='loops'?!lm.paused&&(lm.height*lm.speed!==0||lm.spinX!==0||lm.spinY!==0||lm.spinZ!==0||lm.tilt*lm.speed!==0):(!state.tiles.motion.paused&&state.tiles.motion.speed>0&&state.tiles.motion.height>0)||(!pm.paused&&(pm.height*pm.speed!==0||pm.spin!==0||pm.pulse*pm.speed!==0))||(!cm.paused&&(cm.height*cm.speed!==0||cm.spinX!==0||cm.spinY!==0||cm.spinZ!==0||cm.tilt*cm.speed!==0||cm.coreSpin!==0||cm.coreFloat*cm.speed!==0||cm.pulseSpeed*cm.pulseStrength!==0));
     cameraUpdate(dt);renderFrame();if((!stop&&state.motion.mode==='auto'&&autoActive)||now<settleUntil)schedule();
   }
   function renderFrame(){
-    if(state.model==='glassStack'){
+    if(state.model==='pinOrbit'){world.updateMatrixWorld(true);camera.updateMatrixWorld(true);pinRoots.pinCore.getWorldPosition(focusPoint);lens.render(scene,camera,state.lens,focusPoint);}
+    else if(state.model==='glassStack'){
       world.updateMatrixWorld(true);camera.updateMatrixWorld(true);stackRoots.sphere.getWorldPosition(focusPoint);
       lens.render(scene,camera,state.lens,focusPoint,usesBlender()&&state.slabs.optics==='layered'?destination=>glassComposite.render(scene,camera,stackRoots.slabs,destination):undefined);
     }else renderer.render(scene,camera);
@@ -288,6 +310,6 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     update(next){settleUntil=performance.now()+1200;update(next);},setPaused(value){externalPause=value;last=performance.now();settleUntil=performance.now()+50;schedule();},
     setProfile(value){cameraProfile=value;cameraDirty=true;schedule();},setInteraction(mode){interaction=mode;renderer.domElement.style.touchAction=mode==='camera'?'none':'pan-y';renderer.domElement.style.cursor=mode==='camera'?'grab':'crosshair';},
     getCamera:()=>({profile:activeCameraKey(),value:structuredClone(state[activeCameraKey()])}),selectPattern,getSelection:()=>[...selection],capture,
-    restart(){for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
+    restart(){for(const spin of Object.values(pinSpin))spin.x=spin.y=spin.z=0;for(const k of Object.keys(clocks))clocks[k]=0;for(const k of Object.keys(phases))phases[k]=0;for(const k of Object.keys(spins))spins[k]=0;settleUntil=performance.now()+200;schedule();},destroy,
   };
 }

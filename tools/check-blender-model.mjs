@@ -28,7 +28,7 @@ for(const object of [plate,ball]){
   for(const value of object.geometry.attributes.position.array)assert(Number.isFinite(value));
 }
 
-const state=validate(defaults()),cfg=state.camera;
+const state=validate(builtInPresets().blender.settings),cfg=state.camera;
 const d=THREE.MathUtils.degToRad;
 const position=new THREE.Vector3(Math.sin(d(cfg.azimuth))*Math.cos(d(cfg.elevation)),Math.sin(d(cfg.elevation)),Math.cos(d(cfg.azimuth))*Math.cos(d(cfg.elevation))).multiplyScalar(cfg.distance).add(new THREE.Vector3(cfg.targetX,cfg.targetY,cfg.targetZ));
 assert(position.distanceTo(new THREE.Vector3(...meta.camera.position))<.00001,'Web camera must match Blender camera');
