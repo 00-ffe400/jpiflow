@@ -5,7 +5,7 @@ import {GLTFLoader} from '../dist/vendor/addons/loaders/GLTFLoader.js';
 import {defaults,validate,builtInPresets,applySphereDip,applySphereDetail,applyGlassOptics} from '../dist/login/studio-state.js';
 
 import {createBlenderModels} from '../dist/login/blender-model.js';
-import {dipProgress} from '../dist/login/scene-motion.js';
+import {dipProgress,applyAnimatedTranslation} from '../dist/login/scene-motion.js';
 
 const asset=new URL('../dist/login/assets/blender-261101/',import.meta.url);
 const meta=JSON.parse(await readFile(new URL('source.json',asset),'utf8'));
@@ -47,10 +47,10 @@ invalid.sphere.radius=.35;invalid.sphere.material.color='bad';assert.throws(()=>
 const png=await readFile(new URL('plate-normal.png',asset));
 assert.equal(png.readUInt32BE(16),1024);assert.equal(png.readUInt32BE(20),1024);
 const hdr=await readFile(new URL('environment.hdr',asset));assert(hdr.subarray(0,300).toString().includes('-Y 512 +X 1024'));
-for(const [phase,expected]of [[0,0],[.12,0],[.44,1],[.5,1],[.56,1],[.88,0],[1,0]])assert(Math.abs(dipProgress(phase)-expected)<1e-12);
+for(const [phase,expected]of [[0,0],[.25,.5],[.5,1],[.75,.5],[1,0]])assert(Math.abs(dipProgress(phase)-expected)<1e-12);
 for(let i=0;i<=100;i++){const t=i/100;assert(Math.abs(dipProgress(t)-dipProgress(1-t))<1e-12);assert(dipProgress(t)>=0&&dipProgress(t)<=1);}
 assert(Math.abs(dipProgress(-.5)-dipProgress(.5))<1e-12);
-for(const t of [.12,.44,.56,.88])assert(Math.abs(dipProgress(t+.00001)-dipProgress(t-.00001))<1e-8,'Motion joins must have zero endpoint velocity');
+for(const t of [0,.5,1])assert(Math.abs(dipProgress(t+.00001)-dipProgress(t-.00001))<1e-8,'Turnarounds must have zero endpoint velocity');
 const axis=new THREE.Vector3(...meta.plate.normal).normalize();
 const sphereOffset=new THREE.Vector3(...meta.sphere.position).sub(new THREE.Vector3(...meta.plate.position));
 const signed=sphereOffset.dot(axis),tangent=sphereOffset.clone().addScaledVector(axis,-signed);
@@ -70,6 +70,15 @@ dense.computeBoundingSphere();assert(Math.abs(dense.boundingSphere.radius-meta.s
 assert(state.lens.sharpRange>state.sphere.radius,'Whole sphere must stay within the sharp focus band');
 const preservedMotion=structuredClone(customized.sphere.motion);applySphereDetail(customized);assert.deepEqual(customized.sphere.motion,preservedMotion);assert.deepEqual(customized.camera,before.camera);assert.deepEqual(customized.sphere.material,before.material);
 const beforeGlass={camera:structuredClone(customized.camera),sphere:structuredClone(customized.sphere),lens:structuredClone(customized.lens),motion:structuredClone(customized.motion)};applyGlassOptics(customized);for(const key of Object.keys(beforeGlass))assert.deepEqual(customized[key],beforeGlass[key]);assert.equal(customized.slabs.optics,'layered');assert.equal(customized.slabs.material.opacity,1);assert.equal(customized.slabs.material.transmission,1);
+assert(dipProgress(.01)>0&&dipProgress(.49)<1&&dipProgress(.51)<1&&dipProgress(.99)>0,'No frozen sections at the glass boundary');
+const basePosition=new THREE.Vector3(...meta.sphere.position),animated=basePosition.clone(),priorOffset=new THREE.Vector3();
+for(let i=0;i<500;i++){
+  const offset=axis.clone().multiplyScalar(dipProgress(i/499)*state.sphere.motion.depth);
+  // Reproduce repeated pointer settling/expiry while the sphere is moving.
+  applyAnimatedTranslation(animated,priorOffset,basePosition,offset,i%7===0?1:.06);
+  assert(animated.distanceTo(basePosition.clone().add(offset))<1e-10,'Pointer settling must never lag or snap the animated path');
+}
+console.log('PASS: uninterrupted animation through repeated pointer/settle transitions.');
 console.log('PASS: glass-only migration preserves camera, sphere, focus and animation.');
 console.log('PASS: dense smooth sphere, original size, sharp focus band, preserved motion and camera.');
 console.log('PASS: dip timing, centered path through opening, clearance to next sheet, motion-only migration.');

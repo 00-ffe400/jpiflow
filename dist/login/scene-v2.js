@@ -2,7 +2,7 @@ import * as THREE from '../vendor/three.module.js';
 import {createGlassLoops} from './glass-loops.js';
 import {createGlassStack,createDepthLens} from './glass-stack.js';
 import {loadBlenderSource,createBlenderModels} from './blender-model.js';
-import {dipProgress} from './scene-motion.js';
+import {dipProgress,applyAnimatedTranslation} from './scene-motion.js';
 import {createGlassComposite} from './glass-composite.js';
 const rad=THREE.MathUtils.degToRad,clamp=THREE.MathUtils.clamp;
 
@@ -187,7 +187,8 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
     if(!environmentTarget)environment();else if(state.environment.blur!==previous.environment.blur||state.model!==previous.model||state.geometry.source!==previous.geometry.source||state.loops.preview!==previous.loops.preview){clearTimeout(environmentTimer);environmentTimer=setTimeout(environment,180);}
     if(state.render.quality!==previous.render.quality)quality();cameraDirty=true;schedule();
   }
-  function pose(root,cfg,dt){const a=externalPause||!cameraInitialized||performance.now()>=settleUntil?1:1-Math.exp(-dt/Math.max(.03,state.motion.smoothness));root.position.lerp(new THREE.Vector3(cfg.x,cfg.y,cfg.z),a);root.scale.lerp(new THREE.Vector3(cfg.scale,cfg.scale,cfg.scale),a);root.visible=cfg.visible;return a;}
+  const motionOffsets=new WeakMap();let liveDipDepth=state.sphere.motion.depth;
+  function pose(root,cfg,dt,offset=null){const a=externalPause||!cameraInitialized||performance.now()>=settleUntil?1:1-Math.exp(-dt/Math.max(.03,state.motion.smoothness));const base=new THREE.Vector3(cfg.x,cfg.y,cfg.z);if(offset){let previous=motionOffsets.get(root);if(!previous){previous=new THREE.Vector3();motionOffsets.set(root,previous);}applyAnimatedTranslation(root.position,previous,base,offset,a);}else root.position.lerp(base,a);root.scale.lerp(new THREE.Vector3(cfg.scale,cfg.scale,cfg.scale),a);root.visible=cfg.visible;return a;}
   function rotate(root,x,y,z,dt){targetEuler.set(rad(x),rad(y),rad(z));targetRotation.setFromEuler(targetEuler);root.quaternion.slerp(targetRotation,reduced()||!cameraInitialized||performance.now()>=settleUntil?1:1-Math.exp(-dt/Math.max(.03,state.motion.smoothness)));}
   function animateTiles(time,dt){
     const t=state.tiles,m=t.motion,angle=rad(m.direction);rotate(tileRoot,t.rx,t.ry,t.rz,dt);
@@ -206,6 +207,7 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       if(state.motion.mode==='auto'){if(!stop&&!state[id].motion.paused){clocks[id]+=dt;phases[id]+=(isDip(id)?elapsed/state.sphere.motion.duration:dt)*state[id].motion.speed;}}
       else if(!reduced()&&!state[id].motion.paused){const progress=state.motion.mode==='scroll'?clamp((scrollY-state.motion.scrollStart)/Math.max(1,state.motion.scrollEnd-state.motion.scrollStart),0,1):state.motion.progress;clocks[id]=progress*20;phases[id]=isDip(id)?progress:clocks[id]*state[id].motion.speed;}
     }
+    const depthBlend=reduced()?1:1-Math.exp(-elapsed/Math.max(.03,state.motion.smoothness));liveDipDepth=THREE.MathUtils.lerp(liveDipDepth,state.sphere.motion.depth,depthBlend);
     const mobile=mobileView()&&state.mobile.enabled;
     const a=pose(world,{...state.scene,x:state.scene.x+(mobile?state.mobile.x:0),y:state.scene.y+(mobile?state.mobile.y:0),z:state.scene.z+(mobile?state.mobile.z:0),scale:state.scene.scale*(mobile?state.mobile.scale:1)},dt);
     parallax.lerp(reduced()?new THREE.Vector2():pointer,a);world.rotation.set(rad(state.scene.rx)+parallax.y*state.motion.parallax*.12,rad(state.scene.ry)+parallax.x*state.motion.parallax*.18,rad(state.scene.rz));
@@ -231,9 +233,10 @@ export async function createScene(container,initial,{onCamera=()=>{},onSelection
       const cfg=state[id],m=cfg.motion,phase=phases[id]*Math.PI*2,root=stackRoots[id];
       const origin=usesBlender()?(id==='sphere'?blenderSource.spherePosition:id==='slabs'?blenderSource.platePosition:new THREE.Vector3()):new THREE.Vector3();
       dipAxis.set(0,0,0);
-      if(isDip(id)&&!reduced()){slabRotation.set(rad(state.slabs.rx),rad(state.slabs.ry),rad(state.slabs.rz));dipAxis.fromArray(blenderSource.meta.plate.normal).normalize().applyEuler(slabRotation).multiplyScalar(dipProgress(phases[id])*m.depth);}
+      if(isDip(id)&&!reduced()){slabRotation.set(rad(state.slabs.rx),rad(state.slabs.ry),rad(state.slabs.rz));dipAxis.fromArray(blenderSource.meta.plate.normal).normalize().applyEuler(slabRotation).multiplyScalar(dipProgress(phases[id])*liveDipDepth);}
       const floatY=isDip(id)||reduced()?0:Math.sin(phase)*m.height;
-      pose(root,{...cfg,x:cfg.x+origin.x+dipAxis.x,z:cfg.z+origin.z+dipAxis.z,y:cfg.y+origin.y+floatY+dipAxis.y},dt);
+      dipAxis.y+=floatY;
+      pose(root,{...cfg,x:cfg.x+origin.x,z:cfg.z+origin.z,y:cfg.y+origin.y},dt,dipAxis);
       rotate(root,cfg.rx+clocks[id]*m.spinX,cfg.ry+clocks[id]*m.spinY,cfg.rz+clocks[id]*m.spinZ,dt);
       root.visible=state.model==='glassStack'&&cfg.visible&&(!usesBlender()||id!=='rings');
     }
