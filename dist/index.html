@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#a3b7d0"><meta name="description" content="HEX — 실시간 3D 유리 반구와 그라데이션 구, 자유롭게 조절하는 3D 스튜디오.">
+<title>HEX · 3D Glass Studio</title>
+<link rel="preload" href="assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="login/styles.css"><link rel="stylesheet" href="login/studio.css">
+<script type="module" src="main.js"></script>
+</head><body class="scene-only">
+<main class="login-page"><section class="visual-panel" aria-label="HEX 실시간 3D 장면">
+<div id="scene" class="scene" role="img" aria-label="중앙의 구와 속이 빈 유리 반구들"></div>
+<div id="scene-fallback" class="scene-fallback"></div>
+<p id="scene-error" class="scene-error" hidden>이 브라우저에서는 3D 장면을 표시할 수 없습니다.</p>
+<div class="scene-tools" id="scene-tools"><button type="button" id="studio-toggle" class="scene-button" aria-expanded="false" aria-controls="studio">3D 설정</button><button type="button" id="motion-toggle" class="scene-button" aria-pressed="false">모션 일시정지</button></div>
+<aside id="studio" class="studio" aria-label="3D 설정" hidden></aside>
+</section></main>
+<noscript>이 3D 스튜디오를 사용하려면 JavaScript를 켜 주세요.</noscript>
+</body></html>

@@ -1,0 +1,90 @@
+{
+  "source": "261101.blend",
+  "frame": 72,
+  "referenceAspect": 0.7291666666666666,
+  "plate": {
+    "name": "Cube",
+    "count": 6,
+    "dimensions": [
+      2.0,
+      0.09629608348561192,
+      2.0
+    ],
+    "spacing": 0.6740725843992834,
+    "position": [
+      -1.0287461280822754,
+      3.3355677127838135,
+      0.048802636563777924
+    ],
+    "normal": [
+      0.6921060085296631,
+      -0.5874761939048767,
+      -0.4193577766418457
+    ]
+  },
+  "sphere": {
+    "name": "Sphere",
+    "radius": 0.3548051416873932,
+    "position": [
+      -1.3870725631713867,
+      3.639724016189575,
+      0.2659182548522949
+    ]
+  },
+  "camera": {
+    "name": "Camera.001",
+    "position": [
+      -1.9382975101470947,
+      2.4825382232666016,
+      5.482095241546631
+    ],
+    "direction": [
+      0.12187289446592331,
+      0.10591717809438705,
+      -0.9868781566619873
+    ],
+    "focus": [
+      -0.7093326449394226,
+      2.793593645095825,
+      0.25722038745880127
+    ],
+    "fstop": 0.1700000762939453
+  },
+  "lights": [
+    {
+      "name": "Light",
+      "type": "POINT",
+      "position": [
+        4.076245307922363,
+        9.412450790405273,
+        0.8374953269958496
+      ],
+      "color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "energy": 2000.0
+    },
+    {
+      "name": "Area",
+      "type": "AREA",
+      "position": [
+        0.12574124336242676,
+        -0.4818820357322693,
+        1.2957581281661987
+      ],
+      "color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "energy": 94.2477798461914
+    }
+  ],
+  "materialNotes": {
+    "plate": "Original nested procedural plastic: transmission 1, roughness 0.1, IOR 1.5; procedural scratches are baked to tangent normals.",
+    "sphere": "Cycles Translucent/Transparent/Glass/Glossy mix requires a WebGL physical-material approximation."
+  },
+  "normalMap": "plate-normal.png"
+}
