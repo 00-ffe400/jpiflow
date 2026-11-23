@@ -3,8 +3,11 @@
   const pairs = [
     ["회사 안내", "Company"],
     ["회사 소개", "Company Introduction"],
-    ["서비스 소개", "About Service"],
     ["정책", "Policies"],
+    [
+      "결제와 충전에는 선택한 기관의 계약 통화가 적용됩니다.",
+      "Payments and top-ups use the selected institution’s contract currency.",
+    ],
     ["이용약관", "Terms of Service"],
     ["개인정보 처리방침", "Privacy Policy"],
     ["환불 정책", "Refund Policy"],
