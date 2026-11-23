@@ -2,12 +2,15 @@ const info={
 telemedicine:['Telemedicine service','영상진단 장비부터 전문 원격 판독까지, 동물병원을 위한 원격진료 서비스를 제공합니다.'],
 pacs:['Web PACS','별도 설치 없이 웹에서 사용하는 영상 관리 서비스입니다.'],
 services:['Total Imaging Solution','ExamVue 365 Flow와 Web PACS를 통해 진단 영상과 판독의 흐름을 연결합니다.'],
-pricing:['가격 안내','요금 안내는 추후 제공됩니다.'],
-login:['로그인','서비스 접속은 추후 제공됩니다.'],
-company:['JPI Healthcare','이미징 솔루션 전문 기업, 제이피아이헬스케어입니다. 문의: 02-2108-2580'],
-terms:['Terms of Service','이용약관은 추후 제공됩니다.'],privacy:['Privacy Policy','개인정보 처리방침은 추후 제공됩니다.'],refund:['Refund Policy','환불 정책은 추후 제공됩니다.']};
+company:['JPI Healthcare','이미징 솔루션 전문 기업, 제이피아이헬스케어입니다. 문의: 02-2108-2580']
+};
 const dialog=document.querySelector('.service-dialog');let trigger;
-document.querySelectorAll('[data-info]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.info==='pricing'&&window.openServicePricing){window.openServicePricing(b);return}if(['telemedicine','services'].includes(b.dataset.info)){if(window.openServiceOverlay){window.openServiceOverlay('telemedicine',b)}else{location.href='telemedicine'}return}if(b.dataset.info==='pacs'&&window.openServiceOverlay){window.openServiceOverlay('pacs',b);return}trigger=b;const [title,copy]=info[b.dataset.info];document.querySelector('#service-dialog-title').textContent=title;document.querySelector('#service-dialog-copy').textContent=copy;dialog.showModal()}));
+document.querySelector('[data-service-pricing]')?.addEventListener('click', event => {
+ if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || !window.openServicePricing) return;
+ event.preventDefault();
+ window.openServicePricing(event.currentTarget);
+});
+document.querySelectorAll('[data-info]').forEach(b=>b.addEventListener('click',()=>{if(['telemedicine','services'].includes(b.dataset.info)){if(window.openServiceOverlay){window.openServiceOverlay('telemedicine',b)}else{location.href='telemedicine'}return}if(b.dataset.info==='pacs'&&window.openServiceOverlay){window.openServiceOverlay('pacs',b);return}trigger=b;const [title,copy]=info[b.dataset.info];document.querySelector('#service-dialog-title').textContent=title;document.querySelector('#service-dialog-copy').textContent=copy;dialog.showModal()}));
 const close=()=>{dialog.close();trigger?.focus()};
 document.querySelector('.service-close').addEventListener('click',close);document.querySelector('.dialog-confirm').addEventListener('click',close);
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close()}});

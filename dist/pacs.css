@@ -275,3 +275,15 @@
 @media(max-width:1100px){.tele-page main .pacs-tools .section-head h2{font-size:clamp(30px,4.5vw,44px)}.pacs-tool-card{margin-top:32px}}
 @media(max-width:700px){.tele-page main .pacs-tools .section-head h2{font-size:28px;letter-spacing:-1px}.pacs-tool-card{margin-top:24px}}
 .pacs-deploy-steps article:nth-child(n){border-top-color:#b8c0cc!important}
+.pacs-caption{color:#52647a}
+.pacs-dark-card .pacs-card-label{color:#acb9cb}
+.pacs-light-card .pacs-card-label{color:#47596e}
+.pacs-dark-card .pacs-more div,.pacs-dark-card .pacs-stats span{color:#b3c0d1}
+
+/* Text descriptions and a conceptual monitor layout keep the examples data-free. */
+.pacs-shot figcaption{margin-top:12px;color:#435974;font-size:13px;line-height:20px;text-align:center}
+.pacs-tool-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.pacs-tool-card.pacs-tool-text{display:block;min-width:0;padding:36px;margin-top:56px}
+.pacs-screen-plan{display:grid;place-items:center;aspect-ratio:16/9;color:#e5efff;text-align:center}
+.pacs-screen-plan b{font-size:clamp(14px,1.4vw,20px);font-weight:500}
+@media(max-width:700px){.pacs-tool-cards{grid-template-columns:1fr;gap:16px}.pacs-tool-card.pacs-tool-text{margin-top:0;padding:26px}.pacs-tool-cards{margin-top:24px}}

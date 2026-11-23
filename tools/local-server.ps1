@@ -1,18 +1,29 @@
 ﻿# ExamVue 365 Flow - local preview server (no install needed)
-param([int]$Port = 8080)
+param([int]$Port = 8080, [string]$Directory)
 $ErrorActionPreference = 'Stop'
-$root = (Resolve-Path (Join-Path $PSScriptRoot '..\dist')).Path
+$previewExport = $null
+if ($Directory) {
+  $root = (Resolve-Path -LiteralPath $Directory).Path
+} elseif (Test-Path Env:LANDING_PUBLIC_ORIGIN) {
+  $previewExport = Join-Path ([IO.Path]::GetTempPath()) ("examvue-handoff-" + [Guid]::NewGuid())
+  & node (Join-Path $PSScriptRoot 'export-handoff.mjs') $previewExport | Out-Host
+  if ($LASTEXITCODE -ne 0) { throw '인계본 내보내기에 실패했습니다.' }
+  $root = Join-Path $previewExport 'dist'
+} else {
+  $root = (Resolve-Path (Join-Path $PSScriptRoot '..\dist')).Path
+}
 $mime = @{
   '.html'='text/html; charset=utf-8'; '.css'='text/css; charset=utf-8'; '.js'='text/javascript; charset=utf-8'
   '.json'='application/json'; '.svg'='image/svg+xml'; '.png'='image/png'; '.jpg'='image/jpeg'; '.jpeg'='image/jpeg'
   '.webp'='image/webp'; '.gif'='image/gif'; '.ico'='image/x-icon'; '.woff2'='font/woff2'; '.woff'='font/woff'; '.txt'='text/plain; charset=utf-8'
 }
 $listener = $null
+try {
 for ($p = $Port; $p -lt $Port + 20; $p++) {
   try { $listener = New-Object System.Net.HttpListener; $listener.Prefixes.Add("http://localhost:$p/"); $listener.Start(); $Port = $p; break }
   catch { $listener = $null }
 }
-if (-not $listener) { Write-Host "사용 가능한 포트를 찾지 못했습니다." -ForegroundColor Red; Read-Host "Enter 키를 누르면 닫힙니다"; exit 1 }
+if (-not $listener) { throw '사용 가능한 포트를 찾지 못했습니다.' }
 $url = "http://localhost:$Port/"
 Write-Host ""
 Write-Host "  ExamVue 365 Flow 로컬 서버 실행 중" -ForegroundColor Cyan
@@ -21,7 +32,6 @@ Write-Host "  원격진료 페이지 : ${url}telemedicine#pricing"
 Write-Host "  종료하려면 이 창을 닫거나 Ctrl+C 를 누르세요."
 Write-Host ""
 Start-Process $url
-try {
   while ($listener.IsListening) {
     $ctx = $listener.GetContext(); $res = $ctx.Response
     try {
@@ -45,4 +55,7 @@ try {
     } catch { try { $res.StatusCode = 500 } catch {} }
     finally { try { $res.Close() } catch {} }
   }
-} finally { $listener.Stop() }
+} finally {
+  if ($listener) { $listener.Stop() }
+  if ($previewExport) { Remove-Item -LiteralPath $previewExport -Recurse -Force }
+}

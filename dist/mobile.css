@@ -15,7 +15,7 @@
  .service-card-copy{gap:14px}.service-card-copy>p{font-size:12px;line-height:19px;word-break:keep-all}
  .service-about{font-size:13px;min-height:36px}.service-symbol{width:23px;height:25px}
  .exam-footer{padding:36px 20px 24px}.footer-links{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:20px}
- .footer-links button{min-height:36px;text-align:left;display:block;font-size:12px}.company-info>p{font-size:11px;line-height:1.9;overflow-wrap:anywhere}
+ .footer-links :is(a,button){min-height:36px;text-align:left;display:block;font-size:12px}.company-info>p{font-size:11px;line-height:1.9;overflow-wrap:anywhere}
  .service-overlay-bar{padding:10px 12px;gap:8px;flex-basis:66px}.service-overlay-actions{gap:6px}
  .service-overlay-bar [role=tab]{font-size:11px;padding:8px 9px;min-height:38px}
  .service-overlay-close{width:40px;height:40px}.service-pricing-button{height:40px;padding:0 9px}

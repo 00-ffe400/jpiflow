@@ -237,3 +237,13 @@
 
 /* One shared heading style across all four benefit cards. */
 .tele-page main .benefit-grid .benefit-card .benefit-copy h3{font-family:inherit;font-size:18px;font-weight:500;font-style:normal;line-height:1.4;letter-spacing:0}
+/* Card labels need different tones on light and dark surfaces. */
+.tele-page main .benefit-card:nth-child(odd) .benefit-category{color:#acb9cb}
+.tele-page main .benefit-card:nth-child(even) .benefit-category{color:#52647a}
+.tele-page main .benefit-card:nth-child(even) .benefit-category{color:#47596e}
+.hero-foot{color:#52647a}
+
+/* A single verified example accompanies the multi-device description. */
+.tele-page .device-collage.device-demo{aspect-ratio:auto;margin:0;text-align:center}
+.tele-page .device-demo img{position:static;display:block;width:100%;height:auto;max-width:100%;object-fit:contain;border-radius:0}
+.tele-page .device-demo figcaption{margin-top:12px;color:#52647a;font-size:13px;line-height:20px}
