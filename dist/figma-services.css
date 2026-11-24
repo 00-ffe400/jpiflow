@@ -273,3 +273,20 @@ main.figma-design [data-name="Four steps / Open typography"]>div{height:auto;min
 @media(max-width:640px){
  main.figma-design [data-name="Four steps / Open typography"]>div{min-height:0}
 }
+
+/* Benefit copy follows its card width; fixed 355px text boxes clipped on tablets. */
+main.figma-design [data-name="Editable benefit copy"]{width:100%;max-width:100%;height:auto;min-height:180px;overflow:visible}
+main.figma-design [data-name="Editable benefit copy"]>*{max-width:100%;white-space:normal;overflow-wrap:break-word}
+main.figma-design [data-name="Editable benefit copy"] p{max-width:100%;white-space:normal;word-break:keep-all;overflow-wrap:break-word}
+@media(max-width:1360px){
+ main.figma-design [data-name="Benefits / Silver imagery collection"]{height:auto}
+ main.figma-design [data-name="Staggered feature cards"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;align-items:stretch;width:100%;height:auto;overflow:visible}
+ main.figma-design [data-name="Staggered feature cards"]>div{width:100%;min-width:0;padding-top:0;padding-bottom:0}
+ main.figma-design [data-name="Staggered feature cards"] [data-name^="Benefits / 01 /"]{width:100%;height:auto;min-height:488px;flex:auto}
+ main.figma-design [data-name="Staggered feature cards"]>div:has(>[data-name^="Benefits / 01 /"]){display:flex;align-items:stretch}
+ main.figma-design [data-name="Editable benefit copy"]>p:first-child{font-size:47px;line-height:1.4}
+}
+@media(max-width:640px){
+ main.figma-design [data-name="Staggered feature cards"]{display:flex;flex-direction:column;align-items:center;gap:24px}
+ main.figma-design [data-name="Staggered feature cards"]>div{width:100%;max-width:360px}
+}
