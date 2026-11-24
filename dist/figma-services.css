@@ -266,3 +266,10 @@ main.figma-design #pricing [data-name="결제 및 취소 안내"] p{width:100%;m
 @media(max-width:1000px){
  main.figma-design #pricing [data-name="결제 및 취소 안내"]>[data-name="Items"]{grid-template-columns:minmax(0,1fr);gap:32px;padding:32px 0 40px}
 }
+
+/* A wrapped process grid must contribute both rows to its section's height. */
+main.figma-design [data-name="Four steps / Open typography"]{height:auto;min-height:231px;overflow:visible}
+main.figma-design [data-name="Four steps / Open typography"]>div{height:auto;min-height:231px}
+@media(max-width:640px){
+ main.figma-design [data-name="Four steps / Open typography"]>div{min-height:0}
+}
