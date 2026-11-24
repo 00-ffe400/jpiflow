@@ -355,3 +355,7 @@ main.figma-design.figma-pacs>section:first-child h1>div{width:100%;text-align:ce
 main.figma-design.figma-pacs>section:first-child h1 p{width:100%;text-align:center}
 main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"]{width:100%;align-items:center;text-align:center}
 main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"]>div,main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"] p{width:100%;text-align:center}
+
+/* Scale hero title leading with the responsive type size, instead of fixed 64px lines. */
+main.figma-design:is(.figma-tele,.figma-pacs)>section:first-child h1>div{line-height:1.2}
+main.figma-design:is(.figma-tele,.figma-pacs)>section:first-child h1 p,main.figma-design:is(.figma-tele,.figma-pacs)>section:first-child h1 span{line-height:inherit}
