@@ -348,3 +348,10 @@ main.figma-design [data-name="Stats"] p{max-width:100%;white-space:normal}
 @media(max-width:480px){
  main.figma-design [data-name="Card / Adjustment tools"]>[data-name="Tool grid"],main.figma-design [data-name="Card / Adjustment tools"]>[data-name="Stats"]{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Keep the PACS hero text centered after its inner text boxes wrap. */
+main.figma-design.figma-pacs>section:first-child h1{width:100%;align-items:center;text-align:center}
+main.figma-design.figma-pacs>section:first-child h1>div{width:100%;text-align:center}
+main.figma-design.figma-pacs>section:first-child h1 p{width:100%;text-align:center}
+main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"]{width:100%;align-items:center;text-align:center}
+main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"]>div,main.figma-design.figma-pacs>section:first-child [data-name="Paragraph"] p{width:100%;text-align:center}
