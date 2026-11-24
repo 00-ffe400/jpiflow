@@ -5,7 +5,7 @@
  const KRW_PER_USD=1400, RATE=0.025;
  let currency='KRW';
  const fmt=(krw,unit)=>{
-  if(currency==='USD'){const v=krw/KRW_PER_USD;return '$'+v.toLocaleString('en-US',{minimumFractionDigits:v<1000?2:0,maximumFractionDigits:v<1000?2:0})}
+  if(currency==='USD'){const v=krw/KRW_PER_USD;return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
   return unit==='won'?krw.toLocaleString('ko-KR')+'원':'₩'+krw.toLocaleString('ko-KR');
  };
  const opts=[...section.querySelectorAll('.pr-seg [data-amount]')];
@@ -18,7 +18,7 @@
    section.querySelector('.calc-total').textContent=fmt(a+b,'won');
    section.querySelectorAll('.calc-rate').forEach(e=>e.textContent=+(RATE*100).toFixed(2)+'%');
   }
-  section.querySelector('.usd-note').hidden=currency!=='USD';
+
  }
  section.querySelectorAll('[data-currency]').forEach(b=>b.addEventListener('click',()=>{currency=b.dataset.currency;section.querySelectorAll('[data-currency]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
  function choose(o,focus){opts.forEach(x=>{const on=x===o;x.setAttribute('aria-checked',on);x.tabIndex=on?0:-1});if(focus)o.focus();render()}

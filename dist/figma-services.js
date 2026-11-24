@@ -16,7 +16,7 @@
  const resize=new ResizeObserver(sizeGraphics);graphics.forEach(({wrap})=>resize.observe(wrap));sizeGraphics();
  // Real currency controls, using the same reference conversion as the previous page.
  const pricing=document.querySelector('#pricing');
- if(pricing){
+ if(pricing&&!pricing.classList.contains('pricing-a')){
    const amounts=[];
    pricing.querySelectorAll('p,span').forEach(el=>{if(el.children.length)return;const text=el.textContent.trim();const m=text.match(/₩[\d,]+|[\d,]+원/);if(m)amounts.push({el,krw:Number(m[0].replace(/[^\d]/g,'')),won:m[0].endsWith('원'),prefix:text.slice(0,m.index),suffix:text.slice(m.index+m[0].length)});});
    pricing.querySelectorAll('[data-currency]').forEach(button=>button.addEventListener('click',()=>{
