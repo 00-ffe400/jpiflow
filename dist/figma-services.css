@@ -290,3 +290,10 @@ main.figma-design [data-name="Editable benefit copy"] p{max-width:100%;white-spa
  main.figma-design [data-name="Staggered feature cards"]{display:flex;flex-direction:column;align-items:center;gap:24px}
  main.figma-design [data-name="Staggered feature cards"]>div{width:100%;max-width:360px}
 }
+
+/* Native disclosure rows must expand beyond the closed Figma frame height. */
+main.figma-design details[data-name="Details"]{display:block;height:auto;min-height:79px;overflow:visible}
+main.figma-design details[data-name="Details"]>summary{height:auto;min-height:78px}
+main.figma-design details[data-name="Details"]>[data-name="Paragraph"]{width:100%;max-width:900px;height:auto}
+main.figma-design details[data-name="Details"]>[data-name="Paragraph"] p{width:100%;max-width:100%;white-space:normal;word-break:keep-all;overflow-wrap:break-word}
+@media(max-width:640px){main.figma-design details[data-name="Details"]{min-height:74px}main.figma-design details[data-name="Details"]>summary{min-height:74px}}
