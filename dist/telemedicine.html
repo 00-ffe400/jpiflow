@@ -1,34 +1,855 @@
-<!doctype html><html lang="ko" data-theme="light"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+
+<html data-theme="light" lang="ko"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>Telemedicine Service — ExamVue 365 Flow</title>
-<meta name="description" content="전문 영상의학 수의사와 동물병원을 연결하는 수의 원격 판독 서비스. 의뢰부터 결과 확인까지 하나의 흐름으로.">
+<meta content="전문 영상의학 수의사와 동물병원을 연결하는 수의 원격 판독 서비스. 의뢰부터 결과 확인까지 하나의 흐름으로." name="description"/>
 <style>html.service-motion-boot .service-hero{visibility:hidden}html.service-motion-boot [data-reveal]{transition:none!important}</style>
 <script>document.documentElement.classList.add('service-motion-boot');window.serviceMotionBootTimer=setTimeout(()=>{document.documentElement.classList.remove('service-motion-boot');document.body?.classList.remove('motion-ready')},6000)</script>
-<meta name="theme-color" content="#cdd7dd"><script src="theme.js?v=light-only"></script>
-<link rel="stylesheet" href="style.css?v=full-hero-1"><link rel="stylesheet" href="landing.css?v=responsive-2"><link rel="stylesheet" href="telemedicine.css?v=arc-layout-5">
-<link rel="stylesheet" href="service-content.css?v=benefit-unified-20261117"><link rel="stylesheet" href="pricing.css?v=review-20261117"><script>if(new URLSearchParams(location.search).has("embed"))document.documentElement.classList.add("service-embedded")</script><link rel="stylesheet" href="mobile.css?v=4"></head><body class="tele-page"><a class="skip" href="#tele-main">본문 바로가기</a><header class="header">
-<a class="exam-brand" href="./#home" aria-label="ExamVue 365 Flow 메인"><img src="assets/examvue-header-logo.svg" alt="" /></a>
-<nav aria-label="주요 메뉴"><a href="./#home">메인</a><a href="telemedicine" aria-current="page">서비스</a><a href="#pricing">가격</a></nav>
+<meta content="#cdd7dd" name="theme-color"/><script src="theme.js?v=light-only"></script>
+<link href="style.css?v=full-hero-1" rel="stylesheet"/><link href="landing.css?v=responsive-2" rel="stylesheet"/><link href="telemedicine.css?v=arc-layout-5" rel="stylesheet"/>
+<link href="service-content.css?v=benefit-unified-20261117" rel="stylesheet"/><link href="pricing.css?v=review-20261117" rel="stylesheet"/><script>if(new URLSearchParams(location.search).has("embed"))document.documentElement.classList.add("service-embedded")</script><link href="mobile.css?v=4" rel="stylesheet"/><link href="figma-tele.css?v=20261123" rel="stylesheet"/><link href="figma-services.css?v=20261123" rel="stylesheet"/></head><body class="tele-page"><a class="skip" href="#tele-main">본문 바로가기</a><header class="header">
+<a aria-label="ExamVue 365 Flow 메인" class="exam-brand" href="./#home"><img alt="" src="assets/examvue-header-logo.svg"/></a>
+<nav aria-label="주요 메뉴"><a href="./#home">메인</a><a aria-current="page" href="telemedicine">서비스</a><a href="#pricing">가격</a></nav>
 <div class="exam-actions"><label class="language"><span class="sr-only">언어</span><select aria-label="언어"><option value="ko">KOR</option></select></label><button class="login-button" data-info="login">로그인</button></div>
 </header>
-<main id="tele-main">
-<section class="service-hero"><div class="hero-foot"><span>EXAMVUE 365 FLOW</span><span>TELEMEDICINE SERVICE</span></div><div class="hero-surface"><div data-reveal><span class="eyebrow">TELEMEDICINE SERVICE</span><h1><span>판독이 어려운 영상,</span><br><span>전문 영상의학 수의사에게</span> <em>바로 맡기세요</em></h1><p>영상을 올리고 의뢰서만 보내면, 검증된 영상의학 수의사가 판독해 드려요. <br>의뢰부터 결과 확인까지 한곳에서 끝나요.</p></div><div class="hero-product" data-reveal><img src="assets/service/hero-laptop-final.png" alt="ExamVue 365 Flow 판독 의뢰 현황 화면" width="3348" height="2000"></div></div></section><section class="service-wrap about-service" id="about-service"><div class="manifesto" data-reveal><span class="eyebrow">ABOUT EXAMVUE 365 FLOW</span><div class="reading-stage"><h2 class="reading-pair reading-pair-first"><span class="read-line">촬영은 병원에서, 판독은</span> <span class="read-line">영상의학 전문 수의사에게.</span></h2><h2 class="reading-pair reading-pair-second"><span class="read-line read-line-blue">필요할 때 언제든 전문가에게 맡기고,</span> <span class="read-line read-line-blue">진료의 다음 단계를 함께 만들어요.</span></h2></div><p>병원에서 의뢰하면 검증된 전문가가 영상을 꼼꼼히 확인하고,<br>믿을 수 있는 판독 결과로 답해 드려요.</p></div></section><section class="service-wrap recommend-section" id="recommended"><span class="eyebrow" data-reveal>이런 병원에 추천해요</span><div class="recommend-grid">
-<article data-reveal><span>01</span><h3>영상의학 전문 인력을<br>상시 채용하기 어려운 병원</h3><p>필요할 때만 이용하니까,<br>인력 부담 없이 판독을 맡길 수 있어요.</p></article>
-<article data-reveal><span>02</span><h3>판독 의뢰와 결과를 체계적으로<br>관리하고 싶은 병원</h3><p>의뢰 접수부터 진행 상태와 결과 확인까지<br>한곳에서 관리할 수 있어요.</p></article>
-<article data-reveal><span>03</span><h3>긴급하거나 복잡한 검사에<br>추가 의견이 필요한 병원</h3><p>판단이 애매한 영상도<br>전문가의 의견으로 확신을 더하세요.</p></article></div></section>
-<section class="advantages" id="advantages"><div class="service-wrap"><div class="section-head" data-reveal><div><span class="eyebrow">EXAMVUE 365 FLOW / BENEFITS</span><h2>더 빠르고, 더 간편하게.<br>판독이 쉬워지는 네 가지 이유.</h2><p>전문 판독은 더 가까이,<br>번거로운 일은 더 적게.</p></div></div><div class="benefit-grid"><article class="benefit-card" data-model="watch" data-reveal><span class="benefit-category">01 / EXPEDITED REVIEW</span><div class="benefit-art-frame"><img class="benefit-art" src="assets/benefit/figma-imgGenerated3D01ExpeditedReview.png" alt="급한 의뢰는 더 빠르게." loading="lazy" width="365" height="298"></div><div class="benefit-copy"><span class="benefit-stat">48h</span><h3>급한 의뢰는 더 빠르게.</h3><p>최대 48시간 이내에<br>진단 결과를 받아보세요.</p></div></article><article class="benefit-card" data-model="document" data-reveal><span class="benefit-category">02 / AI ASSISTANCE</span><div class="benefit-art-frame"><img class="benefit-art" src="assets/benefit/figma-imgGenerated3D01ExpeditedReview1.png" alt="의뢰서는 AI가 채워드립니다." loading="lazy" width="365" height="298"></div><div class="benefit-copy"><span class="benefit-stat">AI</span><h3>의뢰서는 AI가 채워 드려요.</h3><p>AI가 내용을 다듬어 주니까<br>작성 시간이 확 줄어요.</p></div></article><article class="benefit-card" data-model="modality" data-reveal><span class="benefit-category">03 / MULTI-MODALITY</span><div class="benefit-art-frame"><img class="benefit-art" src="assets/benefit/figma-imgGenerated3DDicomSpacedLayeredSilverGlass.png" alt="다양한 모달리티를 한곳에서." loading="lazy" width="365" height="298"></div><div class="benefit-copy"><span class="benefit-stat">Modality</span><h3>X-ray부터 MRI까지, 한곳에서.</h3><p>X-ray · CT · MRI · 초음파 등<br>주요 DICOM 영상을 모두 받아요.</p></div></article><article class="benefit-card" data-model="shield" data-reveal><span class="benefit-category">04 / INFORMATION SECURITY</span><div class="benefit-art-frame"><img class="benefit-art" src="assets/benefit/figma-imgGenerated3D04InformationSecurity.png" alt="전송부터 저장까지 안전하게." loading="lazy" width="365" height="298"></div><div class="benefit-copy"><span class="benefit-stat">Encrypted</span><h3>전송부터 저장까지 안전하게.</h3><p>환자 정보는 보내고 저장하는<br>모든 과정에서 암호화돼요.</p></div></article></div></div></section><section class="service-wrap device-section"><div data-reveal><span class="eyebrow">ANYWHERE, ANY DEVICE</span><h2>진료실에서도, 이동 중에도<br><em>휴대폰 · 태블릿 · PC로</em><br>의뢰하고 바로 확인하세요.</h2><p>따로 설치할 필요 없이 웹으로 접속하면 돼요. <br>휴대폰, 태블릿, PC 어떤 화면에서도 보기 편하게 맞춰 보여 드려요.</p></div><div class="device-collage" data-reveal><img class="device-phone" src="assets/overlay/imgImageExamVue365Flow.png" alt="스마트폰에서 이용하는 ExamVue 365 Flow" loading="lazy"><img class="device-desktop" src="assets/overlay/desktop-user-original.png" width="950" height="972" alt="데스크톱에서 이용하는 ExamVue 365 Flow" loading="lazy"><img class="device-tablet" src="assets/overlay/imgImageExamVue365Flow2.png" alt="태블릿에서 이용하는 ExamVue 365 Flow" loading="lazy"></div></section>
-<section class="flow-section" id="service-flow"><div class="service-wrap"><div class="flow-editorial-top" data-reveal><div><span class="eyebrow">SERVICE FLOW / 01–04</span><h2>영상에서,<br>진료의 확신으로.</h2><p>의뢰 접수부터 전문 판독, 결과 알림까지.<br>진료의 흐름을 끊지 않는 네 단계.</p></div><div class="flow-blue-note"><span>EXPERT<br>INTERPRETATION</span><h3>더 깊게 읽고,<br>더 명확하게 전해요.</h3><small>EXAMVUE 365 FLOW ↗</small></div></div><div class="flow-open-steps"><article data-reveal><div><span>01</span></div><h3>의뢰서 접수</h3><p>영상을 올리고 <br>의뢰서를 작성하면 끝이에요.</p></article><article data-reveal><div><span>02</span></div><h3>전문 수의사 배정</h3><p>의뢰 내용을 확인한 뒤 <br>알맞은 영상의학 전문 수의사를 배정해요.</p></article><article data-reveal><div><span>03</span></div><h3>전문 영상 판독</h3><p>영상을 꼼꼼히 살펴보고 <br>종합 진단 보고서를 작성해요.</p></article><article data-reveal><div><span>04</span></div><h3>결과 전달</h3><p>판독이 끝나면 이메일 · 문자 · <br>카카오톡 · 왓츠앱으로 바로 알려 드려요.</p></article></div></div><div class="service-wrap pacs-bridge" id="with-pacs"><div class="bridge-card" data-reveal><div class="bridge-copy"><span class="eyebrow">WEB PACS VIEWER INCLUDED</span><h2>원격 판독에는,<br><em>웹 PACS 뷰어가 기본으로.</em></h2><p>의뢰한 영상은 기본 제공되는 ExamVue 365 Flow <br>웹 PACS 뷰어에서 바로 열어 볼 수 있어요.</p><a class="bridge-link" href="pacs" data-service-tab-link="pacs">웹 PACS 자세히 보기 <span aria-hidden="true">→</span></a></div><ol class="bridge-points"><li><span>01</span><div><h3>브라우저에서 바로 열기</h3><p>설치 없이, 의뢰한 영상을 웹 뷰어로 확인해요.</p></div></li><li><span>02</span><div><h3>익숙한 뷰어 도구 그대로</h3><p>확대, 밝기 · 대비 조절, 측정까지 판독실처럼 써요.</p></div></li><li><span>03</span><div><h3>병원 PACS로도 확장</h3><p>원격 판독 외 업무에도 쓰려면 별도 요금으로 이용할 수 있어요.</p></div></li></ol></div></div></section><section class="pricing-section pr-v2" id="pricing" aria-labelledby="pricing-title">
-<div class="service-wrap">
-<div class="pr-head"><span class="eyebrow">PRICING / 요금 안내</span><h2 id="pricing-title">판독한 만큼만,<br><em>투명하게 계산해요.</em></h2><p>검사 종류와 건수에 따라 요금이 정해지고, 미리 충전하면 2.5%를 더 드려요.</p></div>
-<div class="pr-row">
-<div class="pr-rates"><div class="pr-rates-head"><div><h3>판독 요금</h3><p>첫 이미지(부위) 요금에 추가분만 더해져요.</p></div><div class="currency-switch" role="group" aria-label="표시 통화"><button type="button" data-currency="KRW" aria-pressed="true">KRW</button><button type="button" data-currency="USD" aria-pressed="false">USD</button></div></div><ul class="pr-rate-list"><li><span class="pr-badge">CR</span><div class="pr-name"><b>Computed Radiography</b><span>첫 번째 이미지 기준</span></div><div class="pr-price"><strong data-krw="15000">₩15,000</strong><span>추가 이미지당 <i data-krw="15000">₩15,000</i></span></div></li><li><span class="pr-badge">CT</span><div class="pr-name"><b>Computed Tomography</b><span>첫 번째 부위 기준</span></div><div class="pr-price"><strong data-krw="150000">₩150,000</strong><span>추가 부위당 <i data-krw="150000">₩150,000</i></span></div></li><li><span class="pr-badge">MR</span><div class="pr-name"><b>Magnetic Resonance</b><span>첫 번째 부위 기준</span></div><div class="pr-price"><strong data-krw="165000">₩165,000</strong><span>추가 부위당 <i data-krw="90000">₩90,000</i></span></div></li></ul></div>
-<div class="pr-calc" aria-live="polite"><span class="pr-kicker">PREPAID BALANCE</span><h3>미리 충전하면 <span class="calc-rate">2.5%</span> 더 드려요.</h3><div class="pr-seg" role="radiogroup" aria-label="충전 금액 선택"><button type="button" role="radio" aria-checked="true" tabindex="0" data-amount="1000000">100만 원</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="2000000">200만 원</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-amount="5000000">500만 원</button></div><dl class="pr-break"><div><dt>충전 금액</dt><dd class="calc-amount">1,000,000원</dd></div><div><dt>추가 적립 <span class="calc-rate">2.5%</span></dt><dd class="calc-bonus">+ 25,000원</dd></div><div class="is-total"><dt>사용 가능 금액</dt><dd class="calc-total">1,025,000원</dd></div></dl><button type="button" class="pr-charge" data-info="login">충전하기</button><p class="pr-note">* 추가 적립 비율은 정책에 따라 바뀔 수 있어요.<span class="usd-note" hidden> USD 금액은 참고용이며, 실제 결제는 원화(KRW)로 진행돼요.</span></p></div>
+<main class="figma-design figma-tele" id="tele-main"><section class="fd-tele-0" data-name="01 / Hero — Split layout" data-node-id="1648:28991" data-section="1" id="tele-section-1">
+<div class="fd-tele-1" data-name="Container" data-node-id="1648:29011">
+<div class="fd-tele-2" data-name="Text" data-node-id="1648:29012">
+<p class="fd-tele-3" data-node-id="1648:29013">
+                EXAMVUE 365 FLOW
+              </p>
 </div>
-<ul class="pr-guide"><li><b>결제 방식 선택</b><span>건별 결제와 충전금 결제 중 골라요.</span></li><li><b>언제든 충전</b><span>충전할 때마다 2.5%가 적립돼요.</span></li><li><b>손쉬운 취소 · 환불</b><span>판독의 배정 전이라면 언제든 취소해요.</span></li><li><b>내역 한눈에 보기</b><span>충전 · 사용 · 적립 내역을 한곳에서.</span></li></ul>
+<div class="fd-tele-4" data-name="Link" data-node-id="1648:29014"></div>
+<div class="fd-tele-5" data-name="Text" data-node-id="1648:29016">
+<p class="fd-tele-6" data-node-id="1648:29017">
+                TELEMEDICINE SERVICE
+              </p>
 </div>
-</section>
-<section class="service-wrap faq-section" id="faq"><div class="center-head" data-reveal><span class="eyebrow">FAQ</span><h2>궁금한 점이 있으신가요?</h2></div><div class="faq-list" data-reveal><details><summary>판독 결과는 얼마나 걸리나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>급한 의뢰는 최대 48시간 안에 결과를 받아 보실 수 있어요. 판독이 끝나면 이메일 · 문자 · 카카오톡 · 왓츠앱으로 바로 알려 드려요.</p></details><details><summary>어떤 영상을 의뢰할 수 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>X-ray, CT, MRI, 초음파 등 주요 DICOM 영상을 의뢰할 수 있어요. 영상을 올리고 의뢰서를 작성하면 접수가 끝나요.</p></details><details><summary>판독은 누가 하나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>검증된 영상의학 전문 수의사가 판독해요. 의뢰 내용을 확인한 뒤 검사에 맞는 판독의를 배정해 드려요.</p></details><details><summary>요금은 어떻게 되나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>판독 1건마다 같은 요금이에요. 건별로 결제하거나 충전금으로 결제할 수 있고, 자세한 금액은 위 요금 안내에서 확인하실 수 있어요.</p></details><details><summary>병원에 PACS가 없어도 쓸 수 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>네, 영상을 직접 올려서 의뢰하시면 돼요. 의뢰한 영상은 기본 제공되는 웹 PACS 뷰어에서 바로 열어 볼 수 있어요.</p></details><details><summary>따로 설치해야 하는 프로그램이 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>아니요, 웹으로 접속하면 바로 쓸 수 있어요. 휴대폰, 태블릿, PC 어디서든 의뢰하고 결과를 확인하세요.</p></details></div></section>
-<section class="tele-contact" id="tele-contact"><div><span class="eyebrow">Trust Built on Globally Recognized Technology</span><h2><em>더 빠르고 정확한 판독,</em><br class="mobile-break"> 지금 시작해 보세요.</h2></div><a class="tele-primary" href="tel:0221082580">도입 문의하기 <span>↗</span></a></section>
-</main><footer class="exam-footer" id="company"><div class="footer-top"><div class="company-info"><a class="exam-brand" href="./#home">ExamVue <span>365</span> Flow</a><p>상호명 : 제이피아이헬스케어<br>대표자명 : 김진국<br>사업자 등록번호 : 203-81-48896<br>통신판매업번호 : 2024-서울구로-0968<br>사업장 주소 : 서울특별시 구로구 디지털로33길 28, 608호(우림이비즈센터1차)<br>유선번호 : <a href="tel:0221082580">02-2108-2580</a></p></div><div class="footer-links"><div><h2>Company</h2><button data-info="company">Company Introduction</button><button data-info="services">About Service</button><button data-info="pricing">Pricing</button></div><div><h2>Family Site</h2><button data-info="terms">Terms of Service</button><button data-info="privacy">Privacy Policy</button><button data-info="refund">Refund Policy</button></div></div></div><p class="copyright">Copyright(c) JPI All Rights Reserved.</p></footer><dialog class="service-dialog" aria-labelledby="service-dialog-title"><button class="service-close" aria-label="안내 닫기">×</button><span class="dialog-eyebrow">EXAMVUE 365 FLOW</span><h2 id="service-dialog-title"></h2><p id="service-dialog-copy"></p><button class="dialog-confirm">확인</button></dialog>
-<a class="back-to-top" href="#tele-main" aria-label="맨 위로">↑</a>
-<script src="landing.js?v=tele-2"></script><script src="telemedicine.js?v=review-20261117"></script><script src="pricing.js?v=4"></script><script src="benefit-tilt.js?v=1"></script></body></html>
+</div>
+<div class="fd-tele-7" data-name="Container" data-node-id="1648:28992">
+<div class="fd-tele-8" data-name="Container" data-node-id="1648:28999">
+<div class="fd-tele-9" data-name="Text" data-node-id="1648:29000">
+<p class="fd-tele-10" data-node-id="1648:29001">
+                  TELEMEDICINE SERVICE
+                </p>
+</div>
+<h1 class="fd-tele-11" data-name="Heading 1" data-node-id="1648:29002">
+<div class="fd-tele-12" data-node-id="1648:29003">
+<p class="fd-tele-13">판독이 어려운 영상,</p>
+<p class="fd-tele-14">
+<span class="fd-tele-15">전문 영상의학 수의사에게</span>
+<span class="fd-tele-16"> 바로 맡기세요</span>
+</p>
+</div>
+</h1>
+<div class="fd-tele-17" data-name="Paragraph:margin" data-node-id="1648:29004">
+<div class="fd-tele-18" data-node-id="1648:29005">
+<p class="fd-tele-19">영상을 올리고 의뢰서만 보내면, 검증된 영상의학 수의사가 판독해 드려요.</p>
+<p class="fd-tele-20">의뢰부터 결과 확인까지 한곳에서 끝나요.</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-21" data-name="Image" data-node-id="1645:6118">
+<div class="fd-tele-22">
+<img alt="Image" class="fd-tele-23" decoding="async" src="assets/figma-20261123/tele/imgImage.png"/>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-24 fd-story" data-name="02 / About — Center statement" data-node-id="1648:29018" data-section="2" id="about-service">
+<div class="fd-tele-25 fd-story-stage" data-name="02 / About — Center statement" data-node-id="1778:72800">
+<div class="fd-tele-26" data-name="Container:margin" data-node-id="1778:72801">
+<div class="fd-tele-27" data-name="Container" data-node-id="1778:72802">
+<div class="fd-tele-28" data-name="Text" data-node-id="1778:72803">
+<p class="fd-tele-29" data-node-id="1778:72804">
+                    SYSTEM OVERVIEW
+                  </p>
+</div>
+<div class="fd-story-headlines"><h2 class="fd-tele-30 fd-story-first" data-name="Heading 2" data-node-id="1778:72805">
+<div class="fd-tele-31" data-node-id="1778:72806">
+<p class="fd-tele-32"><span class="fd-story-fill">촬영은 병원에서, 판독은</span></p>
+<p class="fd-tele-33"><span class="fd-story-fill">영상의학 전문 수의사에게.</span></p>
+</div>
+</h2><h2 class="fd-tele-30 fd-story-last" data-name="Heading 2">
+<div class="fd-tele-31">
+<p class="fd-tele-32" style="color:#0068e8"><span class="fd-story-fill">필요할 때 언제든 전문가에게 맡기고,</span></p>
+<p class="fd-tele-33" style="color:#102847"><span class="fd-story-fill">진료의 다음 단계를 함께 만들어요.</span></p>
+</div>
+</h2></div>
+<div class="fd-tele-34 fd-story-description" data-name="Paragraph" data-node-id="1778:72807">
+<div class="fd-tele-35" data-node-id="1778:72808">
+<p class="fd-tele-36">병원에서 의뢰하면 검증된 전문가가 영상을 꼼꼼히 확인하고,</p>
+<p class="fd-tele-37">믿을 수 있는 판독 결과로 답해 드려요.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-38" data-name="03 / Recommended hospitals" data-node-id="1648:29027" data-section="3" id="tele-section-3">
+<div class="fd-tele-39" data-name="Section" data-node-id="1648:29028">
+<p class="fd-tele-40" data-node-id="1654:6247">
+              이런 병원에 추천해요
+            </p>
+<div class="fd-tele-41" data-name="Container" data-node-id="1648:29029">
+<div class="fd-tele-42" data-name="Article" data-node-id="1648:29030">
+<div class="fd-tele-43" data-name="Container" data-node-id="1648:29031">
+<div class="fd-tele-44" data-name="Text" data-node-id="1648:29032">
+<div class="fd-tele-45" data-name="Text" data-node-id="1648:29033"></div>
+<p class="fd-tele-46" data-node-id="1648:29034">
+                      01
+                    </p>
+</div>
+</div>
+<h3 class="fd-tele-47" data-name="Heading 3" data-node-id="1648:29035">
+<div class="fd-tele-48" data-node-id="1648:29036">
+<p class="fd-tele-49">영상의학 전문 인력을</p>
+<p class="fd-tele-50">상시 채용하기 어려운 병원</p>
+</div>
+</h3>
+<div class="fd-tele-51" data-name="Paragraph" data-node-id="1648:29037">
+<div class="fd-tele-52" data-node-id="1648:29038">
+<p class="fd-tele-53">필요할 때만 이용하니까,</p>
+<p class="fd-tele-54">인력 부담 없이 판독을 맡길 수 있어요.</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-55" data-name="Article" data-node-id="1648:29039">
+<div class="fd-tele-56" data-name="Container" data-node-id="1648:29040">
+<div class="fd-tele-57" data-name="Text" data-node-id="1648:29041">
+<div class="fd-tele-58" data-name="Text" data-node-id="1648:29042"></div>
+<p class="fd-tele-59" data-node-id="1648:29043">
+                      02
+                    </p>
+</div>
+</div>
+<h3 class="fd-tele-60" data-name="Heading 3" data-node-id="1648:29044">
+<div class="fd-tele-61" data-node-id="1648:29045">
+<p class="fd-tele-62">판독 의뢰와 결과를 체계적으로</p>
+<p class="fd-tele-63">관리하고 싶은 병원</p>
+</div>
+</h3>
+<div class="fd-tele-64" data-name="Paragraph" data-node-id="1648:29046">
+<div class="fd-tele-65" data-node-id="1648:29047">
+<p class="fd-tele-66">의뢰 접수부터 진행 상태와 결과 확인까지</p>
+<p class="fd-tele-67">한곳에서 관리할 수 있어요.</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-68" data-name="Article" data-node-id="1648:29048">
+<div class="fd-tele-69" data-name="Container" data-node-id="1648:29049">
+<div class="fd-tele-70" data-name="Text" data-node-id="1648:29050">
+<div class="fd-tele-71" data-name="Text" data-node-id="1648:29051"></div>
+<p class="fd-tele-72" data-node-id="1648:29052">
+                      03
+                    </p>
+</div>
+</div>
+<h3 class="fd-tele-73" data-name="Heading 3" data-node-id="1648:29053">
+<div class="fd-tele-74" data-node-id="1648:29054">
+<p class="fd-tele-75">긴급하거나 복잡한 검사에</p>
+<p class="fd-tele-76">추가 의견이 필요한 병원</p>
+</div>
+</h3>
+<div class="fd-tele-77" data-name="Paragraph" data-node-id="1648:29055">
+<div class="fd-tele-78" data-node-id="1648:29056">
+<p class="fd-tele-79">판단이 애매한 영상도</p>
+<p class="fd-tele-80">전문가의 의견으로 확신을 더하세요.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-81" data-name="04 / Benefits — Generated silver imagery" data-node-id="1648:29057" data-section="4" id="tele-section-4">
+<div class="fd-tele-82" data-name="Benefits / Silver imagery collection" data-node-id="1671:29014">
+<div class="fd-tele-83" data-name="Section heading" data-node-id="1671:29015">
+<div class="fd-tele-84" data-name="Title" data-node-id="1671:29016">
+<p class="fd-tele-85" data-node-id="1671:29017">
+                      EXAMVUE 365 FLOW / BENEFITS
+                    </p>
+<div class="fd-tele-86" data-node-id="1671:29018">
+<p class="fd-tele-87">더 빠르고, 더 간편하게.</p>
+<p class="fd-tele-88">판독이 쉬워지는 네 가지 이유.</p>
+</div>
+</div>
+<div class="fd-tele-89" data-name="Introduction" data-node-id="1671:29019">
+<div class="fd-tele-90" data-node-id="1671:29020">
+<p class="fd-tele-91">전문 판독은 더 가까이,</p>
+<p class="fd-tele-92">번거로운 일은 더 적게.</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-93" data-name="Staggered feature cards" data-node-id="1671:29021">
+<div class="fd-tele-94" data-name="Benefits / 01 / EXPEDITED REVIEW" data-node-id="1672:6519">
+<div class="fd-tele-95" data-name="Category" data-node-id="1672:6520">
+<p class="fd-tele-96" data-node-id="1672:6521">
+                        01 / EXPEDITED REVIEW
+                      </p>
+</div>
+<div class="fd-tele-97" data-name="Editable benefit copy" data-node-id="1672:6523">
+<p class="fd-tele-98" data-node-id="1672:6524">
+                        48h
+                      </p>
+<p class="fd-tele-99" data-node-id="1672:6525">
+                        급한 의뢰는 더 빠르게.
+                      </p>
+<div class="fd-tele-100" data-node-id="1672:6526">
+<p class="fd-tele-101">최대 48시간 이내에</p>
+<p class="fd-tele-102">진단 결과를 받아보세요.</p>
+</div>
+</div>
+<div class="fd-tele-103" data-name="Generated 3D / 01 / EXPEDITED REVIEW" data-node-id="1672:6522">
+<img alt="" class="fd-tele-104" decoding="async" src="assets/figma-20261123/tele/imgGenerated3D01ExpeditedReview.png"/>
+</div>
+</div>
+<div class="fd-tele-105" data-node-id="1672:6608">
+<div class="fd-tele-106" data-name="Benefits / 01 / EXPEDITED REVIEW" data-node-id="1672:6537">
+<div class="fd-tele-107" data-name="Category" data-node-id="1672:6538">
+<p class="fd-tele-108" data-node-id="1672:6539">
+                          02 / AI ASSISTANCE
+                        </p>
+</div>
+<div class="fd-tele-109" data-name="Editable benefit copy" data-node-id="1672:6540">
+<p class="fd-tele-110" data-node-id="1672:6541">
+                          AI
+                        </p>
+<p class="fd-tele-111" data-node-id="1672:6542">
+                          의뢰서는 AI가 채워 드려요.
+                        </p>
+<div class="fd-tele-112" data-node-id="1672:6543">
+<p class="fd-tele-113">AI가 내용을 다듬어 주니까</p>
+<p class="fd-tele-114">작성 시간이 확 줄어요.</p>
+</div>
+</div>
+<div class="fd-tele-115" data-name="Generated 3D / 01 / EXPEDITED REVIEW" data-node-id="1672:6544">
+<img alt="" class="fd-tele-116" decoding="async" src="assets/figma-20261123/tele/imgGenerated3D01ExpeditedReview1.png"/>
+</div>
+</div>
+</div>
+<div class="fd-tele-117" data-name="Benefits / 01 / EXPEDITED REVIEW" data-node-id="1695:6610">
+<div class="fd-tele-118" data-name="Category" data-node-id="1695:6611">
+<p class="fd-tele-119" data-node-id="1695:6612">
+                        03 / MULTI-MODALITY
+                      </p>
+</div>
+<div class="fd-tele-120" data-name="Editable benefit copy" data-node-id="1695:6613">
+<p class="fd-tele-121" data-node-id="1695:6614">
+                        Modality
+                      </p>
+<p class="fd-tele-122" data-node-id="1695:6615">
+                        X-ray부터 MRI까지, 한곳에서.
+                      </p>
+<div class="fd-tele-123" data-node-id="1695:6616">
+<p class="fd-tele-124">X-ray · CT · MRI · 초음파 등</p>
+<p class="fd-tele-125">주요 DICOM 영상을 모두 받아요.</p>
+</div>
+</div>
+<div class="fd-tele-126" data-node-id="1695:6618">
+<div class="fd-tele-127">
+<div class="fd-tele-128" data-name="Generated 3D / DICOM — Spaced layered silver-glass">
+<img alt="" class="fd-tele-129" decoding="async" src="assets/figma-20261123/tele/imgGenerated3DDicomSpacedLayeredSilverGlass.png"/>
+</div>
+</div>
+</div>
+</div>
+<div class="fd-tele-130" data-node-id="1672:6609">
+<div class="fd-tele-131" data-name="Benefits / 01 / EXPEDITED REVIEW" data-node-id="1672:6582">
+<div class="fd-tele-132" data-name="Category" data-node-id="1672:6583">
+<p class="fd-tele-133" data-node-id="1672:6584">
+                          04 / INFORMATION SECURITY
+                        </p>
+</div>
+<div class="fd-tele-134" data-name="Editable benefit copy" data-node-id="1672:6585">
+<p class="fd-tele-135" data-node-id="1672:6586">
+                          Encrypted
+                        </p>
+<p class="fd-tele-136" data-node-id="1672:6587">
+                          전송부터 저장까지 안전하게.
+                        </p>
+<div class="fd-tele-137" data-node-id="1672:6588">
+<p class="fd-tele-138">환자 정보는 보내고 저장하는</p>
+<p class="fd-tele-139">모든 과정에서 암호화돼요.</p>
+</div>
+</div>
+<div class="fd-tele-140" data-node-id="1672:6577">
+<div class="fd-tele-141">
+<div class="fd-tele-142" data-name="Generated 3D / 04 / INFORMATION SECURITY">
+<img alt="" class="fd-tele-143" decoding="async" src="assets/figma-20261123/tele/imgGenerated3D04InformationSecurity.png"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-144" data-name="05 / Responsive devices" data-node-id="1648:29135" data-section="5" id="tele-section-5">
+<div class="fd-tele-145" data-name="Section" data-node-id="1648:29136">
+<div class="fd-tele-146" data-name="Container" data-node-id="1648:29137">
+<div class="fd-tele-147" data-name="Text" data-node-id="1648:29138">
+<p class="fd-tele-148" data-node-id="1648:29139">
+                      ANYWHERE, ANY DEVICE
+                    </p>
+</div>
+<h2 class="fd-tele-149" data-name="Heading 2" data-node-id="1648:29140">
+<div class="fd-tele-150" data-node-id="1648:29141">
+<p class="fd-tele-151">진료실에서도, 이동 중에도</p>
+<p class="fd-tele-152">휴대폰 · 태블릿 · PC로</p>
+<p class="fd-tele-153">의뢰하고 바로 확인하세요.</p>
+</div>
+</h2>
+<div class="fd-tele-154" data-name="Paragraph:margin" data-node-id="1648:29142">
+<div class="fd-tele-155" data-node-id="1648:29143">
+<p class="fd-tele-156">따로 설치할 필요 없이 웹으로 접속하면 돼요.</p>
+<p class="fd-tele-157">휴대폰, 태블릿, PC 어떤 화면에서도 보기 편하게 맞춰 보여 드려요.</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-158" data-name="Container" data-node-id="1648:29144">
+<div class="fd-tele-159" data-name="Image (스마트폰에서 이용하는 ExamVue 365 Flow)" data-node-id="1648:29145">
+<img alt="Image (스마트폰에서 이용하는 ExamVue 365 Flow)" class="fd-tele-160" decoding="async" src="assets/figma-20261123/tele/imgImageExamVue365Flow.png"/>
+</div>
+<div class="fd-tele-161" data-name="Image (데스크톱에서 이용하는 ExamVue 365 Flow):margin" data-node-id="1648:29146">
+<div class="fd-tele-162" data-name="Image (데스크톱에서 이용하는 ExamVue 365 Flow)" data-node-id="1648:29147">
+<img alt="Image (데스크톱에서 이용하는 ExamVue 365 Flow)" class="fd-tele-163" decoding="async" src="assets/figma-20261123/tele/imgImageExamVue365Flow1.png"/>
+</div>
+</div>
+<div class="fd-tele-164" data-name="Image (태블릿에서 이용하는 ExamVue 365 Flow)" data-node-id="1648:29148">
+<img alt="Image (태블릿에서 이용하는 ExamVue 365 Flow)" class="fd-tele-165" decoding="async" src="assets/figma-20261123/tele/imgImageExamVue365Flow2.png"/>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-166" data-name="06 / Service Flow — Minimal editorial" data-node-id="1648:29149" data-section="6" id="tele-section-6">
+<div class="fd-tele-167" data-name="Service Flow / Quiet editorial" data-node-id="1667:29010">
+<div class="fd-tele-168" data-name="Headline + Image composition" data-node-id="1667:29011">
+<div class="fd-tele-169" data-name="Editorial headline" data-node-id="1667:29012">
+<p class="fd-tele-170" data-node-id="1667:29013">SERVICE FLOW  /  01—04</p>
+<div class="fd-tele-171" data-node-id="1667:29014">
+<p class="fd-tele-172">영상에서,</p>
+<p class="fd-tele-173">진료의 확신으로.</p>
+</div>
+<div class="fd-tele-174" data-node-id="1667:29015">
+<p class="fd-tele-175">의뢰 접수부터 전문 판독, 결과 알림까지.</p>
+<p class="fd-tele-176">진료의 흐름을 끊지 않는 네 단계.</p>
+</div>
+</div>
+<div class="fd-tele-177" data-name="Clinical imagery / source assets" data-node-id="1667:29016">
+<div class="fd-tele-178" data-name="Blue accent / Clinical insight" data-node-id="1667:29021">
+<div class="fd-tele-179" data-node-id="1667:29022">
+<p class="fd-tele-180">EXPERT</p>
+<p class="fd-tele-181">INTERPRETATION</p>
+</div>
+<div class="fd-tele-182" data-node-id="1667:29023">
+<p class="fd-tele-183">더 깊게 읽고,</p>
+<p class="fd-tele-184">더 명확하게 전해요.</p>
+</div>
+<p class="fd-tele-185" data-node-id="1667:29024">EXAMVUE 365 FLOW   ↗</p>
+</div>
+</div>
+</div>
+<div class="fd-tele-186" data-name="Four steps / Open typography" data-node-id="1667:29025">
+<div class="fd-tele-187" data-name="01 / 의뢰서 접수" data-node-id="1667:29026">
+<div class="fd-tele-188" data-name="Timeline" data-node-id="1750:29139">
+<div class="fd-tele-189" data-name="Line" data-node-id="1750:29140"></div>
+<div class="fd-tele-190" data-name="Dot" data-node-id="1750:29141">
+<img alt="" class="fd-tele-191" decoding="async" src="assets/figma-20261123/tele/imgDot.svg"/>
+</div>
+</div>
+<div class="fd-tele-192" data-name="Index + Direction" data-node-id="1667:29028">
+<p class="fd-tele-193" data-node-id="1667:29029">
+                      01
+                    </p>
+</div>
+<p class="fd-tele-194" data-node-id="1667:29031">
+                    의뢰서 접수
+                  </p>
+<div class="fd-tele-195" data-node-id="1667:29032">
+<p class="fd-tele-196">영상을 올리고</p>
+<p class="fd-tele-197">의뢰서를 작성하면 끝이에요.</p>
+</div>
+</div>
+<div class="fd-tele-198" data-name="02 / 전문 수의사 배정" data-node-id="1667:29033">
+<div class="fd-tele-199" data-name="Timeline" data-node-id="1750:29142">
+<div class="fd-tele-200" data-name="Line" data-node-id="1750:29143"></div>
+<div class="fd-tele-201" data-name="Dot" data-node-id="1750:29144">
+<img alt="" class="fd-tele-202" decoding="async" src="assets/figma-20261123/tele/imgDot.svg"/>
+</div>
+</div>
+<div class="fd-tele-203" data-name="Index + Direction" data-node-id="1667:29035">
+<p class="fd-tele-204" data-node-id="1667:29036">
+                      02
+                    </p>
+</div>
+<p class="fd-tele-205" data-node-id="1667:29038">
+                    전문 수의사 배정
+                  </p>
+<div class="fd-tele-206" data-node-id="1667:29039">
+<p class="fd-tele-207">의뢰 내용을 확인한 뒤</p>
+<p class="fd-tele-208">알맞은 영상의학 전문 수의사를 배정해요.</p>
+</div>
+</div>
+<div class="fd-tele-209" data-name="03 / 전문 영상 판독" data-node-id="1667:29040">
+<div class="fd-tele-210" data-name="Timeline" data-node-id="1750:29145">
+<div class="fd-tele-211" data-name="Line" data-node-id="1750:29146"></div>
+<div class="fd-tele-212" data-name="Dot" data-node-id="1750:29147">
+<img alt="" class="fd-tele-213" decoding="async" src="assets/figma-20261123/tele/imgDot.svg"/>
+</div>
+</div>
+<div class="fd-tele-214" data-name="Index + Direction" data-node-id="1667:29042">
+<p class="fd-tele-215" data-node-id="1667:29043">
+                      03
+                    </p>
+</div>
+<p class="fd-tele-216" data-node-id="1667:29045">
+                    전문 영상 판독
+                  </p>
+<div class="fd-tele-217" data-node-id="1667:29046">
+<p class="fd-tele-218">영상을 꼼꼼히 살펴보고</p>
+<p class="fd-tele-219">종합 진단 보고서를 작성해요.</p>
+</div>
+</div>
+<div class="fd-tele-220" data-name="04 / 결과 전달" data-node-id="1667:29047">
+<div class="fd-tele-221" data-name="Timeline" data-node-id="1750:29148">
+<div class="fd-tele-222" data-name="Line" data-node-id="1750:29149"></div>
+<div class="fd-tele-223" data-name="Dot" data-node-id="1750:29150">
+<img alt="" class="fd-tele-224" decoding="async" src="assets/figma-20261123/tele/imgDot.svg"/>
+</div>
+</div>
+<div class="fd-tele-225" data-name="Index + Direction" data-node-id="1667:29049">
+<p class="fd-tele-226" data-node-id="1667:29050">
+                      04
+                    </p>
+</div>
+<p class="fd-tele-227" data-node-id="1667:29052">
+                    결과 전달
+                  </p>
+<div class="fd-tele-228" data-node-id="1667:29053">
+<p class="fd-tele-229">판독이 끝나면 이메일 · 문자 ·</p>
+<p class="fd-tele-230">카카오톡 · 왓츠앱으로 바로 알려 드려요.</p>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-231" data-name="06-0 / With Web PACS — Integration" data-node-id="1770:23121" data-section="7" id="tele-section-7">
+<div class="fd-tele-232" data-name="Card / With Web PACS" data-node-id="1770:23122">
+<div class="fd-tele-233" data-name="Copy" data-node-id="1770:23123">
+<p class="fd-tele-234" data-node-id="1770:23124">
+                  WEB PACS VIEWER INCLUDED
+                </p>
+<div class="fd-tele-235" data-node-id="1770:23125">
+<p class="fd-tele-236">원격 판독에는,</p>
+<p class="fd-tele-237">웹 PACS 뷰어가 기본으로.</p>
+</div>
+<div class="fd-tele-238" data-node-id="1770:23126">
+<p class="fd-tele-239">의뢰한 영상은 기본 제공되는 ExamVue 365 Flow</p>
+<p class="fd-tele-240">웹 PACS 뷰어에서 바로 열어 볼 수 있어요.</p>
+</div>
+<a class="fd-tele-241" data-name="Link / 웹 PACS 알아보기" data-node-id="1770:23127" data-service-link="pacs" href="pacs">
+<p class="fd-tele-242" data-node-id="1770:23128">
+                    웹 PACS 자세히 보기
+                  </p>
+<p class="fd-tele-243" data-node-id="1770:23129">
+                    →
+                  </p>
+</a>
+</div>
+<div class="fd-tele-244" data-name="Points" data-node-id="1770:23130">
+<div class="fd-tele-245" data-name="Point / 01" data-node-id="1770:23131">
+<p class="fd-tele-246" data-node-id="1770:23132">
+                    01
+                  </p>
+<div class="fd-tele-247" data-name="Text" data-node-id="1770:23133">
+<p class="fd-tele-248" data-node-id="1770:23134">
+                      브라우저에서 바로 열기
+                    </p>
+<p class="fd-tele-249" data-node-id="1770:23135">
+                      설치 없이, 의뢰한 영상을 웹 뷰어로 확인해요.
+                    </p>
+</div>
+</div>
+<div class="fd-tele-250" data-name="Point / 02" data-node-id="1770:23136">
+<p class="fd-tele-251" data-node-id="1770:23137">
+                    02
+                  </p>
+<div class="fd-tele-252" data-name="Text" data-node-id="1770:23138">
+<p class="fd-tele-253" data-node-id="1770:23139">
+                      익숙한 뷰어 도구 그대로
+                    </p>
+<p class="fd-tele-254" data-node-id="1770:23140">
+                      확대, 밝기 · 대비 조절, 측정까지 판독실처럼 써요.
+                    </p>
+</div>
+</div>
+<div class="fd-tele-255" data-name="Point / 03" data-node-id="1770:23141">
+<p class="fd-tele-256" data-node-id="1770:23142">
+                    03
+                  </p>
+<div class="fd-tele-257" data-name="Text" data-node-id="1770:23143">
+<p class="fd-tele-258" data-node-id="1770:23144">
+                      병원 PACS로도 확장
+                    </p>
+<p class="fd-tele-259" data-node-id="1770:23145">
+                      원격 판독 외 업무에도 쓰려면 별도 요금으로 이용할 수 있어요.
+                    </p>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-260" data-name="Pricing 시안 B — 카드 3장 + 충전 배너" data-node-id="1800:29134" data-section="8" id="pricing">
+<div class="fd-tele-261" data-name="Head" data-node-id="1800:29135">
+<p class="fd-tele-262" data-node-id="1800:29136">
+              PRICING
+            </p>
+<p class="fd-tele-263" data-node-id="1800:29137">
+<span class="fd-tele-264">판독한 만큼만, </span>
+<span class="fd-tele-265">투명하게.</span>
+</p>
+<p class="fd-tele-266" data-node-id="1800:29138">
+              첫 이미지(부위) 요금에, 추가되는 만큼만 더해져요.
+            </p>
+</div>
+<div class="fd-tele-267" data-name="Tools" data-node-id="2038:26385">
+<div class="fd-tele-268" data-name="Currency Segment" data-node-id="2038:26386">
+<button aria-pressed="true" class="fd-tele-269" data-currency="KRW" data-name="Segment / KRW" data-node-id="2038:26387" type="button">
+<p class="fd-tele-270" data-node-id="2038:26388">
+                  KRW
+                </p>
+</button>
+<button aria-pressed="false" class="fd-tele-271" data-currency="USD" data-name="Segment / USD" data-node-id="2038:26389" type="button">
+<p class="fd-tele-272" data-node-id="2038:26390">
+                  USD
+                </p>
+</button>
+</div>
+<button class="fd-tele-273" data-info="pricing" data-name="Button" data-node-id="2038:26391" type="button">
+<p class="fd-tele-274" data-node-id="I2038:26391;5:102">
+                요금 기준 안내
+              </p>
+</button>
+</div>
+<div class="fd-tele-275" data-name="Rate cards" data-node-id="1800:29144">
+<div class="fd-tele-276" data-name="Rate / CR" data-node-id="1800:29145">
+<div class="fd-tele-277" data-name="Top" data-node-id="1800:29146">
+<p class="fd-tele-278" data-node-id="1800:29147">
+                  CR
+                </p>
+<p class="fd-tele-279" data-node-id="1800:29148">
+                  Computed Radiography
+                </p>
+</div>
+<div class="fd-tele-280" data-name="Price" data-node-id="1800:29149">
+<p class="fd-tele-281" data-node-id="1800:29150">
+                  ₩15,000
+                </p>
+<p class="fd-tele-282" data-node-id="1800:29151">
+                  / 이미지당
+                </p>
+</div>
+<div class="fd-tele-283" data-name="Extra" data-node-id="1800:29152">
+<p class="fd-tele-284" data-node-id="1800:29153">
+                  추가 이미지 ₩15,000
+                </p>
+</div>
+</div>
+<div class="fd-tele-285" data-name="Rate / CT" data-node-id="1800:29154">
+<div class="fd-tele-286" data-name="Top" data-node-id="1800:29155">
+<p class="fd-tele-287" data-node-id="1800:29156">
+                  CT
+                </p>
+<p class="fd-tele-288" data-node-id="1800:29157">
+                  Computed Tomography
+                </p>
+</div>
+<div class="fd-tele-289" data-name="Price" data-node-id="1800:29158">
+<p class="fd-tele-290" data-node-id="1800:29159">
+                  ₩150,000
+                </p>
+<p class="fd-tele-291" data-node-id="1800:29160">
+                  / 부위당
+                </p>
+</div>
+<div class="fd-tele-292" data-name="Extra" data-node-id="1800:29161">
+<p class="fd-tele-293" data-node-id="1800:29162">
+                  추가 부위 ₩150,000
+                </p>
+</div>
+</div>
+<div class="fd-tele-294" data-name="Rate / MR" data-node-id="1800:29163">
+<div class="fd-tele-295" data-name="Top" data-node-id="1800:29164">
+<p class="fd-tele-296" data-node-id="1800:29165">
+                  MR
+                </p>
+<p class="fd-tele-297" data-node-id="1800:29166">
+                  Magnetic Resonance
+                </p>
+</div>
+<div class="fd-tele-298" data-name="Price" data-node-id="1800:29167">
+<p class="fd-tele-299" data-node-id="1800:29168">
+                  ₩165,000
+                </p>
+<p class="fd-tele-300" data-node-id="1800:29169">
+                  / 첫 부위
+                </p>
+</div>
+<div class="fd-tele-301" data-name="Extra" data-node-id="1800:29170">
+<p class="fd-tele-302" data-node-id="1800:29171">
+                  추가 부위 ₩90,000
+                </p>
+</div>
+</div>
+</div>
+<div class="fd-tele-303" data-name="Charge banner" data-node-id="1800:29172">
+<div class="fd-tele-304" data-name="Copy" data-node-id="1800:29173">
+<p class="fd-tele-305" data-node-id="1800:29174">
+                PREPAID BALANCE
+              </p>
+<div class="fd-tele-306" data-node-id="1800:29175">
+<p class="fd-tele-307">미리 충전하면,</p>
+<p class="fd-tele-308">2.5%를 더 드려요.</p>
+</div>
+<p class="fd-tele-309" data-node-id="1800:29176">
+                충전해 두고 판독할 때마다 꺼내 쓰면 돼요.
+              </p>
+</div>
+<div class="fd-tele-310" data-name="Amounts" data-node-id="1800:29177">
+<div class="fd-tele-311" data-name="Amount / 100만 원" data-node-id="1800:29178">
+<div class="fd-tele-312" data-name="Row" data-node-id="1800:29179">
+<p class="fd-tele-313" data-node-id="1800:29180">
+                    100만 원 충전
+                  </p>
+<div class="fd-tele-314" data-name="Badge" data-node-id="1800:29181">
+<p class="fd-tele-315" data-node-id="1800:29182">
+                      추천
+                    </p>
+</div>
+</div>
+<p class="fd-tele-316" data-node-id="1800:29183">
+                  1,025,000원
+                </p>
+<p class="fd-tele-317" data-node-id="1800:29184">
+                  만큼 쓸 수 있어요
+                </p>
+</div>
+<div class="fd-tele-318" data-name="Amount / 200만 원" data-node-id="1800:29185">
+<div class="fd-tele-319" data-name="Row" data-node-id="1800:29186">
+<p class="fd-tele-320" data-node-id="1800:29187">
+                    200만 원 충전
+                  </p>
+</div>
+<p class="fd-tele-321" data-node-id="1800:29188">
+                  2,050,000원
+                </p>
+<p class="fd-tele-322" data-node-id="1800:29189">
+                  만큼 쓸 수 있어요
+                </p>
+</div>
+<div class="fd-tele-323" data-name="Amount / 500만 원" data-node-id="1800:29190">
+<div class="fd-tele-324" data-name="Row" data-node-id="1800:29191">
+<p class="fd-tele-325" data-node-id="1800:29192">
+                    500만 원 충전
+                  </p>
+</div>
+<p class="fd-tele-326" data-node-id="1800:29193">
+                  5,125,000원
+                </p>
+<p class="fd-tele-327" data-node-id="1800:29194">
+                  만큼 쓸 수 있어요
+                </p>
+</div>
+</div>
+<button class="fd-tele-328" data-info="login" data-name="Button / 충전하기" data-node-id="1800:29195" type="button">
+<p class="fd-tele-329" data-node-id="1800:29196">
+                충전하기
+              </p>
+</button>
+</div>
+<div class="fd-tele-330" data-name="결제 및 취소 안내" data-node-id="2038:26396">
+<div class="fd-tele-331"></div>
+<div class="fd-tele-332" data-name="Items" data-node-id="2038:26398">
+<div class="fd-tele-333" data-name="결제" data-node-id="2038:26399">
+<div class="fd-tele-334" data-name="Icon" data-node-id="2038:26400">
+<div class="fd-tele-335"><img alt="" class="fd-tele-336" decoding="async" height="24" src="assets/figma-20261123/tele/imgNameWallet.svg" width="24"/></div>
+</div>
+<div class="fd-tele-337" data-name="Text" data-node-id="2038:26402">
+<p class="fd-tele-338" data-node-id="2038:26403">
+                    결제
+                  </p>
+<p class="fd-tele-339" data-node-id="2038:26404">
+                    판독 신청 시점에 건당 결제됩니다.
+                  </p>
+<p class="fd-tele-340" data-node-id="2038:26405">
+                    결제 수단: 카드 또는 간편결제 (Toss 제공).
+                  </p>
+</div>
+</div>
+<div class="fd-tele-341" data-node-id="2038:26406">
+<div class="fd-tele-342" data-name="취소 · 환불" data-node-id="2038:26407">
+<div class="fd-tele-343" data-name="Icon" data-node-id="2038:26408">
+<div class="fd-tele-344"><img alt="" class="fd-tele-345" decoding="async" height="24" src="assets/figma-20261123/tele/imgNameReset.svg" width="24"/></div>
+</div>
+<div class="fd-tele-346" data-name="Text" data-node-id="2038:26410">
+<p class="fd-tele-347" data-node-id="2038:26411">
+                      취소 · 환불
+                    </p>
+<p class="fd-tele-348" data-node-id="2038:26412">
+                      판독이 시작되기 전까지 무료로 취소하고 전액 환불받을 수 있습니다.
+                    </p>
+<p class="fd-tele-349" data-node-id="2038:26413">
+                      판독이 시작된 이후에는 관리자에게 문의해 주세요.
+                    </p>
+</div>
+</div>
+<div class="fd-tele-350" data-node-id="2038:26414">
+<a class="fd-tele-351" data-info="refund" data-name="Link" data-node-id="2038:26415" href="#">
+<div class="fd-tele-352" data-name="Text" data-node-id="I2038:26415;1120:4">
+<p class="fd-tele-353" data-node-id="I2038:26415;1120:5">
+                        환불 규정 보기
+                      </p>
+<div class="fd-tele-354" data-name="Underline" data-node-id="I2038:26415;1120:6"></div>
+</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-tele-355" data-name="07 / FAQ" data-node-id="1648:29255" data-section="9" id="faq">
+<div class="fd-tele-356" data-name="Section" data-node-id="1648:29256">
+<div class="fd-tele-357" data-name="Container" data-node-id="1648:29257">
+<div class="fd-tele-358" data-name="Text" data-node-id="1648:29258">
+<p class="fd-tele-359" data-node-id="1648:29259">
+                  FAQ
+                </p>
+</div>
+<h2 class="fd-tele-360" data-name="Heading 2" data-node-id="1648:29260">
+<p class="fd-tele-361" data-node-id="1648:29261">
+                  궁금한 점이 있으신가요?
+                </p>
+</h2>
+</div>
+<div class="fd-tele-362" data-name="Container" data-node-id="1648:29262">
+<details class="fd-tele-363" data-name="Details" data-node-id="1648:29263">
+<summary class="fd-tele-364" data-name="Summary" data-node-id="1648:29264">
+<p class="fd-tele-365" data-node-id="1648:29265">
+                    판독 결과는 얼마나 걸리나요?
+                  </p>
+<div class="fd-tele-366" data-name="Image" data-node-id="1648:29266">
+<img alt="Image" class="fd-tele-367" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-368" data-name="Paragraph" data-node-id="1648:29267">
+<p class="fd-tele-369" data-node-id="1648:29268">
+                    급한 의뢰는 최대 48시간 안에 결과를 받아 보실 수 있어요. 판독이 끝나면 이메일 · 문자 · 카카오톡 · 왓츠앱으로 바로 알려 드려요.
+                  </p>
+</div>
+</details>
+<details class="fd-tele-370" data-name="Details" data-node-id="1648:29269">
+<summary class="fd-tele-371" data-name="Summary" data-node-id="1648:29270">
+<p class="fd-tele-372" data-node-id="1648:29271">
+                    어떤 영상을 의뢰할 수 있나요?
+                  </p>
+<div class="fd-tele-373" data-name="Image" data-node-id="1648:29272">
+<img alt="Image" class="fd-tele-374" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-375" data-name="Paragraph" data-node-id="1648:29273">
+<p class="fd-tele-376" data-node-id="1648:29274">
+                    X-ray, CT, MRI, 초음파 등 주요 DICOM 영상을 의뢰할 수 있어요. 영상을 올리고 의뢰서를 작성하면 접수가 끝나요.
+                  </p>
+</div>
+</details>
+<details class="fd-tele-377" data-name="Details" data-node-id="1648:29275">
+<summary class="fd-tele-378" data-name="Summary" data-node-id="1648:29276">
+<p class="fd-tele-379" data-node-id="1648:29277">
+                    판독은 누가 하나요?
+                  </p>
+<div class="fd-tele-380" data-name="Image" data-node-id="1648:29278">
+<img alt="Image" class="fd-tele-381" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-382" data-name="Paragraph" data-node-id="1648:29279">
+<p class="fd-tele-383" data-node-id="1648:29280">
+                    검증된 영상의학 전문 수의사가 판독해요. 의뢰 내용을 확인한 뒤 검사에 맞는 판독의를 배정해 드려요.
+                  </p>
+</div>
+</details>
+<details class="fd-tele-384" data-name="Details" data-node-id="1648:29281">
+<summary class="fd-tele-385" data-name="Summary" data-node-id="1648:29282">
+<p class="fd-tele-386" data-node-id="1648:29283">
+                    요금은 어떻게 되나요?
+                  </p>
+<div class="fd-tele-387" data-name="Image" data-node-id="1648:29284">
+<img alt="Image" class="fd-tele-388" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-389" data-name="Paragraph" data-node-id="1648:29285">
+<p class="fd-tele-390" data-node-id="1648:29286">
+                    판독 1건마다 같은 요금이에요. 건별로 결제하거나 충전금으로 결제할 수 있고, 자세한 금액은 위 요금 안내에서 확인하실 수 있어요.
+                  </p>
+</div>
+</details>
+<details class="fd-tele-391" data-name="Details" data-node-id="1648:29287">
+<summary class="fd-tele-392" data-name="Summary" data-node-id="1648:29288">
+<p class="fd-tele-393" data-node-id="1648:29289">
+                    병원에 PACS가 없어도 쓸 수 있나요?
+                  </p>
+<div class="fd-tele-394" data-name="Image" data-node-id="1648:29290">
+<img alt="Image" class="fd-tele-395" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-396" data-name="Paragraph" data-node-id="1648:29291">
+<p class="fd-tele-397" data-node-id="1648:29292">
+                    네, 영상을 직접 올려서 의뢰하시면 돼요. 의뢰한 영상은 기본 제공되는 웹 PACS 뷰어에서 바로 열어 볼 수 있어요.
+                  </p>
+</div>
+</details>
+<details class="fd-tele-398" data-name="Details" data-node-id="1648:29293">
+<summary class="fd-tele-399" data-name="Summary" data-node-id="1648:29294">
+<p class="fd-tele-400" data-node-id="1648:29295">
+                    따로 설치해야 하는 프로그램이 있나요?
+                  </p>
+<div class="fd-tele-401" data-name="Image" data-node-id="1648:29296">
+<img alt="Image" class="fd-tele-402" decoding="async" src="assets/figma-20261123/tele/imgImage1.png"/>
+</div>
+</summary>
+<div class="fd-tele-403" data-name="Paragraph" data-node-id="1648:29297">
+<p class="fd-tele-404" data-node-id="1648:29298">
+                    아니요, 웹으로 접속하면 바로 쓸 수 있어요. 휴대폰, 태블릿, PC 어디서든 의뢰하고 결과를 확인하세요.
+                  </p>
+</div>
+</details>
+</div>
+</div>
+</section><section class="fd-tele-405" data-name="08 / Contact CTA" data-node-id="1648:29299" data-section="10" id="tele-section-10">
+<img alt="" class="fd-tele-406" decoding="async" src="assets/figma-20261123/tele/img08ContactCta.png"/>
+<div class="fd-tele-407" data-name="BG" data-node-id="1654:6421">
+<div aria-hidden="" class="fd-tele-408">
+<div class="fd-tele-409"></div>
+<img alt="" class="fd-tele-410" decoding="async" src="assets/figma-20261123/tele/imgBg.png"/>
+</div>
+</div>
+<div class="fd-tele-411" data-node-id="1645:6215">
+<div class="fd-tele-412" data-name="Container" data-node-id="1648:29300">
+<div class="fd-tele-413" data-name="Text" data-node-id="1648:29301">
+<p class="fd-tele-414" data-node-id="1648:29302">
+                  Trust Built on Globally Recognized Technology
+                </p>
+</div>
+<h2 class="fd-tele-415" data-name="Heading 2" data-node-id="1648:29303">
+<p class="fd-tele-416" data-node-id="1648:29304">
+<span class="fd-tele-417">더 빠르고 정확한 판독,</span>
+<span class="fd-tele-418"> 지금 시작해 보세요.</span>
+</p>
+</h2>
+</div>
+<a class="fd-tele-419" data-name="Link" data-node-id="1648:29305" href="tel:0221082580">
+<p class="fd-tele-420" data-node-id="1648:29306">
+                도입 문의하기
+              </p>
+<div class="fd-tele-421" data-name="Text" data-node-id="1648:29307">
+<p class="fd-tele-422" data-node-id="1648:29308">
+                  ↗
+                </p>
+</div>
+</a>
+</div>
+</section></main><footer class="exam-footer" id="company"><div class="footer-top"><div class="company-info"><a class="exam-brand" href="./#home">ExamVue <span>365</span> Flow</a><p>상호명 : 제이피아이헬스케어<br/>대표자명 : 김진국<br/>사업자 등록번호 : 203-81-48896<br/>통신판매업번호 : 2024-서울구로-0968<br/>사업장 주소 : 서울특별시 구로구 디지털로33길 28, 608호(우림이비즈센터1차)<br/>유선번호 : <a href="tel:0221082580">02-2108-2580</a></p></div><div class="footer-links"><div><h2>Company</h2><button data-info="company">Company Introduction</button><button data-info="services">About Service</button><button data-info="pricing">Pricing</button></div><div><h2>Family Site</h2><button data-info="terms">Terms of Service</button><button data-info="privacy">Privacy Policy</button><button data-info="refund">Refund Policy</button></div></div></div><p class="copyright">Copyright(c) JPI All Rights Reserved.</p></footer><dialog aria-labelledby="service-dialog-title" class="service-dialog"><button aria-label="안내 닫기" class="service-close">×</button><span class="dialog-eyebrow">EXAMVUE 365 FLOW</span><h2 id="service-dialog-title"></h2><p id="service-dialog-copy"></p><button class="dialog-confirm">확인</button></dialog>
+<a aria-label="맨 위로" class="back-to-top" href="#tele-main">↑</a>
+<script src="landing.js?v=tele-2"></script><script src="figma-services.js?v=20261123"></script></body></html>

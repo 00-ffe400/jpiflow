@@ -6,143 +6,953 @@
 <script>document.documentElement.classList.add('service-motion-boot');window.serviceMotionBootTimer=setTimeout(()=>{document.documentElement.classList.remove('service-motion-boot');document.body?.classList.remove('motion-ready')},6000)</script>
 <meta name="theme-color" content="#cdd7dd"><script src="theme.js?v=light-only"></script>
 <link rel="stylesheet" href="style.css?v=full-hero-1"><link rel="stylesheet" href="landing.css?v=responsive-2"><link rel="stylesheet" href="telemedicine.css?v=arc-layout-5">
-<link rel="stylesheet" href="service-content.css?v=review-20261117"><link rel="stylesheet" href="pacs.css?v=10"><script>if(new URLSearchParams(location.search).has("embed"))document.documentElement.classList.add("service-embedded")</script><link rel="stylesheet" href="mobile.css?v=4"></head><body class="tele-page pacs-page"><a class="skip" href="#pacs-main">본문 바로가기</a><header class="header">
+<link rel="stylesheet" href="service-content.css?v=review-20261117"><link rel="stylesheet" href="pacs.css?v=10"><script>if(new URLSearchParams(location.search).has("embed"))document.documentElement.classList.add("service-embedded")</script><link rel="stylesheet" href="mobile.css?v=4"><link rel="stylesheet" href="figma-pacs.css?v=20261123"><link rel="stylesheet" href="figma-services.css?v=20261123"></head><body class="tele-page pacs-page"><a class="skip" href="#pacs-main">본문 바로가기</a><header class="header">
 <a class="exam-brand" href="./#home" aria-label="ExamVue 365 Flow 메인"><img src="assets/examvue-header-logo.svg" alt="" /></a>
 <nav aria-label="주요 메뉴"><a href="./#home">메인</a><a href="pacs" aria-current="page">서비스</a><a href="telemedicine#pricing">가격</a></nav>
 <div class="exam-actions"><label class="language"><span class="sr-only">언어</span><select aria-label="언어"><option value="ko">KOR</option></select></label><button class="login-button" data-info="login">로그인</button></div>
 </header>
-<main id="pacs-main">
-<section class="service-hero pacs-hero">
-<div class="hero-foot"><span>EXAMVUE 365 FLOW</span><span>WEB PACS</span></div>
-<div class="hero-surface">
-<div data-reveal>
-<span class="eyebrow">WEB PACS</span>
-<h1><span>설치는 필요 없어요.</span><br><em>CT도 바로 열리는 웹 PACS</em></h1>
-<p>검사를 열기 전에 영상을 미리 불러와 두니까, 수천 장짜리 CT도 기다리지 않아요.<br>저장부터 판독, 리포트 작성까지 병원 어느 PC에서나 이어서 하세요.</p>
-<ul class="pacs-chips" aria-label="제공 방식"><li>클라우드로 바로 시작</li><li>병원 서버 설치도 가능</li><li>Chrome · Edge면 끝, 설치 없음</li><li class="is-cert">동물용 의료기기 2등급 허가</li></ul>
+<main id="pacs-main" class="figma-design figma-pacs"><section class="fd-pacs-0" data-name="01 / Hero — Web PACS" data-node-id="1765:29141" data-section="1" id="pacs-section-1">
+<div class="fd-pacs-1" data-name="Container" data-node-id="1765:29142">
+<p class="fd-pacs-2" data-node-id="1765:29143">
+              EXAMVUE 365 FLOW
+            </p>
+<p class="fd-pacs-3" data-node-id="1765:29144">
+              WEB PACS
+            </p>
 </div>
-<figure class="hero-product pacs-shot" data-reveal>
-<img src="assets/pacs/worklist.webp" alt="ExamVue 365 Flow 워크리스트 화면: 검색 필터, 검사 목록, 썸네일 미리보기, 판독 리포트, 관련 검사" width="1600" height="832">
-<span class="pacs-marker" style="--x:6%;--y:9%">1</span><span class="pacs-marker" style="--x:88.9%;--y:28%">2</span><span class="pacs-marker" style="--x:88.9%;--y:72%">3</span><span class="pacs-marker" style="--x:5%;--y:87.8%">4</span>
-</figure>
-<ol class="pacs-callouts">
-<li><h3>찾는 검사, 바로 찾기</h3><p>환자 이름이나 ID, 날짜, 모달리티로 검색하세요. 자주 쓰는 조건은 저장해 두면 한 번에 불러와요.</p></li>
-<li><h3>열기 전에 미리 보기</h3><p>썸네일로 시리즈를 먼저 확인하고, 필요한 영상만 골라 여세요.</p></li>
-<li><h3>보면서 바로 판독</h3><p>영상 옆에서 소견과 결론을 쓰고, 임시 저장했다가 확정하면 끝이에요.</p></li>
-<li><h3>지난 검사와 나란히</h3><p>같은 환자의 이전 검사가 타임라인에 모여 있어, 클릭 한 번으로 비교할 수 있어요.</p></li>
-</ol>
+<div class="fd-pacs-4" data-name="Container" data-node-id="1765:29145">
+<p class="fd-pacs-5" data-node-id="1765:29146">
+              WEB PACS
+            </p>
+<h1 class="fd-pacs-6" data-name="Heading 1" data-node-id="1765:29147">
+<div class="fd-pacs-7" data-node-id="1765:29148">
+<p class="fd-pacs-8">설치는 필요 없어요.</p>
+<p class="fd-pacs-9">CT도 바로 열리는 웹 PACS</p>
 </div>
-</section>
-
-<section class="service-wrap pacs-platform" id="platform">
-<div class="pacs-manifesto fill-reading">
-<span class="eyebrow">SYSTEM OVERVIEW</span>
-<h2><span class="read-line">장비는 그대로,</span> <span class="read-line read-line-blue">필요한 건 브라우저 하나<span class="fill-dot">.</span></span></h2>
-<p>지금 쓰는 촬영 장비에서 영상을 보내면 바로 저장되고, 어느 PC에서나 열어 볼 수 있어요.</p>
+</h1>
+<div class="fd-pacs-10" data-name="Paragraph" data-node-id="1765:29149">
+<div class="fd-pacs-11" data-node-id="1765:29150">
+<p class="fd-pacs-12">검사를 열기 전에 영상을 미리 불러와 두니까, 수천 장짜리 CT도 기다리지 않아요.</p>
+<p class="fd-pacs-13">저장부터 판독, 리포트 작성까지 병원 어느 PC에서나 이어서 하세요.</p>
 </div>
-<div class="pacs-overview">
-<div class="pacs-overview-side">
-<div class="pacs-side-head"><span class="eyebrow">BEFORE YOU START</span><h2>도입 전에,<br>이것만 확인하세요.</h2></div>
-<dl class="pacs-specs" data-reveal>
-<div><dt>도입 방식</dt><dd>클라우드 구독 또는 병원 서버 설치</dd></div>
-<div><dt>필요한 것</dt><dd>Chrome 또는 Edge 브라우저 하나 (110 이상)</dd></div>
-<div><dt>지원 영상</dt><dd>CT · MR · CR · DR · US · PET · XA</dd></div>
-</dl>
 </div>
-<figure class="pacs-diagram" data-reveal aria-label="플랫폼 구성도">
-<span class="dg-label">의뢰 병원</span>
-<div class="dg-row"><div class="dg-box"><b>Hospital A</b><span>CT · DR · US</span></div><div class="dg-box"><b>Hospital B</b><span>MR · CR</span></div></div>
-<span class="dg-line" aria-hidden="true"></span><span class="dg-label">DICOM C-STORE</span><span class="dg-line" aria-hidden="true"></span>
-<div class="dg-platform">
-<div class="dg-head"><b>ExamVue 365 Flow</b><span>INTEGRATED PLATFORM</span></div>
-<div class="dg-box dg-viewer"><b>웹 뷰어</b><span>PACS와 원격 판독이 함께 쓰는 판독 화면</span></div>
-<div class="dg-links" aria-hidden="true"><span>↑ 영상 보기</span><span>검사 · 리포트 공유 ⇄</span><span>↑ 판독 진행</span></div>
-<div class="dg-row"><div class="dg-box dg-white"><b>DICOM 서버</b><span>병원 영상 저장소</span><ul><li>클라우드</li><li>병원 서버</li></ul></div><div class="dg-box dg-white"><b>원격 판독 서비스</b><span>전문 판독의 연결</span><ul><li>의뢰 병원 화면</li><li>판독의 화면</li><li>관리자 화면</li></ul></div></div>
+<div class="fd-pacs-14" data-name="Chips" data-node-id="1765:29151">
+<div class="fd-pacs-15" data-name="Chip" data-node-id="1765:29152">
+<p class="fd-pacs-16" data-node-id="1765:29153">
+                  클라우드로 바로 시작
+                </p>
 </div>
-</figure>
+<div class="fd-pacs-17" data-name="Chip" data-node-id="1765:29154">
+<p class="fd-pacs-18" data-node-id="1765:29155">
+                  병원 서버 설치도 가능
+                </p>
 </div>
-</section>
-
-<section class="pacs-tools" id="reading-tools">
-<div class="service-wrap">
-<div class="section-head"><div><span class="eyebrow">READING TOOLS</span><h2>판독실 워크스테이션,<br>이제 브라우저 안에.</h2></div><p>진단 뷰어와 CT MPR을 같은 탭에서 바로 열어요.<br>남겨 둔 측정과 주석은 다음에 열어도 그대로예요.</p></div>
-<article class="pacs-tool-card" data-reveal>
-<img src="assets/pacs/ct-viewer.webp" alt="오른쪽 도구 막대가 있는 다중 뷰포트 CT 뷰어" width="1600" height="858" loading="lazy">
-<div><span class="pacs-kicker">CT VIEWER</span><h3>워크스테이션에서 하던 판독,<br>그대로 여기서.</h3><p>최대 4×4 화면에 새 검사와 지난 검사 두 개를 나란히 띄워요. 화면마다 분할과 밝기 설정이 따로 적용되고, 남긴 측정과 주석은 DICOM 표준으로 저장돼 다음에 그대로 다시 볼 수 있어요.</p>
-<ul class="pacs-bullets"><li>길이 · 각도 · Cobb 각, 원형 · 사각형 · 자유형 ROI 측정</li><li>윈도우 프리셋, 시네 재생, 반전 · 회전 · 실제 크기 보기</li></ul></div>
-</article>
-<article class="pacs-tool-card is-reverse" data-reveal>
-<img src="assets/pacs/ct-mpr.webp" alt="축상면·시상면·관상면을 크로스헤어로 연동한 MPR 뷰어" width="1600" height="858" loading="lazy">
-<div><span class="pacs-kicker">CT MPR</span><h3>3D 장비 없이도,<br>세 방향 단면을 한눈에.</h3><p>CT 영상으로 축상면 · 시상면 · 관상면을 바로 만들어 보여 줘요. 한 곳을 가리키면 세 단면이 함께 따라오고, MIP · MinIP · 평균 투영과 슬랩 두께도 단면마다 바꿀 수 있어요.</p>
-<ul class="pacs-bullets"><li>뷰어에서 버튼 하나로 새 창 열기</li><li>회전 · 측정 · 조직별 프리셋 그대로 사용</li></ul></div>
-</article>
+<div class="fd-pacs-19" data-name="Chip" data-node-id="1765:29156">
+<p class="fd-pacs-20" data-node-id="1765:29157">
+                  Chrome · Edge면 끝, 설치 없음
+                </p>
 </div>
-</section>
-
-<section class="pacs-adjust" id="image-adjustment">
-<div class="service-wrap">
-<div class="section-head"><div><span class="eyebrow">IMAGE ADJUSTMENT / WINDOW PRESETS</span><h2>클릭 한 번으로,<br>보고 싶은 조직을 선명하게.</h2><p>폐, 뼈, 뇌처럼 조직별 프리셋을 우클릭으로 바로 적용하세요. 드래그로도 조절할 수 있어요.</p></div></div>
-<div class="pacs-adjust-grid">
-<div class="pacs-dark-card" data-reveal>
-<span class="pacs-card-label">01 / 자주 쓰는 영상 조정 도구</span>
-<ul class="pacs-tool-list"><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></span><span>밝기 / 대비</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 2.4"/><circle cx="12" cy="12" r="4.5"/><path d="M12 7.5a4.5 4.5 0 0 1 0 9z" fill="currentColor" stroke="none"/></svg></span><span>ROI 기반 윈도우</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3 21 21M10.5 7.8v5.4M7.8 10.5h5.4"/></svg></span><span>확대 / 축소</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span><span>이동 (Pan)</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v4h-4"/><path d="M9 9.5v5h5"/></svg></span><span>90° 회전</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="6.5" height="14" rx="1.2" fill="currentColor" stroke="none"/><rect x="14" y="5" width="6.5" height="14" rx="1.2"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg></span><span>좌우 반전</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg></span><span>시네 재생</span></li><li><span class="pacs-tool-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5v17h17"/><path d="M7.5 17v-4M11 17V8M14.5 17v-6M18 17V6" stroke-width="2.2"/></svg></span><span>히스토그램</span></li></ul>
-<div class="pacs-stats"><div><strong>25–800%</strong><span>확대 · 축소 범위</span></div><div><strong>1–30 FPS</strong><span>시네 재생 속도</span></div></div>
+<div class="fd-pacs-21" data-name="Chip" data-node-id="1765:29158">
+<div class="fd-pacs-22" data-name="Ellipse" data-node-id="1765:29159">
+<img alt="" class="fd-pacs-23" decoding="async" src="assets/figma-20261123/pacs/imgEllipse.svg"/>
 </div>
-<div class="pacs-light-card" data-reveal>
-<span class="pacs-card-label">02 / 조직별 프리셋</span>
-<ul class="pacs-presets"><li><b>폐</b><span>결절 · 기관지</span></li><li><b>복부</b><span>간 · 비장 · 신장</span></li><li><b>뇌</b><span>뇌 조직 · 출혈</span></li><li><b>뼈</b><span>골절 · 골밀도</span></li><li><b>척추</b><span>골절 · 디스크</span></li><li><b>연부조직</b><span>근육 · 종괴</span></li></ul>
-<p class="pacs-tip">우클릭 한 번으로 프리셋을 바꾸고, 드래그로 밝기와 대비를 세밀하게 조절하세요.</p>
+<p class="fd-pacs-24" data-node-id="1765:29160">
+                  동물용 의료기기 2등급 허가
+                </p>
+</div>
+</div>
+<div class="fd-pacs-25" data-name="Product screenshot" data-node-id="1765:29161">
+<div class="fd-pacs-26" data-name="Worklist + markers" data-node-id="1765:29162">
+<div class="fd-pacs-27" data-name="IMG / Worklist" data-node-id="1765:29163">
+<img alt="" class="fd-pacs-28" decoding="async" src="assets/figma-20261123/pacs/imgImgWorklist.png"/>
+</div>
+<div class="fd-pacs-29" data-name="Marker 1" data-node-id="1765:29164">
+<p class="fd-pacs-30" data-node-id="1765:29165">
+                    1
+                  </p>
+</div>
+<div class="fd-pacs-31" data-name="Marker 2" data-node-id="1765:29166">
+<p class="fd-pacs-32" data-node-id="1765:29167">
+                    2
+                  </p>
+</div>
+<div class="fd-pacs-33" data-name="Marker 3" data-node-id="1765:29168">
+<p class="fd-pacs-34" data-node-id="1765:29169">
+                    3
+                  </p>
+</div>
+<div class="fd-pacs-35" data-name="Marker 4" data-node-id="1765:29170">
+<p class="fd-pacs-36" data-node-id="1765:29171">
+                    4
+                  </p>
 </div>
 </div>
 </div>
-</section>
-
-<section class="service-wrap pacs-protocols" id="hanging-protocols">
-<div class="section-head pacs-protocol-head"><div><span class="eyebrow">HANGING PROTOCOLS / MULTI-MONITOR</span><h2>늘 보던 배치 그대로,<br><em>모니터 3대까지 알아서.</em></h2><p>CT를 열면 새 검사와 지난 검사가 정해 둔 모니터에, 정해 둔 화면 분할로 자동으로 펼쳐져요. <br>한 번만 설정해 두면 어느 판독 PC에서든 CT · DX · MR이 늘 같은 모습으로 열려요.</p></div></div>
-<div class="pacs-protocol-grid is-single">
-<figure class="pacs-monitors" data-reveal>
-<figcaption>예시 · 모니터 3대로 CT 비교 판독</figcaption>
-<div class="pacs-desk">
-<div class="pacs-monitor"><div class="screen"><img src="assets/pacs/worklist.webp" alt="뷰어 1: 새 CT가 선택된 워크리스트" loading="lazy" width="1600" height="832"></div><i></i><span>뷰어 1 · 워크리스트</span></div>
-<div class="pacs-monitor"><div class="screen"><img src="assets/pacs/ct-mpr.webp" alt="뷰어 2: 최근 이전 검사" loading="lazy" width="1600" height="858"></div><i></i><span>뷰어 2 · 관련 검사 1 · 3×3</span></div>
-<div class="pacs-monitor"><div class="screen"><img src="assets/pacs/ct-viewer.webp" alt="뷰어 3: 그 이전 검사" loading="lazy" width="1600" height="858"></div><i></i><span>뷰어 3 · 관련 검사 2 · 2×2</span></div>
+<div class="fd-pacs-37" data-name="Callouts" data-node-id="1765:29172">
+<div class="fd-pacs-38" data-name="Callout 1" data-node-id="1765:29173">
+<div class="fd-pacs-39" data-name="Frame" data-node-id="1765:29174">
+<p class="fd-pacs-40" data-node-id="1765:29175">
+                    1
+                  </p>
 </div>
-<p class="pacs-caption">모니터 위치는 판독 PC마다 따로 저장돼요.</p>
-</figure>
-</div>
-</section>
-
-<section class="recommend-section pacs-ops" id="operations">
-<span class="eyebrow">OPERATIONS AND COMPLIANCE</span>
-<h2 class="pacs-ops-title">보안과 관리는 저희가 챙길게요.</h2>
-<div class="recommend-grid">
-<article data-reveal><span>01</span><h3>병원마다 따로,<br>안전하게 분리</h3><p>병원마다 저장 공간과 계정이 따로 나뉘어 데이터가 섞이지 않아요.</p></article>
-<article data-reveal><span>02</span><h3>전 구간 암호화,<br>모든 기록은 그대로</h3><p>접속과 영상 전송은 모두 암호화되고, 누가 언제 봤는지 기록이 남아요.</p></article>
-<article data-reveal><span>03</span><h3>어떤 장비와도<br>잘 맞는 DICOM</h3><p>CT, MR, CR, DR, 초음파 등 표준 DICOM 영상을 그대로 주고받아요.</p></article>
-<article data-reveal><span>04</span><h3>허가받은<br>동물용 의료기기</h3><p>농림축산검역본부에서 동물용 의료기기 2등급 허가를 받았어요.</p></article>
-</div>
-</section>
-
-<section class="flow-section pacs-deploy" id="deployment">
-<div class="service-wrap">
-<div class="flow-editorial-top">
-<div><span class="eyebrow">DEPLOYMENT / CLOUD · ON-PREMISE</span><h2>클라우드로 가볍게,<br>병원 서버로 안전하게.</h2><p>우리 병원에 맞는 방식으로 시작하세요.<br>나중에 바꾸거나 함께 써도 괜찮아요.</p></div>
-<div class="flow-blue-note"><span>EITHER WAY</span><h3>어떤 방식이든,<br>원격 판독과 바로 연결돼요.</h3><small>병원이 커져도 그대로 이어서 쓰세요. ↗</small></div>
-</div>
-<div class="flow-open-steps pacs-deploy-steps">
-<article data-reveal><div><span>01</span><small>CLOUD PLATFORM</small></div><h3>오늘 신청하면, 오늘 시작</h3><p>서버를 들이거나 따로 관리할 필요가 없어요.<br>업데이트와 백업은 자동으로 해 드려요.</p></article>
-<article data-reveal><div><span>02</span><small>ON-PREMISE PLATFORM</small></div><h3>영상은 병원 안에만</h3><p>병원 서버에 설치해 영상이 밖으로 나가지 않아요.<br>기능은 클라우드와 똑같아요.</p></article>
-<article data-reveal><div><span>03</span><small>SYSTEM REQUIREMENTS</small></div><h3>브라우저만 있으면 돼요</h3><p>Chrome이나 Edge(110 이상)면 충분해요.<br>따로 설치할 프로그램이 없어요.</p></article>
+<div class="fd-pacs-41" data-name="Frame" data-node-id="1765:29176">
+<p class="fd-pacs-42" data-node-id="1765:29177">
+                    찾는 검사, 바로 찾기
+                  </p>
+<div class="fd-pacs-43" data-node-id="1765:29178">
+<p class="fd-pacs-44">환자 이름이나 ID, 날짜, 모달리티로 검색하세요.</p>
+<p class="fd-pacs-45">자주 쓰는 조건은 저장해 두면 한 번에 불러와요.</p>
 </div>
 </div>
-</section>
-
-<section class="service-wrap faq-section" id="faq"><div class="center-head" data-reveal><span class="eyebrow">FAQ</span><h2>궁금한 점이 있으신가요?</h2></div><div class="faq-list" data-reveal><details><summary>따로 설치해야 하는 프로그램이 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>아니요, Chrome이나 Edge(110 이상) 브라우저만 있으면 돼요. 병원 어느 PC에서나 접속해서 바로 판독하세요.</p></details><details><summary>클라우드와 병원 서버 설치는 어떻게 다른가요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>클라우드는 서버 없이 바로 시작할 수 있고, 업데이트와 백업도 자동으로 해 드려요. 병원 서버에 설치하면 영상이 병원 밖으로 나가지 않아요. 기능은 똑같고, 나중에 바꾸거나 함께 써도 괜찮아요.</p></details><details><summary>지금 쓰는 촬영 장비와 연결되나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>CT, MR, CR, DR, 초음파, PET, XA 영상을 표준 DICOM으로 주고받아요. 다른 PACS로 보내거나 필름 프린터로 바로 출력할 수도 있어요.</p></details><details><summary>우리 병원 영상은 안전하게 보관되나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>병원마다 저장 공간과 계정이 따로 주어져서 데이터가 서로 섞이지 않아요. 접속과 영상 전송은 모두 암호화(TLS 1.2 이상)되고, 누가 언제 보고 내보냈는지 기록이 남아요.</p></details><details><summary>원격 판독도 함께 쓸 수 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>네, 워크리스트에서 ‘판독 의뢰’만 누르면 전문 판독의가 같은 영상을 그대로 봐요. 영상을 다시 올릴 필요가 없고, 완료된 리포트는 그 검사에 자동으로 붙어요. 원격 판독만 쓰셔도 웹 PACS 뷰어는 기본으로 제공돼요.</p></details><details><summary>도입 전에 써 볼 수 있나요?<img src="assets/overlay/imgImage1.png" alt=""></summary><p>네, 데모를 신청하시면 우리 병원 영상으로 직접 써 보실 수 있어요. 아래 ‘데모 신청하기’를 눌러 주세요.</p></details></div></section>
-
-<section class="tele-contact" id="tele-contact">
-<div><span class="eyebrow">Trust Built on Globally Recognized Technology</span><h2><em>웹 PACS,</em><br class="mobile-break"> 우리 병원 영상으로 직접 써 보세요.</h2></div>
-<a class="tele-primary" href="tel:0221082580">데모 신청하기 <span>↗</span></a>
-</section>
-</main><footer class="exam-footer" id="company"><div class="footer-top"><div class="company-info"><a class="exam-brand" href="./#home">ExamVue <span>365</span> Flow</a><p>상호명 : 제이피아이헬스케어<br>대표자명 : 김진국<br>사업자 등록번호 : 203-81-48896<br>통신판매업번호 : 2024-서울구로-0968<br>사업장 주소 : 서울특별시 구로구 디지털로33길 28, 608호(우림이비즈센터1차)<br>유선번호 : <a href="tel:0221082580">02-2108-2580</a></p></div><div class="footer-links"><div><h2>Company</h2><button data-info="company">Company Introduction</button><button data-info="services">About Service</button><button data-info="pricing">Pricing</button></div><div><h2>Family Site</h2><button data-info="terms">Terms of Service</button><button data-info="privacy">Privacy Policy</button><button data-info="refund">Refund Policy</button></div></div></div><p class="copyright">Copyright(c) JPI All Rights Reserved.</p></footer><dialog class="service-dialog" aria-labelledby="service-dialog-title"><button class="service-close" aria-label="안내 닫기">×</button><span class="dialog-eyebrow">EXAMVUE 365 FLOW</span><h2 id="service-dialog-title"></h2><p id="service-dialog-copy"></p><button class="dialog-confirm">확인</button></dialog>
+</div>
+<div class="fd-pacs-46" data-name="Callout 2" data-node-id="1765:29179">
+<div class="fd-pacs-47" data-name="Frame" data-node-id="1765:29180">
+<p class="fd-pacs-48" data-node-id="1765:29181">
+                    2
+                  </p>
+</div>
+<div class="fd-pacs-49" data-name="Frame" data-node-id="1765:29182">
+<p class="fd-pacs-50" data-node-id="1765:29183">
+                    열기 전에 미리 보기
+                  </p>
+<div class="fd-pacs-51" data-node-id="1765:29184">
+<p class="fd-pacs-52">썸네일로 시리즈를 먼저 확인하고,</p>
+<p class="fd-pacs-53">필요한 영상만 골라 여세요.</p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-54" data-name="Callout 3" data-node-id="1765:29185">
+<div class="fd-pacs-55" data-name="Frame" data-node-id="1765:29186">
+<p class="fd-pacs-56" data-node-id="1765:29187">
+                    3
+                  </p>
+</div>
+<div class="fd-pacs-57" data-name="Frame" data-node-id="1765:29188">
+<p class="fd-pacs-58" data-node-id="1765:29189">
+                    보면서 바로 판독
+                  </p>
+<div class="fd-pacs-59" data-node-id="1765:29190">
+<p class="fd-pacs-60">영상 옆에서 소견과 결론을 쓰고,</p>
+<p class="fd-pacs-61">임시 저장했다가 확정하면 끝이에요.</p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-62" data-name="Callout 4" data-node-id="1765:29191">
+<div class="fd-pacs-63" data-name="Frame" data-node-id="1765:29192">
+<p class="fd-pacs-64" data-node-id="1765:29193">
+                    4
+                  </p>
+</div>
+<div class="fd-pacs-65" data-name="Frame" data-node-id="1765:29194">
+<p class="fd-pacs-66" data-node-id="1765:29195">
+                    지난 검사와 나란히
+                  </p>
+<div class="fd-pacs-67" data-node-id="1765:29196">
+<p class="fd-pacs-68">같은 환자의 이전 검사가 타임라인에 모여 있어,</p>
+<p class="fd-pacs-69">클릭 한 번으로 비교할 수 있어요.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-70" data-name="02 / Platform overview — Center statement" data-node-id="1767:72714" data-section="2" id="about-service">
+<div class="fd-pacs-71" data-name="02 / About — Center statement" data-node-id="1767:72782">
+<div class="fd-pacs-72" data-name="Container:margin" data-node-id="1767:72783">
+<div class="fd-pacs-73" data-name="Container" data-node-id="1767:72784">
+<div class="fd-pacs-74" data-name="Text" data-node-id="1767:72785">
+<p class="fd-pacs-75" data-node-id="1767:72786">
+                    SYSTEM OVERVIEW
+                  </p>
+</div>
+<h2 class="fd-pacs-76" data-name="Heading 2" data-node-id="1767:72787">
+<div class="fd-pacs-77" data-node-id="1767:72788">
+<p class="fd-pacs-78">장비는 그대로,</p>
+<p class="fd-pacs-79">필요한 건 브라우저 하나.</p>
+</div>
+</h2>
+<div class="fd-pacs-80" data-name="Paragraph" data-node-id="1767:72789">
+<p class="fd-pacs-81" data-node-id="1767:72790">
+                    지금 쓰는 촬영 장비에서 영상을 보내면 바로 저장되고, 어느 PC에서나 열어 볼 수 있어요.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+<div class="fd-pacs-82" data-name="Specs + Architecture" data-node-id="1767:72722">
+<div class="fd-pacs-83" data-name="Specs" data-node-id="1767:72761">
+<div class="fd-pacs-84" data-name="Frame" data-node-id="1778:72795">
+<p class="fd-pacs-85" data-node-id="1778:72796">
+                  BEFORE YOU START
+                </p>
+<div class="fd-pacs-86" data-node-id="1778:72797">
+<p class="fd-pacs-87">도입 전에, </p>
+<p class="fd-pacs-88">이것만 확인하세요.</p>
+</div>
+</div>
+<div class="fd-pacs-89" data-node-id="1778:72799">
+<div class="fd-pacs-90" data-name="배포 방식" data-node-id="1767:72762">
+<p class="fd-pacs-91" data-node-id="1767:72763">
+                    도입 방식
+                  </p>
+<p class="fd-pacs-92" data-node-id="1767:72764">
+                    클라우드 구독 또는 병원 서버 설치
+                  </p>
+</div>
+<div class="fd-pacs-93" data-name="브라우저" data-node-id="1767:72765">
+<p class="fd-pacs-94" data-node-id="1767:72766">
+                    필요한 것
+                  </p>
+<p class="fd-pacs-95" data-node-id="1767:72767">
+                    Chrome 또는 Edge 브라우저 하나 (110 이상)
+                  </p>
+</div>
+<div class="fd-pacs-96" data-name="모달리티" data-node-id="1767:72768">
+<p class="fd-pacs-97" data-node-id="1767:72769">
+                    지원 영상
+                  </p>
+<p class="fd-pacs-98" data-node-id="1767:72770">
+                    CT · MR · CR · DR · US · PET · XA
+                  </p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-99" data-name="Architecture diagram" data-node-id="1767:72723">
+<div class="fd-pacs-100" data-name="Requesting sites" data-node-id="1767:72724">
+<p class="fd-pacs-101" data-node-id="1767:72725">
+                  의뢰 병원
+                </p>
+<div class="fd-pacs-102" data-name="Frame" data-node-id="1767:72726">
+<div class="fd-pacs-103" data-name="Hospital A" data-node-id="1767:72727">
+<p class="fd-pacs-104" data-node-id="1767:72728">
+                      Hospital A
+                    </p>
+<p class="fd-pacs-105" data-node-id="1767:72729">
+                      CT · DR · US
+                    </p>
+</div>
+<div class="fd-pacs-106" data-name="Hospital B" data-node-id="1767:72730">
+<p class="fd-pacs-107" data-node-id="1767:72731">
+                      Hospital B
+                    </p>
+<p class="fd-pacs-108" data-node-id="1767:72732">
+                      MR · CR
+                    </p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-109" data-name="Rectangle" data-node-id="1767:72733"></div>
+<p class="fd-pacs-110" data-node-id="1767:72734">
+                DICOM C-STORE
+              </p>
+<div class="fd-pacs-111" data-name="Rectangle" data-node-id="1767:72735"></div>
+<div class="fd-pacs-112" data-name="Integrated platform" data-node-id="1767:72736">
+<div class="fd-pacs-113" data-name="Frame" data-node-id="1767:72737">
+<p class="fd-pacs-114" data-node-id="1767:72738">
+                    ExamVue 365 Flow
+                  </p>
+<p class="fd-pacs-115" data-node-id="1767:72739">
+                    INTEGRATED PLATFORM
+                  </p>
+</div>
+<div class="fd-pacs-116" data-name="웹 뷰어" data-node-id="1767:72740">
+<p class="fd-pacs-117" data-node-id="1767:72741">
+                    웹 뷰어
+                  </p>
+<p class="fd-pacs-118" data-node-id="1767:72742">
+                    PACS와 원격 판독이 함께 쓰는 판독 화면
+                  </p>
+</div>
+<div class="fd-pacs-119" data-name="Frame" data-node-id="1767:72743">
+<p class="fd-pacs-120" data-node-id="1767:72744">
+                    ↑ 영상 보기
+                  </p>
+<p class="fd-pacs-121" data-node-id="1767:72745">
+                    검사 · 리포트 공유 ⇄
+                  </p>
+<p class="fd-pacs-122" data-node-id="1767:72746">
+                    ↑ 판독 진행
+                  </p>
+</div>
+<div class="fd-pacs-123" data-name="Frame" data-node-id="1767:72747">
+<div class="fd-pacs-124" data-name="DICOM 서버" data-node-id="1767:72748">
+<p class="fd-pacs-125" data-node-id="1767:72749">
+                      DICOM 서버
+                    </p>
+<p class="fd-pacs-126" data-node-id="1767:72750">
+                      병원 영상 저장소
+                    </p>
+<div class="fd-pacs-127" data-name="Frame" data-node-id="1767:72751">
+<p class="fd-pacs-128" data-node-id="1767:72752">
+                        · 클라우드
+                      </p>
+<p class="fd-pacs-129" data-node-id="1767:72753">
+                        · 병원 서버
+                      </p>
+</div>
+</div>
+<div class="fd-pacs-130" data-name="원격 판독 서비스" data-node-id="1767:72754">
+<p class="fd-pacs-131" data-node-id="1767:72755">
+                      원격 판독 서비스
+                    </p>
+<p class="fd-pacs-132" data-node-id="1767:72756">
+                      전문 판독의 연결
+                    </p>
+<div class="fd-pacs-133" data-name="Frame" data-node-id="1767:72757">
+<p class="fd-pacs-134" data-node-id="1767:72758">
+                        · 의뢰 병원 화면
+                      </p>
+<p class="fd-pacs-135" data-node-id="1767:72759">
+                        · 판독의 화면
+                      </p>
+<p class="fd-pacs-136" data-node-id="1767:72760">
+                        · 관리자 화면
+                      </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-137" data-name="03 / Reading tools — CT viewer · MPR" data-node-id="1765:29253" data-section="3" id="pacs-section-3">
+<div class="fd-pacs-138" data-name="Section" data-node-id="1765:29254">
+<div class="fd-pacs-139" data-name="Section heading" data-node-id="1765:29255">
+<div class="fd-pacs-140" data-name="Frame" data-node-id="1765:29256">
+<p class="fd-pacs-141" data-node-id="1765:29257">
+                  READING TOOLS
+                </p>
+<div class="fd-pacs-142" data-node-id="1765:29258">
+<p class="fd-pacs-143">판독실 워크스테이션,</p>
+<p class="fd-pacs-144">이제 브라우저 안에.</p>
+</div>
+</div>
+<div class="fd-pacs-145" data-node-id="1765:29259">
+<p class="fd-pacs-146">진단 뷰어와 CT MPR을 같은 탭에서 바로 열어요.</p>
+<p class="fd-pacs-147">남겨 둔 측정과 주석은 다음에 열어도 그대로예요.</p>
+</div>
+</div>
+<div class="fd-pacs-148" data-name="Card / CT viewer" data-node-id="1765:29260">
+<div class="fd-pacs-149" data-name="IMG / CT VIEWER" data-node-id="1765:29261">
+<img alt="" class="fd-pacs-150" decoding="async" src="assets/figma-20261123/pacs/imgImgCtViewer.png"/>
+</div>
+<div class="fd-pacs-151" data-name="Copy" data-node-id="1765:29262">
+<p class="fd-pacs-152" data-node-id="1765:29263">
+                  CT VIEWER
+                </p>
+<div class="fd-pacs-153" data-node-id="1765:29264">
+<p class="fd-pacs-154">워크스테이션에서 하던 판독,</p>
+<p class="fd-pacs-155">그대로 여기서.</p>
+</div>
+<p class="fd-pacs-156" data-node-id="1765:29265">
+                  최대 4×4 화면에 새 검사와 지난 검사 두 개를 나란히 띄워요. 화면마다 분할과 밝기 설정이 따로 적용되고, 남긴 측정과 주석은 DICOM 표준으로 저장돼 다음에 그대로 다시 볼 수 있어요.
+                </p>
+<div class="fd-pacs-157" data-name="Frame" data-node-id="1765:29266">
+<div class="fd-pacs-158" data-name="Bullets" data-node-id="1765:29267">
+<div class="fd-pacs-159" data-name="Bullet" data-node-id="1765:29268">
+<div class="fd-pacs-160" data-name="Frame" data-node-id="1765:29269">
+<img alt="" class="fd-pacs-161" decoding="async" src="assets/figma-20261123/pacs/imgFrame.svg"/>
+</div>
+<p class="fd-pacs-162" data-node-id="1765:29271">
+                        길이 · 각도 · Cobb 각, 원형 · 사각형 · 자유형 ROI 측정
+                      </p>
+</div>
+<div class="fd-pacs-163" data-name="Bullet" data-node-id="1765:29272">
+<div class="fd-pacs-164" data-name="Frame" data-node-id="1765:29273">
+<img alt="" class="fd-pacs-165" decoding="async" src="assets/figma-20261123/pacs/imgFrame.svg"/>
+</div>
+<p class="fd-pacs-166" data-node-id="1765:29275">
+                        윈도우 프리셋, 시네 재생, 반전 · 회전 · 실제 크기 보기
+                      </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fd-pacs-167" data-name="Card / CT MPR" data-node-id="1765:29280">
+<div class="fd-pacs-168" data-name="Copy" data-node-id="1765:29281">
+<p class="fd-pacs-169" data-node-id="1765:29282">
+                  CT MPR
+                </p>
+<div class="fd-pacs-170" data-node-id="1765:29283">
+<p class="fd-pacs-171">3D 장비 없이도,</p>
+<p class="fd-pacs-172">세 방향 단면을 한눈에.</p>
+</div>
+<p class="fd-pacs-173" data-node-id="1765:29284">
+                  CT 영상으로 축상면 · 시상면 · 관상면을 바로 만들어 보여 줘요. 한 곳을 가리키면 세 단면이 함께 따라오고, MIP · MinIP · 평균 투영과 슬랩 두께도 단면마다 바꿀 수 있어요.
+                </p>
+<div class="fd-pacs-174" data-name="Frame" data-node-id="1765:29285">
+<div class="fd-pacs-175" data-name="Bullets" data-node-id="1765:29286">
+<div class="fd-pacs-176" data-name="Bullet" data-node-id="1765:29287">
+<div class="fd-pacs-177" data-name="Frame" data-node-id="1765:29288">
+<img alt="" class="fd-pacs-178" decoding="async" src="assets/figma-20261123/pacs/imgFrame.svg"/>
+</div>
+<p class="fd-pacs-179" data-node-id="1765:29290">
+                        뷰어에서 버튼 하나로 새 창 열기
+                      </p>
+</div>
+<div class="fd-pacs-180" data-name="Bullet" data-node-id="1765:29291">
+<div class="fd-pacs-181" data-name="Frame" data-node-id="1765:29292">
+<img alt="" class="fd-pacs-182" decoding="async" src="assets/figma-20261123/pacs/imgFrame.svg"/>
+</div>
+<p class="fd-pacs-183" data-node-id="1765:29294">
+                        회전 · 측정 · 조직별 프리셋 그대로 사용
+                      </p>
+</div>
+</div>
+</div>
+</div>
+<div class="fd-pacs-184" data-name="IMG / CT MPR" data-node-id="1765:29299">
+<img alt="" class="fd-pacs-185" decoding="async" src="assets/figma-20261123/pacs/imgImgCtMpr.png"/>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-186" data-name="04 / Image adjustment — Window presets" data-node-id="1765:29300" data-section="4" id="pacs-section-4">
+<div class="fd-pacs-187" data-name="Section" data-node-id="1765:29301">
+<div class="fd-pacs-188" data-name="Section heading" data-node-id="1765:29302">
+<p class="fd-pacs-189" data-node-id="1765:29303">IMAGE ADJUSTMENT  /  WINDOW PRESETS</p>
+<div class="fd-pacs-190" data-node-id="1765:29304">
+<p class="fd-pacs-191">클릭 한 번으로,</p>
+<p class="fd-pacs-192">보고 싶은 조직을 선명하게.</p>
+</div>
+<p class="fd-pacs-193" data-node-id="1765:29305">
+                폐, 뼈, 뇌처럼 조직별 프리셋을 우클릭으로 바로 적용하세요. 드래그로도 조절할 수 있어요.
+              </p>
+</div>
+<div class="fd-pacs-194" data-name="Tools + Presets" data-node-id="1765:29306">
+<div class="fd-pacs-195" data-name="Card / Adjustment tools" data-node-id="1765:29307">
+<p class="fd-pacs-196" data-node-id="1765:29308">
+                  01 / 자주 쓰는 영상 조정 도구
+                </p>
+<div class="fd-pacs-197" data-name="Tool grid" data-node-id="1765:29309">
+<div class="fd-pacs-198" data-name="Frame" data-node-id="1765:29310">
+<div class="fd-pacs-199" data-name="Tool / 밝기 / 대비" data-node-id="1765:29311">
+<div class="fd-pacs-200" data-name="IMG / icon 1" data-node-id="1765:29312">
+<img alt="" class="fd-pacs-201" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon1.png"/>
+</div>
+<p class="fd-pacs-202" data-node-id="1765:29313">
+                        밝기 / 대비
+                      </p>
+</div>
+<div class="fd-pacs-203" data-name="Tool / ROI 기반 윈도우" data-node-id="1765:29314">
+<div class="fd-pacs-204" data-name="IMG / icon 2" data-node-id="1765:29315">
+<img alt="" class="fd-pacs-205" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon2.png"/>
+</div>
+<p class="fd-pacs-206" data-node-id="1765:29316">
+                        ROI 기반 윈도우
+                      </p>
+</div>
+<div class="fd-pacs-207" data-name="Tool / 확대 / 축소" data-node-id="1765:29327">
+<div class="fd-pacs-208" data-name="IMG / icon 6" data-node-id="1765:29328">
+<img alt="" class="fd-pacs-209" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon6.png"/>
+</div>
+<p class="fd-pacs-210" data-node-id="1765:29329">
+                        확대 / 축소
+                      </p>
+</div>
+<div class="fd-pacs-211" data-name="Tool / 이동 (Pan)" data-node-id="1765:29350">
+<div class="fd-pacs-212" data-name="IMG / icon 13" data-node-id="1765:29351">
+<img alt="" class="fd-pacs-213" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon13.png"/>
+</div>
+<p class="fd-pacs-214" data-node-id="1765:29352">
+                        이동 (Pan)
+                      </p>
+</div>
+</div>
+<div class="fd-pacs-215" data-name="Frame" data-node-id="1765:29323">
+<div class="fd-pacs-216" data-name="Tool / 90° 회전" data-node-id="1765:29324">
+<div class="fd-pacs-217" data-name="IMG / icon 5" data-node-id="1765:29325">
+<img alt="" class="fd-pacs-218" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon5.png"/>
+</div>
+<p class="fd-pacs-219" data-node-id="1765:29326">
+                        90° 회전
+                      </p>
+</div>
+<div class="fd-pacs-220" data-name="Tool / 좌우 반전" data-node-id="1765:29317">
+<div class="fd-pacs-221" data-name="IMG / icon 3" data-node-id="1765:29318">
+<img alt="" class="fd-pacs-222" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon3.png"/>
+</div>
+<p class="fd-pacs-223" data-node-id="1765:29319">
+                        좌우 반전
+                      </p>
+</div>
+<div class="fd-pacs-224" data-name="Tool / 시네 재생" data-node-id="1765:29343">
+<div class="fd-pacs-225" data-name="IMG / icon 11" data-node-id="1765:29344">
+<img alt="" class="fd-pacs-226" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon11.png"/>
+</div>
+<p class="fd-pacs-227" data-node-id="1765:29345">
+                        시네 재생
+                      </p>
+</div>
+<div class="fd-pacs-228" data-name="Tool / 히스토그램" data-node-id="1765:29346">
+<div class="fd-pacs-229" data-name="IMG / icon 12" data-node-id="1765:29347">
+<img alt="" class="fd-pacs-230" decoding="async" src="assets/figma-20261123/pacs/imgImgIcon12.png"/>
+</div>
+<p class="fd-pacs-231" data-node-id="1765:29348">
+                        히스토그램
+                      </p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-232" data-name="Stats" data-node-id="1765:29362">
+<div class="fd-pacs-233" data-name="Frame" data-node-id="1765:29363">
+<p class="fd-pacs-234" data-node-id="1765:29364">
+                      25–800%
+                    </p>
+<p class="fd-pacs-235" data-node-id="1765:29365">
+                      확대 · 축소 범위
+                    </p>
+</div>
+<div class="fd-pacs-236" data-name="Frame" data-node-id="1765:29366">
+<p class="fd-pacs-237" data-node-id="1765:29367">
+                      1–30 FPS
+                    </p>
+<p class="fd-pacs-238" data-node-id="1765:29368">
+                      시네 재생 속도
+                    </p>
+</div>
+</div>
+</div>
+<div class="fd-pacs-239" data-name="Card / Window presets" data-node-id="1765:29369">
+<p class="fd-pacs-240" data-node-id="1765:29370">
+                  02 / 조직별 프리셋
+                </p>
+<div class="fd-pacs-241" data-name="Preset chips" data-node-id="1765:29661">
+<div class="fd-pacs-242" data-name="Preset / 폐" data-node-id="1765:29662">
+<p class="fd-pacs-243" data-node-id="1765:29663">
+                      폐
+                    </p>
+<p class="fd-pacs-244" data-node-id="1765:29664">
+                      결절 · 기관지
+                    </p>
+</div>
+<div class="fd-pacs-245" data-name="Preset / 복부" data-node-id="1765:29665">
+<p class="fd-pacs-246" data-node-id="1765:29666">
+                      복부
+                    </p>
+<p class="fd-pacs-247" data-node-id="1765:29667">
+                      간 · 비장 · 신장
+                    </p>
+</div>
+<div class="fd-pacs-248" data-name="Preset / 뇌" data-node-id="1765:29668">
+<p class="fd-pacs-249" data-node-id="1765:29669">
+                      뇌
+                    </p>
+<p class="fd-pacs-250" data-node-id="1765:29670">
+                      뇌 조직 · 출혈
+                    </p>
+</div>
+<div class="fd-pacs-251" data-name="Preset / 뼈" data-node-id="1765:29671">
+<p class="fd-pacs-252" data-node-id="1765:29672">
+                      뼈
+                    </p>
+<p class="fd-pacs-253" data-node-id="1765:29673">
+                      골절 · 골밀도
+                    </p>
+</div>
+<div class="fd-pacs-254" data-name="Preset / 척추" data-node-id="1765:29674">
+<p class="fd-pacs-255" data-node-id="1765:29675">
+                      척추
+                    </p>
+<p class="fd-pacs-256" data-node-id="1765:29676">
+                      골절 · 디스크
+                    </p>
+</div>
+<div class="fd-pacs-257" data-name="Preset / 연부조직" data-node-id="1765:29677">
+<p class="fd-pacs-258" data-node-id="1765:29678">
+                      연부조직
+                    </p>
+<p class="fd-pacs-259" data-node-id="1765:29679">
+                      근육 · 종괴
+                    </p>
+</div>
+</div>
+<div class="fd-pacs-260" data-name="Tip" data-node-id="1765:29428">
+<p class="fd-pacs-261" data-node-id="1765:29429">
+                    우클릭 한 번으로 프리셋을 바꾸고, 드래그로 밝기와 대비를 세밀하게 조절하세요.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-262" data-name="05 / Hanging protocols — Multi-monitor" data-node-id="1765:29430" data-section="5" id="pacs-section-5">
+<div class="fd-pacs-263" data-name="Section" data-node-id="1765:29431">
+<div class="fd-pacs-264" data-name="Section heading" data-node-id="1765:29432">
+<p class="fd-pacs-265" data-node-id="1765:29433">HANGING PROTOCOLS  /  MULTI-MONITOR</p>
+<div class="fd-pacs-266" data-node-id="1765:29434">
+<p class="fd-pacs-267">늘 보던 배치 그대로,</p>
+<p class="fd-pacs-268">모니터 3대까지 알아서.</p>
+</div>
+<div class="fd-pacs-269" data-node-id="1765:29435">
+<p class="fd-pacs-270">CT를 열면 새 검사와 지난 검사가 정해 둔 모니터에, 정해 둔 화면 분할로 자동으로 펼쳐져요.</p>
+<p class="fd-pacs-271">한 번만 설정해 두면 어느 판독 PC에서든 CT · DX · MR이 늘 같은 모습으로 열려요.</p>
+</div>
+</div>
+<div class="fd-pacs-272" data-name="Monitors + Protocols" data-node-id="1765:29436">
+<div class="fd-pacs-273" data-name="Example: 3-monitor CT comparison" data-node-id="1765:29437">
+<p class="fd-pacs-274" data-node-id="1765:29438">
+                  예시 · 모니터 3대로 CT 비교 판독
+                </p>
+<div class="fd-pacs-275" data-name="Monitors" data-node-id="1765:29439">
+<div class="fd-pacs-276" data-name="Monitor 1" data-node-id="1765:29440">
+<div class="fd-pacs-277" data-name="Screen" data-node-id="1765:29441">
+<div class="fd-pacs-278" data-name="IMG / monitor 1" data-node-id="1765:29442">
+<img alt="" class="fd-pacs-279" decoding="async" src="assets/figma-20261123/pacs/imgImgWorklist.png"/>
+</div>
+</div>
+<div class="fd-pacs-280" data-name="Rectangle" data-node-id="1765:29443"></div>
+<div class="fd-pacs-281" data-name="Rectangle" data-node-id="1765:29444"></div>
+<div class="fd-pacs-282" data-name="Frame" data-node-id="1765:29445"></div>
+<div class="fd-pacs-283" data-name="Frame" data-node-id="1765:29446">
+<p class="fd-pacs-284" data-node-id="1765:29447">
+                        뷰어 1 · 워크리스트
+                      </p>
+</div>
+</div>
+<div class="fd-pacs-285" data-name="Monitor 2" data-node-id="1765:29448">
+<div class="fd-pacs-286" data-name="Screen" data-node-id="1765:29449">
+<div class="fd-pacs-287" data-name="IMG / monitor 2" data-node-id="1765:29450">
+<img alt="" class="fd-pacs-288" decoding="async" src="assets/figma-20261123/pacs/imgImgCtMpr.png"/>
+</div>
+</div>
+<div class="fd-pacs-289" data-name="Rectangle" data-node-id="1765:29451"></div>
+<div class="fd-pacs-290" data-name="Rectangle" data-node-id="1765:29452"></div>
+<div class="fd-pacs-291" data-name="Frame" data-node-id="1765:29453"></div>
+<div class="fd-pacs-292" data-name="Frame" data-node-id="1765:29454">
+<p class="fd-pacs-293" data-node-id="1765:29455">
+                        뷰어 2 · 관련 검사 1 · 3×3
+                      </p>
+</div>
+</div>
+<div class="fd-pacs-294" data-name="Monitor 3" data-node-id="1765:29456">
+<div class="fd-pacs-295" data-name="Screen" data-node-id="1765:29457">
+<div class="fd-pacs-296" data-name="IMG / monitor 3" data-node-id="1765:29458">
+<img alt="" class="fd-pacs-297" decoding="async" src="assets/figma-20261123/pacs/imgImgCtViewer.png"/>
+</div>
+</div>
+<div class="fd-pacs-298" data-name="Rectangle" data-node-id="1765:29459"></div>
+<div class="fd-pacs-299" data-name="Rectangle" data-node-id="1765:29460"></div>
+<div class="fd-pacs-300" data-name="Frame" data-node-id="1765:29461"></div>
+<div class="fd-pacs-301" data-name="Frame" data-node-id="1765:29462">
+<p class="fd-pacs-302" data-node-id="1765:29463">
+                        뷰어 3 · 관련 검사 2 · 2×2
+                      </p>
+</div>
+</div>
+</div>
+<p class="fd-pacs-303" data-node-id="1765:29464">
+                  모니터 위치는 판독 PC마다 따로 저장돼요.
+                </p>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-304" data-name="06 / Operations &amp; compliance" data-node-id="1765:29518" data-section="6" id="pacs-section-6">
+<div class="fd-pacs-305" data-name="Section" data-node-id="1765:29519">
+<p class="fd-pacs-306" data-node-id="1765:29520">
+              OPERATIONS AND COMPLIANCE
+            </p>
+<p class="fd-pacs-307" data-node-id="1765:29521">
+              보안과 관리는 저희가 챙길게요.
+            </p>
+<div class="fd-pacs-308" data-name="Articles" data-node-id="1765:29522">
+<div class="fd-pacs-309" data-name="Article" data-node-id="1765:29523">
+<div class="fd-pacs-310" data-name="Frame" data-node-id="1765:29524">
+<div class="fd-pacs-311" data-name="Rectangle" data-node-id="1765:29525"></div>
+<p class="fd-pacs-312" data-node-id="1765:29526">
+                    01
+                  </p>
+</div>
+<div class="fd-pacs-313" data-name="Frame" data-node-id="1765:29527">
+<div class="fd-pacs-314" data-node-id="1765:29528">
+<p class="fd-pacs-315">병원마다 따로,</p>
+<p class="fd-pacs-316">안전하게 분리</p>
+</div>
+</div>
+<div class="fd-pacs-317" data-name="Frame" data-node-id="1765:29529">
+<p class="fd-pacs-318" data-node-id="1765:29530">
+                    병원마다 저장 공간과 계정이 따로 나뉘어 데이터가 섞이지 않아요.
+                  </p>
+</div>
+</div>
+<div class="fd-pacs-319" data-name="Article" data-node-id="1765:29531">
+<div class="fd-pacs-320" data-name="Frame" data-node-id="1765:29532">
+<div class="fd-pacs-321" data-name="Rectangle" data-node-id="1765:29533"></div>
+<p class="fd-pacs-322" data-node-id="1765:29534">
+                    02
+                  </p>
+</div>
+<div class="fd-pacs-323" data-name="Frame" data-node-id="1765:29535">
+<div class="fd-pacs-324" data-node-id="1765:29536">
+<p class="fd-pacs-325">전 구간 암호화,</p>
+<p class="fd-pacs-326">모든 기록은 그대로</p>
+</div>
+</div>
+<div class="fd-pacs-327" data-name="Frame" data-node-id="1765:29537">
+<p class="fd-pacs-328" data-node-id="1765:29538">
+                    접속과 영상 전송은 모두 암호화되고, 누가 언제 봤는지 기록이 남아요.
+                  </p>
+</div>
+</div>
+<div class="fd-pacs-329" data-name="Article" data-node-id="1765:29539">
+<div class="fd-pacs-330" data-name="Frame" data-node-id="1765:29540">
+<div class="fd-pacs-331" data-name="Rectangle" data-node-id="1765:29541"></div>
+<p class="fd-pacs-332" data-node-id="1765:29542">
+                    03
+                  </p>
+</div>
+<div class="fd-pacs-333" data-name="Frame" data-node-id="1765:29543">
+<div class="fd-pacs-334" data-node-id="1765:29544">
+<p class="fd-pacs-335">어떤 장비와도</p>
+<p class="fd-pacs-336">잘 맞는 DICOM</p>
+</div>
+</div>
+<div class="fd-pacs-337" data-name="Frame" data-node-id="1765:29545">
+<p class="fd-pacs-338" data-node-id="1765:29546">
+                    CT, MR, CR, DR, 초음파 등 표준 DICOM 영상을 그대로 주고받아요.
+                  </p>
+</div>
+</div>
+<div class="fd-pacs-339" data-name="Article" data-node-id="1765:29547">
+<div class="fd-pacs-340" data-name="Frame" data-node-id="1765:29548">
+<div class="fd-pacs-341" data-name="Rectangle" data-node-id="1765:29549"></div>
+<p class="fd-pacs-342" data-node-id="1765:29550">
+                    04
+                  </p>
+</div>
+<div class="fd-pacs-343" data-name="Frame" data-node-id="1765:29551">
+<div class="fd-pacs-344" data-node-id="1765:29552">
+<p class="fd-pacs-345">허가받은</p>
+<p class="fd-pacs-346">동물용 의료기기</p>
+</div>
+</div>
+<div class="fd-pacs-347" data-name="Frame" data-node-id="1765:29553">
+<p class="fd-pacs-348" data-node-id="1765:29554">
+                    농림축산검역본부에서 동물용 의료기기 2등급 허가를 받았어요.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-349" data-name="07 / Deployment — Minimal editorial" data-node-id="1765:29555" data-section="7" id="pacs-section-7">
+<div class="fd-pacs-350" data-name="Section" data-node-id="1765:29556">
+<div class="fd-pacs-351" data-name="Headline + Note" data-node-id="1765:29557">
+<div class="fd-pacs-352" data-name="Frame" data-node-id="1765:29558">
+<p class="fd-pacs-353" data-node-id="1765:29559">DEPLOYMENT  /  CLOUD · ON-PREMISE</p>
+<div class="fd-pacs-354" data-node-id="1765:29560">
+<p class="fd-pacs-355">클라우드로 가볍게,</p>
+<p class="fd-pacs-356">병원 서버로 안전하게.</p>
+</div>
+<div class="fd-pacs-357" data-node-id="1765:29561">
+<p class="fd-pacs-358">우리 병원에 맞는 방식으로 시작하세요.</p>
+<p class="fd-pacs-359">나중에 바꾸거나 함께 써도 괜찮아요.</p>
+</div>
+</div>
+<div class="fd-pacs-360" data-name="Blue accent / Either way" data-node-id="1765:29562">
+<p class="fd-pacs-361" data-node-id="1765:29563">
+                  EITHER WAY
+                </p>
+<div class="fd-pacs-362" data-node-id="1765:29564">
+<p class="fd-pacs-363">어떤 방식이든,</p>
+<p class="fd-pacs-364">원격 판독과 바로 연결돼요.</p>
+</div>
+<p class="fd-pacs-365" data-node-id="1765:29565">병원이 커져도 그대로 이어서 쓰세요.   ↗</p>
+</div>
+</div>
+<div class="fd-pacs-366" data-name="Options" data-node-id="1765:29566">
+<div class="fd-pacs-367" data-name="01 / CLOUD PLATFORM" data-node-id="1765:29567">
+<div class="fd-pacs-368" data-name="Rectangle" data-node-id="1765:29568"></div>
+<div class="fd-pacs-369" data-name="Frame" data-node-id="1765:29569">
+<p class="fd-pacs-370" data-node-id="1765:29570">
+                    01
+                  </p>
+<p class="fd-pacs-371" data-node-id="1765:29571">
+                    CLOUD PLATFORM
+                  </p>
+</div>
+<p class="fd-pacs-372" data-node-id="1765:29572">
+                  오늘 신청하면, 오늘 시작
+                </p>
+<div class="fd-pacs-373" data-node-id="1765:29573">
+<p class="fd-pacs-374">서버를 들이거나 따로 관리할 필요가 없어요.</p>
+<p class="fd-pacs-375">업데이트와 백업은 자동으로 해 드려요.</p>
+</div>
+</div>
+<div class="fd-pacs-376" data-name="02 / ON-PREMISE PLATFORM" data-node-id="1765:29574">
+<div class="fd-pacs-377" data-name="Rectangle" data-node-id="1765:29575"></div>
+<div class="fd-pacs-378" data-name="Frame" data-node-id="1765:29576">
+<p class="fd-pacs-379" data-node-id="1765:29577">
+                    02
+                  </p>
+<p class="fd-pacs-380" data-node-id="1765:29578">
+                    ON-PREMISE PLATFORM
+                  </p>
+</div>
+<p class="fd-pacs-381" data-node-id="1765:29579">
+                  영상은 병원 안에만
+                </p>
+<div class="fd-pacs-382" data-node-id="1765:29580">
+<p class="fd-pacs-383">병원 서버에 설치해 영상이 밖으로 나가지 않아요.</p>
+<p class="fd-pacs-384">기능은 클라우드와 똑같아요.</p>
+</div>
+</div>
+<div class="fd-pacs-385" data-name="03 / SYSTEM REQUIREMENTS" data-node-id="1765:29581">
+<div class="fd-pacs-386" data-name="Rectangle" data-node-id="1765:29582"></div>
+<div class="fd-pacs-387" data-name="Frame" data-node-id="1765:29583">
+<p class="fd-pacs-388" data-node-id="1765:29584">
+                    03
+                  </p>
+<p class="fd-pacs-389" data-node-id="1765:29585">
+                    SYSTEM REQUIREMENTS
+                  </p>
+</div>
+<p class="fd-pacs-390" data-node-id="1765:29586">
+                  브라우저만 있으면 돼요
+                </p>
+<div class="fd-pacs-391" data-node-id="1765:29587">
+<p class="fd-pacs-392">Chrome이나 Edge(110 이상)면 충분해요.</p>
+<p class="fd-pacs-393">따로 설치할 프로그램이 없어요.</p>
+</div>
+</div>
+</div>
+</div>
+</section><section class="fd-pacs-394" data-name="FAQ / Web PACS" data-node-id="1765:29588" data-section="8" id="faq">
+<div class="fd-pacs-395" data-name="Section" data-node-id="1765:29589">
+<div class="fd-pacs-396" data-name="Container" data-node-id="1765:29590">
+<div class="fd-pacs-397" data-name="Text" data-node-id="1765:29591">
+<p class="fd-pacs-398" data-node-id="1765:29592">
+                  FAQ
+                </p>
+</div>
+<h2 class="fd-pacs-399" data-name="Heading 2" data-node-id="1765:29593">
+<p class="fd-pacs-400" data-node-id="1765:29594">
+                  궁금한 점이 있으신가요?
+                </p>
+</h2>
+</div>
+<div class="fd-pacs-401" data-name="Container" data-node-id="1765:29595">
+<details class="fd-pacs-402" data-name="Details" data-node-id="1765:29596">
+<summary class="fd-pacs-403" data-name="Summary" data-node-id="1765:29597">
+<p class="fd-pacs-404" data-node-id="1765:29598">
+                    따로 설치해야 하는 프로그램이 있나요?
+                  </p>
+<div class="fd-pacs-405" data-name="Image" data-node-id="1765:29599">
+<img alt="Image" class="fd-pacs-406" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-407" data-name="Paragraph" data-node-id="1765:29600">
+<p class="fd-pacs-408" data-node-id="1765:29601">
+                    아니요, Chrome이나 Edge(110 이상) 브라우저만 있으면 돼요. 병원 어느 PC에서나 접속해서 바로 판독하세요.
+                  </p>
+</div>
+</details>
+<details class="fd-pacs-409" data-name="Details" data-node-id="1765:29602">
+<summary class="fd-pacs-410" data-name="Summary" data-node-id="1765:29603">
+<p class="fd-pacs-411" data-node-id="1765:29604">
+                    클라우드와 병원 서버 설치는 어떻게 다른가요?
+                  </p>
+<div class="fd-pacs-412" data-name="Image" data-node-id="1765:29605">
+<img alt="Image" class="fd-pacs-413" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-414" data-name="Paragraph" data-node-id="1765:29606">
+<p class="fd-pacs-415" data-node-id="1765:29607">
+                    클라우드는 서버 없이 바로 시작할 수 있고, 업데이트와 백업도 자동으로 해 드려요. 병원 서버에 설치하면 영상이 병원 밖으로 나가지 않아요. 기능은 똑같고, 나중에 바꾸거나 함께 써도 괜찮아요.
+                  </p>
+</div>
+</details>
+<details class="fd-pacs-416" data-name="Details" data-node-id="1765:29608">
+<summary class="fd-pacs-417" data-name="Summary" data-node-id="1765:29609">
+<p class="fd-pacs-418" data-node-id="1765:29610">
+                    지금 쓰는 촬영 장비와 연결되나요?
+                  </p>
+<div class="fd-pacs-419" data-name="Image" data-node-id="1765:29611">
+<img alt="Image" class="fd-pacs-420" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-421" data-name="Paragraph" data-node-id="1765:29612">
+<p class="fd-pacs-422" data-node-id="1765:29613">
+                    CT, MR, CR, DR, 초음파, PET, XA 영상을 표준 DICOM으로 주고받아요. 다른 PACS로 보내거나 필름 프린터로 바로 출력할 수도 있어요.
+                  </p>
+</div>
+</details>
+<details class="fd-pacs-423" data-name="Details" data-node-id="1765:29614">
+<summary class="fd-pacs-424" data-name="Summary" data-node-id="1765:29615">
+<p class="fd-pacs-425" data-node-id="1765:29616">
+                    우리 병원 영상은 안전하게 보관되나요?
+                  </p>
+<div class="fd-pacs-426" data-name="Image" data-node-id="1765:29617">
+<img alt="Image" class="fd-pacs-427" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-428" data-name="Paragraph" data-node-id="1765:29618">
+<p class="fd-pacs-429" data-node-id="1765:29619">
+                    병원마다 저장 공간과 계정이 따로 주어져서 데이터가 서로 섞이지 않아요. 접속과 영상 전송은 모두 암호화(TLS 1.2 이상)되고, 누가 언제 보고 내보냈는지 기록이 남아요.
+                  </p>
+</div>
+</details>
+<details class="fd-pacs-430" data-name="Details" data-node-id="1765:29620">
+<summary class="fd-pacs-431" data-name="Summary" data-node-id="1765:29621">
+<p class="fd-pacs-432" data-node-id="1765:29622">
+                    원격 판독도 함께 쓸 수 있나요?
+                  </p>
+<div class="fd-pacs-433" data-name="Image" data-node-id="1765:29623">
+<img alt="Image" class="fd-pacs-434" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-435" data-name="Paragraph" data-node-id="1765:29624">
+<p class="fd-pacs-436" data-node-id="1765:29625">
+                    네, 워크리스트에서 ‘판독 의뢰’만 누르면 전문 판독의가 같은 영상을 그대로 봐요. 영상을 다시 올릴 필요가 없고, 완료된 리포트는 그 검사에 자동으로 붙어요. 원격 판독만 쓰셔도 웹 PACS 뷰어는 기본으로 제공돼요.
+                  </p>
+</div>
+</details>
+<details class="fd-pacs-437" data-name="Details" data-node-id="1765:29626">
+<summary class="fd-pacs-438" data-name="Summary" data-node-id="1765:29627">
+<p class="fd-pacs-439" data-node-id="1765:29628">
+                    도입 전에 써 볼 수 있나요?
+                  </p>
+<div class="fd-pacs-440" data-name="Image" data-node-id="1765:29629">
+<img alt="Image" class="fd-pacs-441" decoding="async" src="assets/figma-20261123/pacs/imgImage.png"/>
+</div>
+</summary>
+<div class="fd-pacs-442" data-name="Paragraph" data-node-id="1765:29630">
+<p class="fd-pacs-443" data-node-id="1765:29631">
+                    네, 데모를 신청하시면 우리 병원 영상으로 직접 써 보실 수 있어요. 아래 ‘데모 신청하기’를 눌러 주세요.
+                  </p>
+</div>
+</details>
+</div>
+</div>
+</section><section class="fd-pacs-444" data-name="08 / Contact CTA" data-node-id="1765:29632" data-section="9" id="pacs-section-9">
+<img alt="" class="fd-pacs-445" decoding="async" src="assets/figma-20261123/pacs/img08ContactCta.png"/>
+<div class="fd-pacs-446" data-name="BG" data-node-id="1765:29633">
+<div aria-hidden="" class="fd-pacs-447">
+<div class="fd-pacs-448"></div>
+<img alt="" class="fd-pacs-449" decoding="async" src="assets/figma-20261123/pacs/imgBg.png"/>
+</div>
+</div>
+<div class="fd-pacs-450" data-node-id="1765:29634">
+<div class="fd-pacs-451" data-name="Container" data-node-id="1765:29635">
+<div class="fd-pacs-452" data-name="Text" data-node-id="1765:29636">
+<p class="fd-pacs-453" data-node-id="1765:29637">
+                  Trust Built on Globally Recognized Technology
+                </p>
+</div>
+<h2 class="fd-pacs-454" data-name="Heading 2" data-node-id="1765:29638">
+<p class="fd-pacs-455" data-node-id="1765:29639">
+<span class="fd-pacs-456">웹 PACS, </span>
+<span class="fd-pacs-457">우리 병원 영상으로 직접 써 보세요.</span>
+</p>
+</h2>
+</div>
+<a class="fd-pacs-458" data-name="Link" data-node-id="1765:29640" href="tel:0221082580">
+<p class="fd-pacs-459" data-node-id="1765:29641">
+                데모 신청하기
+              </p>
+<div class="fd-pacs-460" data-name="Text" data-node-id="1765:29642">
+<p class="fd-pacs-461" data-node-id="1765:29643">
+                  ↗
+                </p>
+</div>
+</a>
+</div>
+</section></main><footer class="exam-footer" id="company"><div class="footer-top"><div class="company-info"><a class="exam-brand" href="./#home">ExamVue <span>365</span> Flow</a><p>상호명 : 제이피아이헬스케어<br>대표자명 : 김진국<br>사업자 등록번호 : 203-81-48896<br>통신판매업번호 : 2024-서울구로-0968<br>사업장 주소 : 서울특별시 구로구 디지털로33길 28, 608호(우림이비즈센터1차)<br>유선번호 : <a href="tel:0221082580">02-2108-2580</a></p></div><div class="footer-links"><div><h2>Company</h2><button data-info="company">Company Introduction</button><button data-info="services">About Service</button><button data-info="pricing">Pricing</button></div><div><h2>Family Site</h2><button data-info="terms">Terms of Service</button><button data-info="privacy">Privacy Policy</button><button data-info="refund">Refund Policy</button></div></div></div><p class="copyright">Copyright(c) JPI All Rights Reserved.</p></footer><dialog class="service-dialog" aria-labelledby="service-dialog-title"><button class="service-close" aria-label="안내 닫기">×</button><span class="dialog-eyebrow">EXAMVUE 365 FLOW</span><h2 id="service-dialog-title"></h2><p id="service-dialog-copy"></p><button class="dialog-confirm">확인</button></dialog>
 <a class="back-to-top" href="#pacs-main" aria-label="맨 위로">↑</a>
-<script src="landing.js?v=tele-2"></script><script src="telemedicine.js?v=review-20261117"></script></body></html>
+<script src="landing.js?v=tele-2"></script><script src="figma-services.js?v=20261123"></script></body></html>
